@@ -310,3 +310,52 @@
    （消耗品モードは .paper.mode-consumables... 側の指定が優先される） */
 .paper.a4-landscape .layout-4 .case-photo{height:150px}
 .paper.a4-landscape .layout-9 .case-photo{height:66px}
+
+/* ==========================================================================
+   配色の刷新（2026-08-19）
+   「全体の色合いが暗い／茶色はやめて」というご指摘への対応。
+   画面UIのアクセント色を茶系から明るい青系へ変更し、背景も白寄りに上げる。
+   チラシ本体の色は作品ごとに保存されるため（.paper に --accent を直接指定）、
+   ここの変更では過去の作品の色は変わらない。
+   ========================================================================== */
+:root{
+  --accent:#2f86c5;        /* 明るい青 */
+  --accent-dark:#22689e;
+  --accent-soft:#eff7fd;
+  --line:#dfe5ea;
+  --workspace:#f3f7fa;
+  --shadow:0 10px 26px rgba(31,72,102,.10);
+}
+
+/* ヘッダーまわり・区切り線を明るく */
+.topbar{border-bottom-color:#e3eaf0}
+.autosave-chip{border-right-color:#e3eaf0}
+.profile-menu-wrap{border-left-color:#e3eaf0}
+.avatar{background:var(--accent)}
+.brand-link .brand-sun{color:#f5a623}     /* 太陽のロゴ色はそのまま活かす */
+.login-sun{color:#f5a623}
+
+/* ホームの見出し帯を明るい青のグラデーションへ */
+.home-hero{background:linear-gradient(105deg,#2f86c5 0%,#3f9ad6 55%,#63b3e4 100%);
+  box-shadow:0 12px 30px rgba(31,92,140,.16)}
+.new-flyer-btn{color:#1d5c85}
+.new-flyer-btn small{color:#5b7386}
+
+/* ログイン画面も白基調へ */
+.login-page{background:linear-gradient(135deg,#f2f8fc 0%,#fff 46%,#eef6fb 100%)}
+.login-card{border-color:#dde7ee;box-shadow:0 20px 55px rgba(31,72,102,.10)}
+
+/* 各種パネル・境界を明るく */
+.standard-page,.home-page,.wizard-page{background:#f6f9fb}
+.left-panel,.right-panel{background:#fcfdfe}
+.left-panel{border-right-color:#e3eaf0}
+.right-panel{border-left-color:#e3eaf0}
+.canvas-area{background:#eef4f8}
+.section-block{border-bottom-color:#e7edf2}
+.flyer-row,.template-library-card,.media-library-card,.admin-table-wrap,
+.office-form,.company-form,.category-admin,.filter-bar,.wizard-card{border-color:#e0e8ee}
+.admin-table th{background:#f4f8fb}
+.icon-btn:hover,.top-nav button:hover,.top-btn:hover,.icon-action:hover,
+.profile-button:hover,.profile-popover button:hover{background:#eef4f9}
+.meta-badges span,.scope-badge,.category-list span{background:#eaf3fa;color:#1d5c85;border-color:#d5e5f1}
+.zoom-group span{border-color:#e3eaf0}

@@ -51,7 +51,7 @@ export function createDefaultEditorState(layoutCount = 9, mode = 'cases') {
         footerNote: '介護保険レンタル対象品目です。単位数・自己負担額は担当者までお気軽にお問い合わせください。',
         layoutCount, orientation: 'portrait',
         display: { showLogo: true, showUnits: true, showPrices: true, showBurden1: true, showBurden2: false, showBurden3: false },
-        design: { style: 'standard', color: '#71431f' },
+        design: { style: 'standard', color: '#2f86c5' },
         contact: { personName: '', mobilePhone: '' },
         items: Array.from({ length: 9 }, (_, index) => emptyItem(index + 1))
     };

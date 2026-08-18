@@ -67,10 +67,10 @@ async function drawWelfareCard(ctx:CanvasRenderingContext2D,item:FlyerItem,x:num
   const {photoH,pad,border}=await drawCardPhoto(ctx,item,x,y,w,h,state,accent);
   let ty=y+photoH+pad;
   if(item.equipmentCategory){const bs=clamp(w*0.032,16,24);ctx.font=`700 ${bs}px sans-serif`;const bw=ctx.measureText(item.equipmentCategory).width+bs*1.1;const bh=bs*1.75;ctx.fillStyle=accent;roundRect(ctx,x+pad,ty,bw,bh,bh/2);ctx.fill();drawText(ctx,item.equipmentCategory,x+pad+bs*0.55,ty+bh/2+bs*0.36,bs,'700','#ffffff');ty+=bh+pad*0.35;}
-  const titleSize=clamp(w*0.052,24,40);drawText(ctx,item.title,x+pad,ty,titleSize,'700','#34251b',undefined,undefined,w-pad*2);ty+=titleSize*1.35;
-  const descSize=clamp(w*0.034,17,26);const descLines=wrapLines(ctx,item.description,w-pad*2,descSize,'normal','sans-serif',state.layoutCount<=4?5:3);for(const line of descLines){drawText(ctx,line,x+pad,ty,descSize,'normal','#4a413a');ty+=descSize*1.35;}
-  if(item.productName){ty+=descSize*.2;drawText(ctx,`商品：${item.productName}${item.productCode?`（${item.productCode}）`:''}`,x+pad,ty,clamp(w*.028,15,22),'normal','#695f57',undefined,undefined,w-pad*2);}
-  const metaParts=[item.maker,item.taisCode?`TAIS ${item.taisCode}`:''].filter(Boolean);
+  if(item.productName){const ps=clamp(w*0.062,28,48);const lines=wrapLines(ctx,item.productName,w-pad*2,ps,'800','sans-serif',2);for(const line of lines){drawText(ctx,line,x+pad,ty,ps,'800','#2b1f16');ty+=ps*1.2;}ty+=ps*.15;}
+  const titleSize=clamp(w*0.040,19,30);drawText(ctx,item.title,x+pad,ty,titleSize,'700','#5b4a3d',undefined,undefined,w-pad*2);ty+=titleSize*1.3;
+  const descSize=clamp(w*0.034,17,26);const descLines=wrapLines(ctx,item.description,w-pad*2,descSize,'normal','sans-serif',state.layoutCount<=4?4:3);for(const line of descLines){drawText(ctx,line,x+pad,ty,descSize,'normal','#4a413a');ty+=descSize*1.35;}
+  const metaParts=[item.maker,item.taisCode?`TAIS ${item.taisCode}`:'',item.productCode?`品番 ${item.productCode}`:''].filter(Boolean);
   if(metaParts.length){const ms=clamp(w*.026,14,20);ty+=ms*.35;drawText(ctx,metaParts.join('　'),x+pad,ty,ms,'normal','#7a6f66',undefined,undefined,w-pad*2);ty+=ms*1.2;}
   if(item.assistBarFree){const label=item.assistBarLabel||'介助バー無料';const fs2=clamp(w*.03,15,23);ctx.font=`700 ${Math.round(fs2)}px sans-serif`;const tw=ctx.measureText(label).width+fs2*.9;const th=fs2*1.6;ctx.fillStyle='#e8f3ec';roundRect(ctx,x+pad,ty,tw,th,4);ctx.fill();ctx.strokeStyle='#2c7b4f';ctx.lineWidth=1;roundRect(ctx,x+pad,ty,tw,th,4);ctx.stroke();drawText(ctx,label,x+pad+fs2*.45,ty+th/2+fs2*.36,fs2,'700','#1f5c3a');ty+=th+fs2*.3;}
   // 料金帯：参考チラシに合わせ、色を敷いて金額を大きく見せる。
