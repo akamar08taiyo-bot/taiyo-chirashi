@@ -36,7 +36,7 @@ export const demoCategories = [
 export function emptyItem(number) {
     return {
         id: createId(), number, title: `${String(number).padStart(2, '0')} タイトルを入力`, description: '', productName: '', productCode: '',
-        equipmentCategory: '', maker: '', taisCode: '',
+        equipmentCategory: '', maker: '', taisCode: '', assistBarFree: false, assistBarLabel: '介助バー無料',
         consumableCategory: '', consumableType: '', specification: '', packSize: '', priceYen: 0, showPrice: true, units: 0, monthlyAmount: 0,
         media: null, transform: { scale: 100, x: 50, y: 50, rotation: 0, fitMode: 'contain' }
     };
@@ -127,12 +127,36 @@ export function createSeedFlyers() {
 export function createSeedTemplates() {
     const now = new Date().toISOString();
     const cases = createDemoEditorState();
-    const privateBed = createDefaultEditorState(4, 'rental');
-    privateBed.title = '特価ベッド ご案内';
-    privateBed.subtitle = '用途に合わせて選べるベッドをご案内します。';
+    // 特価ベッドは1〜3モーターの3種類を並べて比較できる形にしておく。
+    const specialBed = createDefaultEditorState(3, 'rental');
+    specialBed.title = '特価ベッド ご案内';
+    specialBed.subtitle = 'モーター数に合わせてお選びいただけます。';
+    ['1モーター', '2モーター', '3モーター'].forEach((motor, i) => {
+        const item = specialBed.items[i];
+        if (!item)
+            return;
+        item.equipmentCategory = '特殊寝台';
+        item.title = `特価ベッド ${motor}`;
+        item.productName = `特価ベッド（${motor}）`;
+        item.assistBarFree = true;
+        item.assistBarLabel = '介助バー無料';
+    });
+    // 自費車いすは自走式・介助式の2種類。
+    const privateWheelchair = createDefaultEditorState(2, 'rental');
+    privateWheelchair.title = '自費車いす ご案内';
+    privateWheelchair.subtitle = '使い方に合わせてお選びいただけます。';
+    ['自走式', '介助式'].forEach((kind, i) => {
+        const item = privateWheelchair.items[i];
+        if (!item)
+            return;
+        item.equipmentCategory = '車椅子';
+        item.title = `自費車いす ${kind}`;
+        item.productName = `自費車いす（${kind}）`;
+    });
     return [
         { id: 'tpl-railing-9', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '屋内手すり 9枚', categoryId: 'cat-cases', shareScope: 'company', editorState: cases, createdAt: now, updatedAt: now, deletedAt: null },
-        { id: 'tpl-private-bed-4', organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', name: '特価ベッド 4枚', categoryId: 'cat-private-rental', shareScope: 'office', editorState: privateBed, createdAt: now, updatedAt: now, deletedAt: null },
+        { id: 'tpl-special-bed-3', organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', name: '特価ベッド 3種（1・2・3モーター）', categoryId: 'cat-private-rental', shareScope: 'office', editorState: specialBed, createdAt: now, updatedAt: now, deletedAt: null },
+        { id: 'tpl-private-wheelchair-2', organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', name: '自費車いす 2種（自走式・介助式）', categoryId: 'cat-private-rental', shareScope: 'office', editorState: privateWheelchair, createdAt: now, updatedAt: now, deletedAt: null },
         { id: 'tpl-renovation-2', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '住宅改修 2枚', categoryId: 'cat-renovation', shareScope: 'company', editorState: createDefaultEditorState(2, 'cases'), createdAt: now, updatedAt: now, deletedAt: null },
         { id: 'tpl-consumables-6', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '消耗品 商品紹介 6品', categoryId: 'cat-consumables', shareScope: 'company', editorState: createDefaultEditorState(6, 'consumables'), createdAt: now, updatedAt: now, deletedAt: null }
     ];

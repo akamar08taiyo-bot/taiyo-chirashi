@@ -268,3 +268,45 @@
   border:1px solid #b9b0a6;border-radius:7px;background:#fff;font-size:14px;color:#241f1a}
 .wizard-office small{display:block;margin-top:7px;font-size:12px;color:#5b534b}
 .orientation-mini{border-top:0;margin-top:16px;padding-top:0;font-size:13px}
+
+/* ==========================================================================
+   価格の強調と配色（参考チラシに寄せる / 2026-08-18）
+   出力側は exportRenderer.ts の drawWelfareCard と同じ考え方に揃えている。
+   ========================================================================== */
+
+/* カテゴリバッジ（特殊寝台・手すり など） */
+.equip-badge{display:inline-block;background:var(--accent);color:#fff;font-size:7px;font-weight:800;
+  line-height:1;padding:3px 7px;border-radius:9px;margin-bottom:4px;letter-spacing:.02em}
+.layout-1 .equip-badge,.layout-2 .equip-badge{font-size:11px;padding:5px 11px;border-radius:12px}
+.layout-3 .equip-badge,.layout-4 .equip-badge{font-size:9px;padding:4px 9px}
+
+/* メーカー・TAIS番号 */
+.equip-meta{font-size:6.6px;color:#7a6f66;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.layout-1 .equip-meta,.layout-2 .equip-meta{font-size:10px}
+.layout-3 .equip-meta,.layout-4 .equip-meta{font-size:8px}
+
+/* 「介助バー無料」などの特典タグ */
+.free-tag{display:inline-block;margin-top:3px;font-size:6.6px;font-weight:800;color:#1f5c3a;
+  background:#e8f3ec;border:1px solid #2c7b4f;border-radius:4px;padding:2px 6px;line-height:1.2}
+.layout-1 .free-tag,.layout-2 .free-tag{font-size:11px;padding:4px 10px}
+.layout-3 .free-tag,.layout-4 .free-tag{font-size:8.5px;padding:3px 8px}
+
+/* 料金帯：色を敷いて金額を大きく見せる */
+.unit-line,.burden-line{background:color-mix(in srgb,var(--accent) 10%,#fff)}
+.unit-line{border-top:1px solid color-mix(in srgb,var(--accent) 30%,#fff);padding:4px 6px 2px;margin-top:auto}
+.unit-line strong{font-size:16px;font-weight:800}
+.burden-line{border-top:0;padding:2px 6px 4px;font-size:9px}
+.burden-line b{font-size:11px;font-weight:800}
+.layout-1 .unit-line strong,.layout-2 .unit-line strong{font-size:30px}
+.layout-1 .burden-line,.layout-2 .burden-line{font-size:14px}
+.layout-1 .burden-line b,.layout-2 .burden-line b{font-size:18px}
+.layout-3 .unit-line strong,.layout-4 .unit-line strong{font-size:22px}
+.layout-3 .burden-line b,.layout-4 .burden-line b{font-size:14px}
+.a4-landscape .layout-9 .unit-line strong{font-size:13px}
+.a4-landscape .layout-9 .burden-line b{font-size:9.5px}
+
+/* 料金表示を大きくした分、A4横で文字が枠外へ出るため写真枠を詰める。
+   出力側はカード高の比率で描くため、この調整で画面と出力がより近づく。
+   （消耗品モードは .paper.mode-consumables... 側の指定が優先される） */
+.paper.a4-landscape .layout-4 .case-photo{height:150px}
+.paper.a4-landscape .layout-9 .case-photo{height:66px}

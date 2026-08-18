@@ -12,8 +12,20 @@ export async function ensureLocalSeeds() {
         return;
     if (!(await kvGet(LOCAL_FLYERS)))
         await kvSet(LOCAL_FLYERS, createSeedFlyers());
-    if (!(await kvGet(LOCAL_TEMPLATES)))
-        await kvSet(LOCAL_TEMPLATES, createSeedTemplates());
+    const seeds = createSeedTemplates();
+    const existing = await kvGet(LOCAL_TEMPLATES);
+    if (!existing) {
+        await kvSet(LOCAL_TEMPLATES, seeds);
+        return;
+    }
+    // 初期テンプレートを後から増やしても既存の利用者へ届くように、不足分だけ補充する。
+    // 利用者が自分で保存したテンプレートは消さない。
+    const existingIds = new Set(existing.map((t) => t.id));
+    const missing = seeds.filter((t) => !existingIds.has(t.id));
+    const retired = new Set(['tpl-private-bed-4']);
+    const kept = existing.filter((t) => !retired.has(t.id));
+    if (missing.length || kept.length !== existing.length)
+        await kvSet(LOCAL_TEMPLATES, [...missing, ...kept]);
 }
 export async function listFlyers(session, includeDeleted = false) {
     if (isLocalMode) {

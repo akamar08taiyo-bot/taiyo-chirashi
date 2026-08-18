@@ -83,6 +83,10 @@ export interface FlyerItem {
   /** 消耗品モード専用。大分類・細分類は候補選択後も自由入力できる。 */
   /** レンタル・事例集モード用。カード左上のカテゴリバッジ（特殊寝台・手すり等）。自由入力可。 */
   equipmentCategory: string;
+  /** 「介助バー無料」などの特典表示。商品ごとにON/OFFできる。 */
+  assistBarFree: boolean;
+  /** 特典として表示する文言。既定は「介助バー無料」。 */
+  assistBarLabel: string;
   /** メーカー名。介護保険チラシで表示が求められる。 */
   maker: string;
   /** TAISコード（福祉用具情報システムの識別番号）。 */

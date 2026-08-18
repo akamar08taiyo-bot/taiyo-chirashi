@@ -133,7 +133,7 @@ async function drawCardPhoto(ctx, item, x, y, w, h, state, accent) {
     return { border, photoH, pad: Math.max(16, w * 0.035) };
 }
 async function drawWelfareCard(ctx, item, x, y, w, h, state, accent) {
-    const { photoH, pad } = await drawCardPhoto(ctx, item, x, y, w, h, state, accent);
+    const { photoH, pad, border } = await drawCardPhoto(ctx, item, x, y, w, h, state, accent);
     let ty = y + photoH + pad;
     if (item.equipmentCategory) {
         const bs = clamp(w * 0.032, 16, 24);
@@ -166,23 +166,41 @@ async function drawWelfareCard(ctx, item, x, y, w, h, state, accent) {
         drawText(ctx, metaParts.join('　'), x + pad, ty, ms, 'normal', '#7a6f66', undefined, undefined, w - pad * 2);
         ty += ms * 1.2;
     }
+    if (item.assistBarFree) {
+        const label = item.assistBarLabel || '介助バー無料';
+        const fs2 = clamp(w * .03, 15, 23);
+        ctx.font = `700 ${Math.round(fs2)}px sans-serif`;
+        const tw = ctx.measureText(label).width + fs2 * .9;
+        const th = fs2 * 1.6;
+        ctx.fillStyle = '#e8f3ec';
+        roundRect(ctx, x + pad, ty, tw, th, 4);
+        ctx.fill();
+        ctx.strokeStyle = '#2c7b4f';
+        ctx.lineWidth = 1;
+        roundRect(ctx, x + pad, ty, tw, th, 4);
+        ctx.stroke();
+        drawText(ctx, label, x + pad + fs2 * .45, ty + th / 2 + fs2 * .36, fs2, '700', '#1f5c3a');
+        ty += th + fs2 * .3;
+    }
+    // 料金帯：参考チラシに合わせ、色を敷いて金額を大きく見せる。
     const bottom = y + h - pad;
     const burdens = calculateBurdenAmounts(item.monthlyAmount);
-    let burdenY = bottom - clamp(w * .033, 16, 23) * 1.5;
     const enabled = [state.display.showBurden1 ? `1割 ${formatYen(burdens.burden1)}` : '', state.display.showBurden2 ? `2割 ${formatYen(burdens.burden2)}` : '', state.display.showBurden3 ? `3割 ${formatYen(burdens.burden3)}` : ''].filter(Boolean);
+    const burdenSize = clamp(w * .040, 20, 30);
+    const unitSize = clamp(w * .052, 24, 38);
+    const bandH = (state.display.showUnits ? unitSize * 1.5 : 0) + (enabled.length ? burdenSize * 1.6 : 0) + pad * .5;
+    if (bandH > pad) {
+        ctx.fillStyle = lighten(accent, .90);
+        ctx.fillRect(x + border, bottom + pad - bandH, w - border * 2, bandH - border);
+    }
+    let burdenY = bottom - burdenSize * 1.2;
     if (enabled.length) {
-        drawText(ctx, enabled.join('   '), x + pad, burdenY, clamp(w * .027, 14, 21), '700', accent, undefined, undefined, w - pad * 2);
-        burdenY -= clamp(w * .035, 18, 25) * 1.4;
+        drawText(ctx, enabled.join('　'), x + pad, burdenY, burdenSize, '700', accent, undefined, undefined, w - pad * 2);
+        burdenY -= unitSize * 1.35;
     }
     if (state.display.showUnits) {
-        ctx.strokeStyle = lighten(accent, .72);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(x + pad, burdenY - 5);
-        ctx.lineTo(x + w - pad, burdenY - 5);
-        ctx.stroke();
-        drawText(ctx, '単位数', x + pad, burdenY + 4, clamp(w * .026, 14, 20), 'normal', '#4c4037');
-        drawText(ctx, `${Math.max(0, item.units).toLocaleString('ja-JP')} 単位／月`, x + pad, burdenY, clamp(w * .043, 20, 32), '700', '#34251b', undefined, 'right', w - pad * 2);
+        drawText(ctx, '単位数', x + pad, burdenY + unitSize * .34, clamp(w * .026, 14, 20), 'normal', '#4c4037');
+        drawText(ctx, `${Math.max(0, item.units).toLocaleString('ja-JP')} 単位／月`, x + pad, burdenY, unitSize, '800', '#34251b', undefined, 'right', w - pad * 2);
     }
 }
 async function drawConsumableCard(ctx, item, x, y, w, h, state, accent) {

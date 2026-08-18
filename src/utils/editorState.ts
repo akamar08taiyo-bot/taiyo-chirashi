@@ -29,6 +29,8 @@ export function normalizeEditorState(state: EditorState): EditorState {
   next.items = next.items ?? [];
   for (const item of next.items) {
     item.equipmentCategory = item.equipmentCategory ?? '';
+    item.assistBarFree = item.assistBarFree ?? false;
+    item.assistBarLabel = item.assistBarLabel || '介助バー無料';
     item.maker = item.maker ?? '';
     item.taisCode = item.taisCode ?? '';
     item.consumableCategory = item.consumableCategory ?? '';
