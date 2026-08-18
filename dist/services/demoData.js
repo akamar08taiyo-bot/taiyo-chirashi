@@ -36,6 +36,7 @@ export const demoCategories = [
 export function emptyItem(number) {
     return {
         id: createId(), number, title: `${String(number).padStart(2, '0')} タイトルを入力`, description: '', productName: '', productCode: '',
+        equipmentCategory: '', maker: '', taisCode: '',
         consumableCategory: '', consumableType: '', specification: '', packSize: '', priceYen: 0, showPrice: true, units: 0, monthlyAmount: 0,
         media: null, transform: { scale: 100, x: 50, y: 50, rotation: 0, fitMode: 'contain' }
     };
@@ -127,11 +128,11 @@ export function createSeedTemplates() {
     const now = new Date().toISOString();
     const cases = createDemoEditorState();
     const privateBed = createDefaultEditorState(4, 'rental');
-    privateBed.title = '自費レンタルベッド ご案内';
+    privateBed.title = '特価ベッド ご案内';
     privateBed.subtitle = '用途に合わせて選べるベッドをご案内します。';
     return [
         { id: 'tpl-railing-9', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '屋内手すり 9枚', categoryId: 'cat-cases', shareScope: 'company', editorState: cases, createdAt: now, updatedAt: now, deletedAt: null },
-        { id: 'tpl-private-bed-4', organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', name: '自費ベッド 4枚', categoryId: 'cat-private-rental', shareScope: 'office', editorState: privateBed, createdAt: now, updatedAt: now, deletedAt: null },
+        { id: 'tpl-private-bed-4', organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', name: '特価ベッド 4枚', categoryId: 'cat-private-rental', shareScope: 'office', editorState: privateBed, createdAt: now, updatedAt: now, deletedAt: null },
         { id: 'tpl-renovation-2', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '住宅改修 2枚', categoryId: 'cat-renovation', shareScope: 'company', editorState: createDefaultEditorState(2, 'cases'), createdAt: now, updatedAt: now, deletedAt: null },
         { id: 'tpl-consumables-6', organizationId: demoOrganization.id, officeId: null, ownerId: 'user-admin', name: '消耗品 商品紹介 6品', categoryId: 'cat-consumables', shareScope: 'company', editorState: createDefaultEditorState(6, 'consumables'), createdAt: now, updatedAt: now, deletedAt: null }
     ];

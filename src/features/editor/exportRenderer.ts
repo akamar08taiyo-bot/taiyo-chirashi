@@ -14,14 +14,14 @@ export async function renderFlyerCanvas(record:FlyerRecord,context:AppContext):P
   const size=record.orientation==='landscape'?LANDSCAPE:PORTRAIT; const canvas=document.createElement('canvas');canvas.width=size.w;canvas.height=size.h;const ctx=canvas.getContext('2d');if(!ctx)throw new AppError('画像出力を準備できませんでした。');
   ctx.fillStyle='#fff';ctx.fillRect(0,0,size.w,size.h);
   const scale=size.w/(record.orientation==='landscape'?1123:794); const px=(n:number)=>n*scale; const state=record.editorState; const accent=state.design.color; const margin=px(28); const pageW=size.w; const office=context.offices.find((o)=>o.id===record.officeId)??context.offices[0];const assignee=context.profiles.find((p)=>p.id===record.assigneeId);const contactName=state.contact?.personName||assignee?.flyerContactName||assignee?.displayName||'';const mobilePhone=state.contact?.mobilePhone||assignee?.mobilePhone||assignee?.phone||'';
-  const headerH=px(record.orientation==='landscape'?92:100); const footerH=px(62); const gap=px(10); const contentTop=margin+headerH; const contentBottom=size.h-margin-footerH-gap; const contentH=contentBottom-contentTop; const contentW=pageW-margin*2;
+  const headerH=px(record.orientation==='landscape'?92:100); const footerH=px(80); const gap=px(10); const contentTop=margin+headerH; const contentBottom=size.h-margin-footerH-gap; const contentH=contentBottom-contentTop; const contentW=pageW-margin*2;
   ctx.textBaseline='top'; ctx.fillStyle=accent;ctx.fillRect(margin,margin+px(4),px(56),px(23));drawText(ctx,state.eyebrow,margin+px(8),margin+px(8),px(10),'bold', '#fff');drawText(ctx,state.eyebrowNote,margin+px(66),margin+px(9),px(9),'normal','#43372f');
   drawText(ctx,state.title,margin,margin+px(35),px(record.orientation==='landscape'?31:30),'700','#2f2017','serif');drawText(ctx,state.subtitle,margin,margin+px(72),px(9.5),'normal','#44372e','serif','left',contentW*0.68);
-  const companyX=pageW-margin-px(260);if(state.display.showLogo!==false&&context.organization.logoUrl){try{const logo=await loadImage(context.organization.logoUrl);const lh=px(38),lw=Math.min(px(58),lh*(logo.naturalWidth/logo.naturalHeight));ctx.drawImage(logo,companyX-lw-px(8),margin+px(8),lw,lh);}catch{/* optional logo */}}drawText(ctx,context.organization.name,companyX,margin+px(8),px(11.5),'700','#2f2017','serif','right',px(260));drawText(ctx,office?.name??'',companyX,margin+px(24),px(8.5),'normal','#2f2017','serif','right',px(260));if(office?.address)drawText(ctx,office.address,companyX,margin+px(37),px(7),'normal','#5e5147','serif','right',px(260));drawText(ctx,`TEL:${office?.phone??''}`,companyX,margin+px(50),px(8),'normal','#2f2017','serif','right',px(260));drawText(ctx,`FAX:${office?.fax??''}`,companyX,margin+px(63),px(8),'normal','#2f2017','serif','right',px(260));if(contactName||mobilePhone)drawText(ctx,`担当：${contactName}${mobilePhone?` ${mobilePhone}`:''}`,companyX,margin+px(76),px(7.5),'normal','#2f2017','serif','right',px(260));
+  const companyX=pageW-margin;if(state.display.showLogo!==false&&context.organization.logoUrl){try{const logo=await loadImage(context.organization.logoUrl);const lh=px(46),lw=Math.min(px(120),lh*(logo.naturalWidth/logo.naturalHeight));ctx.drawImage(logo,companyX-lw,margin+px(6),lw,lh);}catch{/* optional logo */}}
   ctx.fillStyle=accent;ctx.fillRect(margin,contentTop-px(7),contentW,px(3));
   const spec=gridSpec(state.layoutCount);const cardGap=px(10);const cardW=(contentW-cardGap*(spec.cols-1))/spec.cols;const cardH=(contentH-cardGap*(spec.rows-1))/spec.rows;
   for(let i=0;i<state.layoutCount;i++){const item=state.items[i];if(!item)continue;const col=i%spec.cols,row=Math.floor(i/spec.cols);await drawCard(ctx,item,margin+col*(cardW+cardGap),contentTop+row*(cardH+cardGap),cardW,cardH,state,accent);}
-  const fy=size.h-margin-footerH;ctx.fillStyle=accent;ctx.fillRect(margin,fy,contentW,footerH);drawText(ctx,state.footerHeadline,margin+px(12),fy+px(10),px(11),'700','#fff',undefined,undefined,contentW*0.6);drawText(ctx,state.footerNote,margin+px(12),fy+px(31),px(7.3),'normal','#fff',undefined,undefined,contentW*0.62);drawText(ctx,`${context.organization.name} ${office?.name??''}`,pageW-margin-px(310),fy+px(10),px(10),'700','#fff',undefined,'right',px(298));drawText(ctx,`TEL:${office?.phone??''} / FAX:${office?.fax??''}`,pageW-margin-px(310),fy+px(32),px(8.5),'normal','#fff',undefined,'right',px(298));
+  const fy=size.h-margin-footerH;ctx.fillStyle=accent;ctx.fillRect(margin,fy,contentW,footerH);drawText(ctx,state.footerHeadline,margin+px(12),fy+px(10),px(11),'700','#fff',undefined,undefined,contentW*0.6);drawText(ctx,state.footerNote,margin+px(12),fy+px(31),px(7.3),'normal','#fff',undefined,undefined,contentW*0.62);const cx=pageW-margin-px(12);const cw=px(330);drawText(ctx,`${context.organization.name}　${office?.name??''}`,cx,fy+px(9),px(13),'700','#fff',undefined,'right',cw);if(office?.address)drawText(ctx,office.address,cx,fy+px(28),px(8.6),'normal','#fff',undefined,'right',cw);drawText(ctx,`TEL:${office?.phone??''}　FAX:${office?.fax??''}`,cx,fy+px(43),px(12),'700','#fff',undefined,'right',cw);if(contactName||mobilePhone)drawText(ctx,`担当：${contactName}${mobilePhone?`　${mobilePhone}`:''}`,cx,fy+px(62),px(8.6),'normal','#fff',undefined,'right',cw);
   return canvas;
 }
 
@@ -65,9 +65,13 @@ async function drawCardPhoto(ctx:CanvasRenderingContext2D,item:FlyerItem,x:numbe
 
 async function drawWelfareCard(ctx:CanvasRenderingContext2D,item:FlyerItem,x:number,y:number,w:number,h:number,state:FlyerRecord['editorState'],accent:string){
   const {photoH,pad}=await drawCardPhoto(ctx,item,x,y,w,h,state,accent);
-  let ty=y+photoH+pad;const titleSize=clamp(w*0.052,24,40);drawText(ctx,item.title,x+pad,ty,titleSize,'700','#34251b',undefined,undefined,w-pad*2);ty+=titleSize*1.35;
+  let ty=y+photoH+pad;
+  if(item.equipmentCategory){const bs=clamp(w*0.032,16,24);ctx.font=`700 ${bs}px sans-serif`;const bw=ctx.measureText(item.equipmentCategory).width+bs*1.1;const bh=bs*1.75;ctx.fillStyle=accent;roundRect(ctx,x+pad,ty,bw,bh,bh/2);ctx.fill();drawText(ctx,item.equipmentCategory,x+pad+bs*0.55,ty+bh/2+bs*0.36,bs,'700','#ffffff');ty+=bh+pad*0.35;}
+  const titleSize=clamp(w*0.052,24,40);drawText(ctx,item.title,x+pad,ty,titleSize,'700','#34251b',undefined,undefined,w-pad*2);ty+=titleSize*1.35;
   const descSize=clamp(w*0.034,17,26);const descLines=wrapLines(ctx,item.description,w-pad*2,descSize,'normal','sans-serif',state.layoutCount<=4?5:3);for(const line of descLines){drawText(ctx,line,x+pad,ty,descSize,'normal','#4a413a');ty+=descSize*1.35;}
   if(item.productName){ty+=descSize*.2;drawText(ctx,`商品：${item.productName}${item.productCode?`（${item.productCode}）`:''}`,x+pad,ty,clamp(w*.028,15,22),'normal','#695f57',undefined,undefined,w-pad*2);}
+  const metaParts=[item.maker,item.taisCode?`TAIS ${item.taisCode}`:''].filter(Boolean);
+  if(metaParts.length){const ms=clamp(w*.026,14,20);ty+=ms*.35;drawText(ctx,metaParts.join('　'),x+pad,ty,ms,'normal','#7a6f66',undefined,undefined,w-pad*2);ty+=ms*1.2;}
   const bottom=y+h-pad;const burdens=calculateBurdenAmounts(item.monthlyAmount);let burdenY=bottom-clamp(w*.033,16,23)*1.5;const enabled=[state.display.showBurden1?`1割 ${formatYen(burdens.burden1)}`:'',state.display.showBurden2?`2割 ${formatYen(burdens.burden2)}`:'',state.display.showBurden3?`3割 ${formatYen(burdens.burden3)}`:''].filter(Boolean);if(enabled.length){drawText(ctx,enabled.join('   '),x+pad,burdenY,clamp(w*.027,14,21),'700',accent,undefined,undefined,w-pad*2);burdenY-=clamp(w*.035,18,25)*1.4;}
   if(state.display.showUnits){ctx.strokeStyle=lighten(accent,.72);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x+pad,burdenY-5);ctx.lineTo(x+w-pad,burdenY-5);ctx.stroke();drawText(ctx,'単位数',x+pad,burdenY+4,clamp(w*.026,14,20),'normal','#4c4037');drawText(ctx,`${Math.max(0,item.units).toLocaleString('ja-JP')} 単位／月`,x+pad,burdenY,clamp(w*.043,20,32),'700','#34251b',undefined,'right',w-pad*2);}
 }
@@ -132,7 +136,9 @@ async function drawConsumableCard(ctx:CanvasRenderingContext2D,item:FlyerItem,x:
 }
 
 function setCanvasFont(ctx:CanvasRenderingContext2D,size:number,weight:string,family='sans-serif'){
-  ctx.font=`${weight} ${Math.round(size)}px ${family==='serif'?`"Yu Mincho","Hiragino Mincho ProN",serif`:`"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif`}`;
+  // チラシは高齢の方も読むため、可読性の高いUDフォントを優先する。
+  // family==='serif' は見出し用の指定。明朝から親しみやすいゴシックへ変更。
+  ctx.font=`${weight} ${Math.round(size)}px ${family==='serif'?`"BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",sans-serif`:`"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif`}`;
 }
 function measureText(ctx:CanvasRenderingContext2D,text:string,size:number,weight:string,family='sans-serif'){
   setCanvasFont(ctx,size,weight,family);return ctx.measureText(text).width;
@@ -178,3 +184,5 @@ function buildSingleImagePdf(jpeg:Uint8Array,pixelW:number,pixelH:number,orienta
   obj(4,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${pixelW} /Height ${pixelH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);push(jpeg);push('\nendstream');});
   const content=`q\n${pageW} 0 0 ${pageH} 0 0 cm\n/Im0 Do\nQ`;obj(5,()=>push(`<< /Length ${enc.encode(content).length} >>\nstream\n${content}\nendstream`));const xref=len;push('xref\n0 6\n0000000000 65535 f \n');for(let i=1;i<=5;i++)push(`${String(offsets[i]??0).padStart(10,'0')} 00000 n \n`);push(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);const out=new Uint8Array(len);let pos=0;for(const c of chunks){out.set(c,pos);pos+=c.length;}return out;
 }
+
+function roundRect(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,r:number){const rr=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);ctx.arcTo(x,y,x+w,y,rr);ctx.closePath();}

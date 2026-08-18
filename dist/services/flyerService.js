@@ -47,7 +47,7 @@ export async function createFlyer(session, context, input) {
     state.items.forEach((item, index) => { item.number = index + 1; });
     const now = new Date().toISOString();
     const base = {
-        id: createId(), organizationId: session.profile.organizationId, officeId: session.profile.officeId, ownerId: session.profile.id, assigneeId: session.profile.id,
+        id: createId(), organizationId: session.profile.organizationId, officeId: input.officeId || session.profile.officeId, ownerId: session.profile.id, assigneeId: session.profile.id,
         title: state.title || (input.mode === 'consumables' ? '無題の消耗品チラシ' : input.mode === 'rental' ? '無題のレンタルチラシ' : '無題の事例集'), categoryId: input.categoryId, shareScope: 'private', orientation: state.orientation, layoutCount: state.layoutCount,
         designStyle: state.design.style, mainColor: state.design.color, editorState: state, version: 1, createdAt: now, updatedAt: now, deletedAt: null
     };

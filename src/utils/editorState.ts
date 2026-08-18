@@ -28,6 +28,9 @@ export function normalizeEditorState(state: EditorState): EditorState {
   };
   next.items = next.items ?? [];
   for (const item of next.items) {
+    item.equipmentCategory = item.equipmentCategory ?? '';
+    item.maker = item.maker ?? '';
+    item.taisCode = item.taisCode ?? '';
     item.consumableCategory = item.consumableCategory ?? '';
     item.consumableType = item.consumableType ?? '';
     item.specification = item.specification ?? '';

@@ -16,6 +16,7 @@ export async function renderCreateWizard(root, session, context) {
     let mode = 'cases';
     let layoutCount = 9;
     let templateId = null;
+    let officeId = session.profile.officeId;
     let orientation = 'portrait';
     const categoryForMode = (value) => {
         const preferred = value === 'rental' ? ['rental'] : value === 'consumables' ? ['consumables'] : ['cases', 'casebook'];
@@ -30,13 +31,15 @@ export async function renderCreateWizard(root, session, context) {
         back.disabled = step === 1; if (next)
         next.textContent = step === 3 ? '編集を始める' : '次へ'; if (!body)
         return; if (step === 1)
-        body.innerHTML = `<div class="wizard-question"><h2>STEP 1　何を作りますか？</h2><p>作成モードを選んでください。編集画面でも後から切り替えできます。</p><div class="choice-grid mode-choice">${MODES.map(entry => `<button data-mode="${entry.id}" class="${entry.id === mode ? 'selected' : ''}">${icon(entry.icon, 30)}<strong>${entry.title}</strong><span>${entry.description}</span></button>`).join('')}</div><div class="orientation-mini"><span>用紙</span><label><input type="radio" name="orientation" value="portrait" ${orientation === 'portrait' ? 'checked' : ''}>A4縦</label><label><input type="radio" name="orientation" value="landscape" ${orientation === 'landscape' ? 'checked' : ''}>A4横</label></div></div>`;
+        body.innerHTML = `<div class="wizard-question"><h2>STEP 1　何を作りますか？</h2><p>作成モードを選んでください。編集画面でも後から切り替えできます。</p><div class="choice-grid mode-choice">${MODES.map(entry => `<button data-mode="${entry.id}" class="${entry.id === mode ? 'selected' : ''}">${icon(entry.icon, 30)}<strong>${entry.title}</strong><span>${entry.description}</span></button>`).join('')}</div><div class="wizard-office"><label>営業所<select id="wizard-office">${context.offices.filter(o => o.isActive !== false).map(o => `<option value="${escapeAttr(o.id)}" ${o.id === officeId ? 'selected' : ''}>${escapeHtml(o.name)}</option>`).join('')}</select></label><small>チラシに載る会社名・住所・TEL・FAXが、この営業所のものになります。</small></div><div class="orientation-mini"><span>用紙</span><label><input type="radio" name="orientation" value="portrait" ${orientation === 'portrait' ? 'checked' : ''}>A4縦</label><label><input type="radio" name="orientation" value="landscape" ${orientation === 'landscape' ? 'checked' : ''}>A4横</label></div></div>`;
     else if (step === 2)
         body.innerHTML = `<div class="wizard-question"><h2>STEP 2　${mode === 'consumables' ? '商品' : '写真'}は何${mode === 'consumables' ? '点' : '枚'}ですか？</h2><p>あとから変更できます。</p><div class="choice-grid layout-choice">${[1, 2, 3, 4, 6, 9].map(n => `<button data-layout="${n}" class="${n === layoutCount ? 'selected' : ''}"><i class="large-mini-layout grid-${n}">${Array.from({ length: n }, () => '<span></span>').join('')}</i><strong>${n}${mode === 'consumables' ? '商品' : '枚'}${n === 9 ? '（3×3）' : ''}</strong></button>`).join('')}</div></div>`;
     else {
         const matching = templates.filter(t => (t.editorState.mode ?? 'cases') === mode);
         body.innerHTML = `<div class="wizard-question"><h2>STEP 3　テンプレートを選びますか？</h2><p>「白紙から作成」でもすぐ始められます。</p><div class="template-choice"><button data-template="" class="template-option ${templateId === null ? 'selected' : ''}"><div class="template-thumb blank">${icon('plus', 28)}</div><strong>白紙から作成</strong><span>選んだ${mode === 'consumables' ? '商品数' : '写真枚数'}で開始</span></button>${matching.slice(0, 8).map(t => `<button data-template="${escapeAttr(t.id)}" class="template-option ${templateId === t.id ? 'selected' : ''}"><div class="template-thumb">${miniTemplate(t)}</div><strong>${escapeHtml(t.name)}</strong><span>${t.editorState.layoutCount}${mode === 'consumables' ? '商品' : '枚'}・${scopeLabel(t.shareScope)}</span></button>`).join('')}</div>${!matching.length ? '<p class="wizard-empty-hint">このモードの保存済みテンプレートはまだありません。</p>' : ''}</div>`;
     } };
+    body?.addEventListener('change', (e) => { const sel = e.target.closest('#wizard-office'); if (sel)
+        officeId = sel.value; });
     body?.addEventListener('click', (e) => { const modeBtn = e.target.closest('[data-mode]'); if (modeBtn) {
         mode = modeBtn.dataset.mode;
         templateId = null;
@@ -64,7 +67,7 @@ export async function renderCreateWizard(root, session, context) {
         render();
         return;
     } next.disabled = true; next.textContent = '作成中…'; try {
-        const input = { mode, categoryId: categoryForMode(mode), layoutCount, templateId, orientation };
+        const input = { mode, categoryId: categoryForMode(mode), officeId, layoutCount, templateId, orientation };
         const record = await createFlyer(session, context, input);
         navigate(`editor/${record.id}`);
     }

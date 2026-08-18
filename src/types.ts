@@ -2,7 +2,7 @@ export type Role = 'employee' | 'office_admin' | 'org_admin';
 export type ShareScope = 'private' | 'office' | 'company';
 export type LayoutCount = 1 | 2 | 3 | 4 | 6 | 9;
 export type Orientation = 'portrait' | 'landscape';
-export type DesignStyle = 'standard' | 'simple' | 'soft' | 'product';
+export type DesignStyle = 'standard' | 'simple' | 'soft' | 'product' | 'catalog';
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'offline' | 'error' | 'conflict';
 export type MediaKind = 'product' | 'case';
 export type MediaScope = ShareScope;
@@ -81,6 +81,12 @@ export interface FlyerItem {
   productName: string;
   productCode: string;
   /** 消耗品モード専用。大分類・細分類は候補選択後も自由入力できる。 */
+  /** レンタル・事例集モード用。カード左上のカテゴリバッジ（特殊寝台・手すり等）。自由入力可。 */
+  equipmentCategory: string;
+  /** メーカー名。介護保険チラシで表示が求められる。 */
+  maker: string;
+  /** TAISコード（福祉用具情報システムの識別番号）。 */
+  taisCode: string;
   consumableCategory: string;
   consumableType: string;
   specification: string;
@@ -201,6 +207,8 @@ export interface AppContext {
 export interface NewFlyerInput {
   mode: FlyerMode;
   categoryId: string;
+  /** 作成時に選んだ営業所。会社名・住所・TEL・FAXの出力元になる。 */
+  officeId: string;
   layoutCount: LayoutCount;
   templateId: string | null;
   orientation: Orientation;

@@ -158,3 +158,113 @@
   padding:7px 13px;font-size:13px;font-weight:700;margin-bottom:12px}
 .page-back:hover{background:#f6f2ee;border-color:#c0b4a7}
 .page-back:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ==========================================================================
+   2026-08-18 追加：カタログ風デザイン / 会社情報を下部へ / 入力欄の見やすさ
+   ========================================================================== */
+
+/* --- 入力欄をはっきり見えるように（枠を濃く、文字を黒く、背景を白に） --- */
+.section-block input,.section-block select,.section-block textarea,
+.editor-body input,.editor-body select,.editor-body textarea,
+.login-form input,.form-grid input,.form-grid select,.form-grid textarea,
+.office-form input,.company-form input,.category-admin input,
+.modal-field textarea,.modal-field input[type="text"],
+.filter-bar select,.search-input input,.canvas-toolbar select{
+  border-color:#b9b0a6;color:#241f1a;background:#fff}
+.section-block input::placeholder,.editor-body input::placeholder,
+.editor-body textarea::placeholder,.login-form input::placeholder{color:#8d857c}
+.section-block label,.editor-body label{color:#2f2925}
+.section-block select,.editor-body select,.filter-bar select{background:#fff}
+.copy-sample-select{background:#fffaf5!important;border-color:#c9ae90!important}
+
+/* --- A4見出し：会社情報を外したので、タイトルを広く使う --- */
+.flyer-head:has(.head-logo-only){grid-template-columns:1fr auto}
+.head-logo-only{min-width:0;align-items:flex-end}
+.head-logo-only .company-logo{max-width:110px;max-height:46px}
+
+/* --- A4下部：会社名・住所・TEL/FAX・担当をまとめて大きく --- */
+.flyer-footer{height:auto;min-height:74px;padding:9px 13px}
+.footer-contact{min-width:290px;display:flex;flex-direction:column;gap:1px;text-align:right}
+.footer-company{font-size:13px!important;line-height:1.25;display:block}
+.footer-address{font-size:8.6px;opacity:.92}
+.footer-tel{font-size:12px;font-weight:800;letter-spacing:.01em}
+.footer-person{font-size:8.6px;opacity:.92}
+.a4-landscape .flyer-footer{min-height:70px}
+
+/* --- 商品カードのカテゴリバッジ / メーカー・TAIS --- */
+.equip-badge{display:inline-block;background:var(--accent);color:#fff;font-size:7px;
+  font-weight:800;line-height:1;padding:3px 7px;border-radius:9px;margin-bottom:4px;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.equip-meta{font-size:6.8px;color:#7a6f66;margin-top:2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.layout-1 .equip-badge,.layout-2 .equip-badge{font-size:11px;padding:5px 11px;border-radius:13px}
+.layout-3 .equip-badge,.layout-4 .equip-badge{font-size:9px;padding:4px 9px;border-radius:11px}
+.layout-1 .equip-meta,.layout-2 .equip-meta{font-size:10px}
+.layout-3 .equip-meta,.layout-4 .equip-meta{font-size:8px}
+
+/* --- デザインスタイル「商品カタログ」：にぎやかで価格が目立つ --- */
+.style-catalog .case-card{border:2px solid color-mix(in srgb,var(--accent) 55%,#fff);
+  border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(80,55,30,.10)}
+.style-catalog .case-photo{background:#fbf8f4;border-bottom:1px solid color-mix(in srgb,var(--accent) 22%,#fff)}
+.style-catalog .case-title{color:var(--accent)}
+.style-catalog .eyeline strong{border-radius:11px}
+.style-catalog .head-rule{height:5px;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#fff))}
+.style-catalog .flyer-footer{border-radius:8px}
+.style-catalog .unit-line{border-top:1px dashed color-mix(in srgb,var(--accent) 45%,#ccc);
+  background:color-mix(in srgb,var(--accent) 6%,#fff);padding:4px 5px 3px;border-radius:5px}
+.style-catalog .unit-line strong{font-size:17px;color:var(--accent)}
+.style-catalog .burden-line b{font-size:1.35em;color:var(--accent)}
+.style-catalog .layout-1 .unit-line strong,.style-catalog .layout-2 .unit-line strong{font-size:30px}
+.style-catalog .layout-3 .unit-line strong,.style-catalog .layout-4 .unit-line strong{font-size:23px}
+.style-catalog .consumable-price strong{font-size:19px}
+.style-catalog .layout-1 .consumable-price strong,.style-catalog .layout-2 .consumable-price strong{font-size:30px}
+.style-catalog .layout-3 .consumable-price strong,.style-catalog .layout-4 .consumable-price strong{font-size:24px}
+
+/* --- 右パネル：商品名・単位数を主役に --- */
+.primary-fields{background:#fbf8f4;border:1px solid #e3d9cd;border-radius:8px;
+  padding:11px 11px 3px;margin-bottom:14px}
+.editor-body .field-strong{font-size:13px!important;font-weight:800;color:#3a2f26}
+.editor-body .field-strong input{font-size:16px;font-weight:700;height:44px;
+  border-color:#a9998a;background:#fff}
+.editor-body .field-strong .unit-input{border-color:#a9998a}
+.editor-body .field-strong .unit-input input{font-size:18px;font-weight:800;height:42px;text-align:right}
+.editor-body .field-strong .unit-input span{font-size:11px;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two-col label{margin-bottom:11px}
+
+/* ==========================================================================
+   チラシのフォントと入力欄の見やすさ（2026-08-18）
+   ・チラシ本体は明朝体から、可読性の高いUDゴシックへ変更
+     （高齢のご利用者・ご家族が読む前提。BIZ UDPGothic はWindows標準搭載）
+   ・出力(PNG/PDF)側は exportRenderer.ts の setCanvasFont で同じ指定にしている
+   ========================================================================== */
+.paper,.flyer-head h1,.flyer-head p,.company-block,.company-address,
+.flyer-footer,.footer-contact{
+  font-family:"BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",sans-serif}
+.flyer-head h1{letter-spacing:.02em;font-weight:800}
+
+/* --- 入力欄をはっきり・明るく --- */
+.section-block input,.section-block select,.section-block textarea,
+.editor-body input,.editor-body select,.editor-body textarea,
+.login-form input,.form-grid input,.form-grid select,.form-grid textarea,
+.office-form input,.company-form input,.category-admin input,
+.modal-field textarea,.modal-field input[type="text"],
+.filter-bar select,.search-input{
+  background:#fff;border-color:#bdb5ac}
+.section-block input:hover,.section-block select:hover,.section-block textarea:hover,
+.editor-body input:hover,.editor-body select:hover,.editor-body textarea:hover{
+  border-color:#9c9187}
+/* 入力欄のラベルをはっきりさせて、どこに入れるか分かりやすくする */
+.section-block label,.editor-body label{color:#3a332d}
+/* パネルの地色をわずかに明るくして、白い入力欄との境目を出す */
+.left-panel,.right-panel{background:#fcfbfa}
+.section-block{background:transparent}
+
+/* --- 新規作成STEP1の営業所選択 --- */
+.wizard-office{border-top:1px solid #eee8e2;margin-top:22px;padding-top:16px}
+.wizard-office label{display:block;font-size:13px;font-weight:800;margin:0}
+.wizard-office select{width:min(340px,100%);height:44px;margin-top:7px;padding:0 11px;
+  border:1px solid #b9b0a6;border-radius:7px;background:#fff;font-size:14px;color:#241f1a}
+.wizard-office small{display:block;margin-top:7px;font-size:12px;color:#5b534b}
+.orientation-mini{border-top:0;margin-top:16px;padding-top:0;font-size:13px}

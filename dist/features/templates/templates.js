@@ -20,7 +20,7 @@ export async function renderTemplates(root, session, context) {
         return; const tpl = records.find(t => t.id === btn.dataset.id); if (!tpl)
         return; if (btn.dataset.action === 'use') {
         try {
-            const flyer = await createFlyer(session, context, { mode: tpl.editorState.mode ?? 'cases', categoryId: tpl.categoryId, layoutCount: tpl.editorState.layoutCount, templateId: tpl.id, orientation: tpl.editorState.orientation });
+            const flyer = await createFlyer(session, context, { mode: tpl.editorState.mode ?? 'cases', categoryId: tpl.categoryId, officeId: session.profile.officeId, layoutCount: tpl.editorState.layoutCount, templateId: tpl.id, orientation: tpl.editorState.orientation });
             navigate(`editor/${flyer.id}`);
         }
         catch (error) {

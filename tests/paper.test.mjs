@@ -49,7 +49,9 @@ test('older saved state defaults logo display to on',()=>{
 
 test('remembered flyer contact is rendered independently from account assignee',()=>{
   const html=renderPaper(record(true),context,-1,false);
-  assert.match(html,/担当：チラシ担当 090-1111-2222/);
+  // 会社情報はA4下部のフッターへ移動。担当と携帯の区切りは全角スペース。
+  assert.match(html,/担当：チラシ担当[s　]090-1111-2222/);
+  assert.match(html,/footer-contact/);
   assert.doesNotMatch(html,/担当：担当者 090/);
   assert.match(html,/福岡県行橋市大字流末1327/);
 });
