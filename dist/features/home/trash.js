@@ -1,0 +1,30 @@
+import { topbar } from '../../components/shell.js';
+import { icon } from '../../components/icons.js';
+import { listFlyers, permanentlyDeleteFlyer, setFlyerDeleted } from '../../services/flyerService.js';
+import { escapeAttr, escapeHtml } from '../../utils/html.js';
+import { formatDateTime } from '../../utils/time.js';
+import { showToast } from '../../components/toast.js';
+import { showModal } from '../../components/modal.js';
+export async function renderTrash(root, session, context) { root.innerHTML = `${topbar(session)}<main class="standard-page"><header class="page-heading"><div><h1>ゴミ箱</h1><p>削除した作品を復元できます。完全削除は元に戻せません。</p></div></header><section id="trash-list" class="flyer-list"><div class="loading">読み込んでいます…</div></section></main>`; let records = await listFlyers(session, true).catch(() => []); const list = root.querySelector('#trash-list'); const render = () => { if (!list)
+    return; list.innerHTML = records.length ? records.map(r => `<article class="flyer-row"><div class="flyer-preview trash-preview">${icon('trash', 28)}</div><div class="flyer-meta"><h3>${escapeHtml(r.title)}</h3><p>${escapeHtml(context.offices.find(o => o.id === r.officeId)?.name ?? '')}・削除 ${escapeHtml(formatDateTime(r.deletedAt ?? r.updatedAt))}</p></div><div class="flyer-actions"><button class="icon-action primary-text" data-restore="${escapeAttr(r.id)}">${icon('restore', 16)}復元</button>${canPermanentlyDelete(r, session) ? (daysUntilPermanent(r) <= 0 ? `<button class="icon-action danger-text" data-permanent="${escapeAttr(r.id)}">${icon('trash', 16)}完全削除</button>` : `<span class="trash-retention">完全削除まであと${daysUntilPermanent(r)}日</span>`) : ''}</div></article>`).join('') : '<div class="empty-panel">ゴミ箱は空です。</div>'; }; list?.addEventListener('click', async (e) => { const restore = e.target.closest('[data-restore]'); if (restore) {
+    await setFlyerDeleted(session, restore.dataset.restore ?? '', false);
+    records = records.filter(r => r.id !== restore.dataset.restore);
+    render();
+    showToast('復元しました', 'success');
+    return;
+} const permanent = e.target.closest('[data-permanent]'); if (permanent) {
+    const answer = await showModal({ title: '完全に削除しますか？', bodyHtml: '<p>この操作は元に戻せません。作品データを完全に削除します。</p>', actions: [{ label: 'キャンセル', value: 'cancel', kind: 'secondary' }, { label: '完全削除', value: 'delete', kind: 'danger' }] });
+    if (answer === 'delete') {
+        await permanentlyDeleteFlyer(session, permanent.dataset.permanent ?? '');
+        records = records.filter(r => r.id !== permanent.dataset.permanent);
+        render();
+        showToast('完全に削除しました', 'success');
+    }
+} }); render(); }
+function canPermanentlyDelete(r, session) { const p = session.profile; if (r.ownerId === p.id)
+    return true; if (r.shareScope === 'private' || r.organizationId !== p.organizationId)
+    return false; if (p.role === 'org_admin')
+    return true; return p.role === 'office_admin' && r.officeId === p.officeId; }
+function daysUntilPermanent(r) { if (!r.deletedAt)
+    return 30; const elapsed = Math.floor((Date.now() - new Date(r.deletedAt).getTime()) / 86400000); return Math.max(0, 30 - elapsed); }
+//# sourceMappingURL=trash.js.map

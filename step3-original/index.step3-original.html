@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>太陽シルバーサービス｜事例集・チラシ作成</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">☀</div>
+        <div class="brand-name">太陽シルバーサービス</div>
+        <div class="page-title">事例集・チラシ作成</div>
+      </div>
+      <div class="top-actions">
+        <div class="autosave" id="autosaveStatus">✓ 自動保存済み</div>
+        <button class="text-btn" id="undoBtn" title="元に戻す">↶ <span>戻す</span></button>
+        <button class="text-btn" id="redoBtn" title="やり直す">↷ <span>やり直す</span></button>
+        <button class="text-btn">ⓘ <span>使い方</span></button>
+        <div class="profile">
+          <div class="avatar">久</div>
+          <div><strong>久保 匠史</strong><small>行橋営業所</small></div>
+          <span class="chevron">⌄</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="left-panel panel">
+        <div class="tabs" role="tablist">
+          <button class="tab active">設定</button>
+          <button class="tab">テンプレート</button>
+          <button class="tab">保存済み</button>
+        </div>
+
+        <section class="section-block">
+          <h2><span>▦</span> 基本情報</h2>
+          <label>営業所<select><option>行橋営業所</option><option>小倉営業所</option><option>八幡営業所</option></select></label>
+          <label>担当者<select><option>久保 匠史</option><option>土居</option><option>信田</option><option>宮村</option></select></label>
+          <label>カテゴリ<select id="categorySelect"><option>事例集</option><option>住宅改修</option><option>レンタル</option><option>特定福祉用具</option><option>自費レンタル</option></select></label>
+          <label>タイトル<input id="docTitle" value="手すり設置 事例集" /></label>
+          <label>サブタイトル（任意）<textarea id="docSubtitle" rows="2">起き上がり・立ち上がり・移動、日常の動作に合わせて、置き型・突っ張り式を選べます。</textarea></label>
+        </section>
+
+        <section class="section-block">
+          <h2><span>▧</span> 写真レイアウト</h2>
+          <div class="layout-grid" id="layoutGrid">
+            <button data-count="1"><i class="mini-layout one"></i><span>1枚</span></button>
+            <button data-count="2"><i class="mini-layout two"></i><span>2枚</span></button>
+            <button data-count="3"><i class="mini-layout three"></i><span>3枚</span></button>
+            <button data-count="4"><i class="mini-layout four"></i><span>4枚</span></button>
+            <button data-count="6"><i class="mini-layout six"></i><span>6枚</span></button>
+            <button data-count="9" class="selected"><i class="mini-layout nine"></i><span>9枚（3×3）</span><b>✓</b></button>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <h2><span>◉</span> 表示設定</h2>
+          <div class="switch-row"><span>単位数を表示</span><button class="switch on" data-target="units" aria-pressed="true"></button></div>
+          <div class="switch-row"><span>1割負担を表示</span><button class="switch on" data-target="burden1" aria-pressed="true"></button></div>
+          <div class="switch-row"><span>2割負担を表示</span><button class="switch" data-target="burden2" aria-pressed="false"></button></div>
+          <div class="switch-row"><span>3割負担を表示</span><button class="switch" data-target="burden3" aria-pressed="false"></button></div>
+        </section>
+
+        <section class="section-block">
+          <h2><span>◌</span> デザイン設定</h2>
+          <label>デザインスタイル<select><option>標準（ブラウン）</option><option>シンプル</option><option>やわらかい</option><option>商品紹介</option></select></label>
+          <div class="color-row"><span>メインカラー</span><div class="swatches"><button class="swatch brown active" data-color="#71431f">✓</button><button class="swatch blue" data-color="#356ec9"></button><button class="swatch green" data-color="#5a9f67"></button><button class="swatch orange" data-color="#ec8a1c"></button><button class="swatch purple" data-color="#8e6bc2"></button><button class="swatch plus">＋</button></div></div>
+        </section>
+
+        <details class="section-block compact">
+          <summary><span>⚙</span> その他の設定</summary>
+          <div class="details-body">ページ下部の注意書きや共有範囲は、次の実装段階で設定できるようにします。</div>
+        </details>
+
+        <button class="reset-btn" id="resetBtn">↻ 設定をリセット</button>
+      </aside>
+
+      <section class="canvas-area">
+        <div class="canvas-toolbar">
+          <select aria-label="用紙サイズ"><option>A4縦</option><option>A4横</option></select>
+          <button class="ghost-btn">◉ プレビュー表示</button>
+          <div class="zoom-group"><button id="zoomOut">−</button><span id="zoomLabel">76%</span><button id="zoomIn">＋</button></div>
+        </div>
+
+        <div class="paper-wrap" id="paperWrap">
+          <article class="paper" id="paper">
+            <header class="flyer-head">
+              <div>
+                <div class="eyeline"><strong>屋内編</strong><span>壁に穴をあけずに、必要な場所へ</span></div>
+                <h1 id="previewTitle">手すり設置 事例集</h1>
+                <p id="previewSubtitle">起き上がり・立ち上がり・移動、日常の動作に合わせて、置き型・突っ張り式を選べます。</p>
+              </div>
+              <div class="company-block">
+                <strong>太陽シルバーサービス(株)</strong>
+                <span>行橋営業所</span>
+                <span>TEL:0930-26-9840</span>
+                <span>FAX:0930-26-9641</span>
+              </div>
+            </header>
+            <div class="head-rule"></div>
+            <div class="case-grid" id="caseGrid"></div>
+            <footer class="flyer-footer">
+              <div><strong>下見・お見積り・設置まで、無料でご相談いただけます。</strong><small>介護保険レンタル対象品目です。単位数・自己負担額は担当者までお気軽にお問い合わせください。</small></div>
+              <div class="footer-contact"><strong>太陽シルバーサービス(株) 行橋営業所</strong><span>TEL:0930-26-9840 / FAX:0930-26-9641</span></div>
+            </footer>
+          </article>
+        </div>
+
+        <div class="bottom-actions">
+          <button class="secondary" id="saveBtn">下書きを保存</button>
+          <button class="primary" id="pdfBtn">▣ PDF出力</button>
+          <button class="secondary" id="pngBtn">▧ 画像（PNG）で保存</button>
+          <button class="primary" id="printBtn">▤ 印刷する</button>
+        </div>
+      </section>
+
+      <aside class="right-panel panel">
+        <div class="editor-heading">
+          <h2>写真・項目を編集</h2>
+          <div class="item-nav"><select id="itemSelect"></select><button id="prevItem">‹</button><button id="nextItem">›</button></div>
+        </div>
+        <div class="editor-tabs"><button class="active">基本情報</button><button id="photoTab">写真の調整</button></div>
+
+        <div id="basicEditor" class="editor-body">
+          <label>タイトル<input id="itemTitle" maxlength="30" /><small><span id="titleCount">0</span> / 30</small></label>
+          <label>説明文<textarea id="itemDescription" rows="5" maxlength="120"></textarea><small><span id="descCount">0</span> / 120</small></label>
+          <label>商品名（任意）<input id="itemProduct" maxlength="40" /><small><span id="productCount">0</span> / 40</small></label>
+          <label>品番（任意）<input id="itemCode" maxlength="20" /></label>
+          <label>単位数<div class="unit-input"><input id="itemUnits" type="number" min="0" /><span>単位／月</span></div></label>
+          <div class="cost-box">
+            <h3>利用者負担額（自動計算）</h3>
+            <label>月額（保険対象額）<div class="money-input"><input id="monthlyAmount" type="number" min="0" step="10" /><span>円</span></div></label>
+            <div class="cost-grid"><div><span>1割負担</span><strong id="cost1">0円</strong></div><div><span>2割負担</span><strong id="cost2">0円</strong></div><div><span>3割負担</span><strong id="cost3">0円</strong></div></div>
+          </div>
+          <button class="ai-btn" id="aiBtn">✦ AIで文章を整える</button>
+          <button class="delete-btn" id="deleteItem">♧ この項目を空にする</button>
+        </div>
+
+        <div id="photoEditor" class="editor-body hidden">
+          <div class="drop-zone" id="dropZone">
+            <strong>写真をここにドロップ</strong>
+            <span>または</span>
+            <button id="choosePhoto">写真を選択する</button>
+            <input id="fileInput" type="file" accept="image/*" hidden />
+          </div>
+          <div class="photo-tools">
+            <h3>写真の位置</h3>
+            <label>拡大・縮小<input id="scaleRange" type="range" min="100" max="180" value="100" /></label>
+            <button class="secondary" id="centerPhoto">中央に戻す</button>
+            <p>写真はプレビュー上でもドラッグして順番を入れ替えられます。</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

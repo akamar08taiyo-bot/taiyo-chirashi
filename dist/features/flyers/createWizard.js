@@ -1,0 +1,80 @@
+import { topbar } from '../../components/shell.js';
+import { icon } from '../../components/icons.js';
+import { listTemplates } from '../../services/templateService.js';
+import { createFlyer } from '../../services/flyerService.js';
+import { escapeAttr, escapeHtml } from '../../utils/html.js';
+import { showToast } from '../../components/toast.js';
+import { navigate } from '../../app/router.js';
+const MODES = [
+    { id: 'rental', title: 'レンタルチラシ', description: '福祉用具の単位数・月額・1〜3割負担を掲載', icon: 'file' },
+    { id: 'cases', title: '事例集', description: '設置・住宅改修などの写真と説明を分かりやすく掲載', icon: 'image' },
+    { id: 'consumables', title: '消耗品チラシ', description: '消耗品の商品・規格・入数・価格を掲載', icon: 'settings' }
+];
+export async function renderCreateWizard(root, session, context) {
+    const templates = await listTemplates(session).catch(() => []);
+    let step = 1;
+    let mode = 'cases';
+    let layoutCount = 9;
+    let templateId = null;
+    let orientation = 'portrait';
+    const categoryForMode = (value) => {
+        const preferred = value === 'rental' ? ['rental'] : value === 'consumables' ? ['consumables'] : ['cases', 'casebook'];
+        return context.categories.find(c => preferred.includes(c.slug))?.id ?? context.categories[0]?.id ?? '';
+    };
+    root.innerHTML = `${topbar(session)}<main class="wizard-page"><section class="wizard-card"><header class="wizard-head"><button class="back-link" data-nav="home">${icon('chevronLeft', 17)}ホームへ</button><div><h1>新しく作成する</h1><p>3つ選ぶだけで編集を始められます。</p></div><div class="step-dots" id="step-dots"></div></header><div id="wizard-body"></div><footer class="wizard-footer"><button class="btn secondary" id="wizard-back">戻る</button><button class="btn primary" id="wizard-next">次へ</button></footer></section></main>`;
+    const body = root.querySelector('#wizard-body');
+    const back = root.querySelector('#wizard-back');
+    const next = root.querySelector('#wizard-next');
+    const render = () => { const dots = root.querySelector('#step-dots'); if (dots)
+        dots.innerHTML = [1, 2, 3].map(n => `<span class="${n === step ? 'active' : n < step ? 'done' : ''}">${n < step ? '✓' : n}</span>`).join(''); if (back)
+        back.disabled = step === 1; if (next)
+        next.textContent = step === 3 ? '編集を始める' : '次へ'; if (!body)
+        return; if (step === 1)
+        body.innerHTML = `<div class="wizard-question"><h2>STEP 1　何を作りますか？</h2><p>作成モードを選んでください。編集画面でも後から切り替えできます。</p><div class="choice-grid mode-choice">${MODES.map(entry => `<button data-mode="${entry.id}" class="${entry.id === mode ? 'selected' : ''}">${icon(entry.icon, 30)}<strong>${entry.title}</strong><span>${entry.description}</span></button>`).join('')}</div><div class="orientation-mini"><span>用紙</span><label><input type="radio" name="orientation" value="portrait" ${orientation === 'portrait' ? 'checked' : ''}>A4縦</label><label><input type="radio" name="orientation" value="landscape" ${orientation === 'landscape' ? 'checked' : ''}>A4横</label></div></div>`;
+    else if (step === 2)
+        body.innerHTML = `<div class="wizard-question"><h2>STEP 2　${mode === 'consumables' ? '商品' : '写真'}は何${mode === 'consumables' ? '点' : '枚'}ですか？</h2><p>あとから変更できます。</p><div class="choice-grid layout-choice">${[1, 2, 3, 4, 6, 9].map(n => `<button data-layout="${n}" class="${n === layoutCount ? 'selected' : ''}"><i class="large-mini-layout grid-${n}">${Array.from({ length: n }, () => '<span></span>').join('')}</i><strong>${n}${mode === 'consumables' ? '商品' : '枚'}${n === 9 ? '（3×3）' : ''}</strong></button>`).join('')}</div></div>`;
+    else {
+        const matching = templates.filter(t => (t.editorState.mode ?? 'cases') === mode);
+        body.innerHTML = `<div class="wizard-question"><h2>STEP 3　テンプレートを選びますか？</h2><p>「白紙から作成」でもすぐ始められます。</p><div class="template-choice"><button data-template="" class="template-option ${templateId === null ? 'selected' : ''}"><div class="template-thumb blank">${icon('plus', 28)}</div><strong>白紙から作成</strong><span>選んだ${mode === 'consumables' ? '商品数' : '写真枚数'}で開始</span></button>${matching.slice(0, 8).map(t => `<button data-template="${escapeAttr(t.id)}" class="template-option ${templateId === t.id ? 'selected' : ''}"><div class="template-thumb">${miniTemplate(t)}</div><strong>${escapeHtml(t.name)}</strong><span>${t.editorState.layoutCount}${mode === 'consumables' ? '商品' : '枚'}・${scopeLabel(t.shareScope)}</span></button>`).join('')}</div>${!matching.length ? '<p class="wizard-empty-hint">このモードの保存済みテンプレートはまだありません。</p>' : ''}</div>`;
+    } };
+    body?.addEventListener('click', (e) => { const modeBtn = e.target.closest('[data-mode]'); if (modeBtn) {
+        mode = modeBtn.dataset.mode;
+        templateId = null;
+        render();
+        return;
+    } const lay = e.target.closest('[data-layout]'); if (lay) {
+        layoutCount = Number(lay.dataset.layout);
+        render();
+        return;
+    } const tpl = e.target.closest('[data-template]'); if (tpl) {
+        templateId = tpl.dataset.template || null;
+        const chosen = templates.find(t => t.id === templateId);
+        if (chosen)
+            layoutCount = chosen.editorState.layoutCount;
+        render();
+    } });
+    body?.addEventListener('change', (e) => { const input = e.target; if (input.name === 'orientation')
+        orientation = input.value; });
+    back?.addEventListener('click', () => { if (step > 1) {
+        step--;
+        render();
+    } });
+    next?.addEventListener('click', async () => { if (step < 3) {
+        step++;
+        render();
+        return;
+    } next.disabled = true; next.textContent = '作成中…'; try {
+        const input = { mode, categoryId: categoryForMode(mode), layoutCount, templateId, orientation };
+        const record = await createFlyer(session, context, input);
+        navigate(`editor/${record.id}`);
+    }
+    catch (error) {
+        showToast(error instanceof Error ? error.message : '作成できませんでした。', 'error');
+        next.disabled = false;
+        next.textContent = '編集を始める';
+    } });
+    render();
+}
+function miniTemplate(t) { const count = t.editorState.layoutCount; return `<div class="mini-template-grid count-${count}">${Array.from({ length: count }, (_, i) => { const u = t.editorState.items[i]?.media?.previewUrl; return `<span>${u ? `<img src="${escapeAttr(u)}" alt="">` : ''}</span>`; }).join('')}</div>`; }
+function scopeLabel(s) { return s === 'private' ? '個人' : s === 'office' ? '営業所' : '全社'; }
+//# sourceMappingURL=createWizard.js.map

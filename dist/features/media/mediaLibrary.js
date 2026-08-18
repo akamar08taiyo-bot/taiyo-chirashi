@@ -1,0 +1,55 @@
+import { topbar } from '../../components/shell.js';
+import { icon } from '../../components/icons.js';
+import { listMedia, setMediaDeleted, uploadMedia } from '../../services/mediaService.js';
+import { escapeAttr, escapeHtml } from '../../utils/html.js';
+import { showToast } from '../../components/toast.js';
+import { showModal } from '../../components/modal.js';
+export async function renderMediaLibrary(root, session, _context) {
+    root.innerHTML = `${topbar(session)}<main class="standard-page"><header class="page-heading"><div><h1>写真ライブラリ</h1><p>商品写真と事例写真を、共有範囲を指定して安全に管理します。</p></div><label class="btn primary">${icon('upload', 17)}写真をアップロード<input id="library-upload" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></label></header><div class="filter-bar"><div class="search-input">${icon('search', 16)}<input id="media-search-page" placeholder="カテゴリー・メーカー・商品名・ファイル名"></div><select id="media-kind-page"><option value="all">すべての写真</option><option value="product">商品写真</option><option value="case">事例写真</option></select><select id="media-scope-page"><option value="all">すべての共有範囲</option><option value="private">自分だけ</option><option value="office">営業所</option><option value="company">会社共有</option></select></div><section id="media-page-grid" class="media-grid page-media-grid"><div class="loading">読み込んでいます…</div></section></main>`;
+    let records = [];
+    const grid = root.querySelector('#media-page-grid');
+    const search = root.querySelector('#media-search-page');
+    const kind = root.querySelector('#media-kind-page');
+    const scope = root.querySelector('#media-scope-page');
+    const load = async () => { try {
+        records = await listMedia(session);
+        render();
+    }
+    catch (error) {
+        if (grid)
+            grid.innerHTML = `<div class="empty-panel error">${escapeHtml(error instanceof Error ? error.message : '写真を読み込めませんでした。')}</div>`;
+    } };
+    const render = () => { if (!grid)
+        return; const q = (search?.value ?? '').toLowerCase().trim(), k = kind?.value ?? 'all', s = scope?.value ?? 'all'; const filtered = records.filter(m => (k === 'all' || m.kind === k) && (s === 'all' || m.shareScope === s) && (!q || [m.fileName, m.category, m.manufacturer, m.productName].some(v => v.toLowerCase().includes(q)))); grid.innerHTML = filtered.length ? filtered.map(m => card(m, session)).join('') : '<div class="empty-panel">該当する写真がありません。</div>'; };
+    search?.addEventListener('input', render);
+    kind?.addEventListener('change', render);
+    scope?.addEventListener('change', render);
+    root.querySelector('#library-upload')?.addEventListener('change', async (e) => { const input = e.target; const files = Array.from(input.files ?? []); if (!files.length)
+        return; const options = await askUploadOptions(); if (!options) {
+        input.value = '';
+        return;
+    } for (const file of files) {
+        try {
+            showToast(`${file.name} をアップロードしています…`);
+            const record = await uploadMedia(session, file, options);
+            records.unshift(record);
+        }
+        catch (error) {
+            showToast(error instanceof Error ? error.message : '写真をアップロードできませんでした。', 'error');
+            break;
+        }
+    } input.value = ''; render(); showToast('写真を追加しました', 'success'); });
+    grid?.addEventListener('click', async (e) => { const btn = e.target.closest('[data-delete-media]'); if (!btn)
+        return; const media = records.find(m => m.id === btn.dataset.deleteMedia); if (!media)
+        return; const answer = await showModal({ title: '写真を削除しますか？', bodyHtml: '<p>写真ライブラリから非表示にします。元画像はすぐには完全削除しません。</p>', actions: [{ label: 'キャンセル', value: 'cancel', kind: 'secondary' }, { label: '削除', value: 'delete', kind: 'danger' }] }); if (answer === 'delete') {
+        await setMediaDeleted(session, media.id, true);
+        records = records.filter(m => m.id !== media.id);
+        render();
+        showToast('写真を削除しました', 'success');
+    } });
+    await load();
+}
+function card(m, session) { const canDelete = m.ownerId === session.profile.id || session.profile.role === 'org_admin' || (session.profile.role === 'office_admin' && m.officeId === session.profile.officeId); return `<article class="media-library-card"><div class="media-thumb"><img src="${escapeAttr(m.previewUrl)}" alt=""></div><div><span class="scope-badge">${m.kind === 'product' ? '商品写真' : '事例写真'}・${scopeLabel(m.shareScope)}</span><h3>${escapeHtml(m.productName || m.category || m.fileName)}</h3><p>${escapeHtml([m.manufacturer, m.fileName].filter(Boolean).join(' / '))}</p></div>${canDelete ? `<button class="icon-btn danger-text media-delete" data-delete-media="${escapeAttr(m.id)}" title="削除">${icon('trash', 17)}</button>` : ''}</article>`; }
+function scopeLabel(s) { return s === 'private' ? '自分だけ' : s === 'office' ? '営業所' : '会社共有'; }
+function askUploadOptions() { return new Promise(resolve => { const o = document.createElement('div'); o.className = 'modal-overlay'; o.innerHTML = `<section class="modal"><header><h2>写真の登録内容</h2><button class="icon-btn close">${icon('close')}</button></header><div class="modal-body form-grid"><label>写真の種類<select id="up-kind"><option value="case">事例写真</option><option value="product">商品写真</option></select></label><label>共有範囲<select id="up-scope"><option value="private">自分だけ</option><option value="office">営業所</option><option value="company">会社共有</option></select></label><label>カテゴリー<input id="up-category" placeholder="例：手すり、ベッド、歩行器"></label><label>メーカー（任意）<input id="up-maker"></label><label>商品名（任意）<input id="up-product"></label></div><footer><button class="btn secondary cancel">キャンセル</button><button class="btn primary submit">アップロード</button></footer></section>`; const done = (v) => { o.remove(); resolve(v); }; const values = () => ({ kind: (o.querySelector('#up-kind')?.value ?? 'case'), shareScope: (o.querySelector('#up-scope')?.value ?? 'private'), category: o.querySelector('#up-category')?.value.trim() || '未分類', manufacturer: o.querySelector('#up-maker')?.value.trim() || '', productName: o.querySelector('#up-product')?.value.trim() || '' }); o.querySelector('.close')?.addEventListener('click', () => done(null)); o.querySelector('.cancel')?.addEventListener('click', () => done(null)); o.querySelector('.submit')?.addEventListener('click', () => done(values())); document.body.append(o); }); }
+//# sourceMappingURL=mediaLibrary.js.map
