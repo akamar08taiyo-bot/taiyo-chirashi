@@ -88,3 +88,73 @@
 
 /* テンプレート名など1行入力のモーダル欄 */
 .modal-field input[type="text"]{width:100%;height:43px;border:1px solid #d8d2cc;border-radius:7px;padding:0 11px;margin-top:6px;background:#fff}
+
+/* ==========================================================================
+   視認性の改善（2026-08-18）
+   ・文字色が薄い / 文字が小さい というご指摘への対応
+   ・対象は画面UIのみ。A4用紙の中身（.case-* / .consumable-* / .flyer-* 等）は
+     210mmを794pxに縮小表示しているため、変更すると印刷レイアウトが崩れる。触らない。
+   ========================================================================== */
+
+/* --- 文字色のコントラストを上げる --- */
+:root{--muted:#5f574f;--ink:#2a2420}
+
+/* 個別に薄い色が直書きされていた箇所をまとめて濃くする */
+.flyer-meta p,.quick-links small,.new-flyer-btn small,.admin-section-head p,
+.template-card-copy p,.media-card span,.media-library-card p,.details-body,
+.mode-help,.mode-choice button span,.wizard-empty-hint,.drop-zone>span,
+.photo-fit-help,.photo-fit-choice button span,.office-auto-info span,
+.office-auto-info small,.section-block label .remember-hint,.editor-body label small,
+.trash-retention,.admin-table th,.company-logo-preview small,.demo-credentials,
+.step-dots span,.wizard-head p,.section-title-row p{color:#5b534b}
+.icon-action{color:#4a423b}
+.sample-select-label{color:#5b534b!important}
+.copy-sample-select{color:#3f382f!important}
+
+/* --- 小さすぎる文字を大きくする（UIのみ） --- */
+
+/* 8px台 → 11px */
+.editor-body label small,.cost-grid span,.media-card span,.media-library-card p,
+.photo-fit-choice button span,.office-auto-info small,.section-block label .remember-hint,
+.mode-help,.drop-zone>span,.photo-fit-help,.office-auto-info span,
+.company-logo-preview small{font-size:11px}
+
+/* 9px台 → 12px */
+.profile-button small,.meta-badges span,.scope-badge,.template-option>span,
+.layout-grid button,.split-action>.split-caret,.unit-input span,.money-input span,
+.drop-actions .btn,.photo-tool-row .btn,.template-card-copy p,.admin-table th,
+.status-pill,.mode-switch button,.compact-btn,.mode-choice button span,
+.delete-btn,.photo-fit-choice button strong{font-size:12px}
+.sample-select-label,.copy-sample-select{font-size:12px!important}
+.layout-grid button b{font-size:11px}
+
+/* 10px台 → 12.5px */
+.new-flyer-btn small,.flyer-meta p,.icon-action,.quick-links small,.details-body,
+.reset-btn,.offline-banner,.canvas-toolbar select,.ghost-btn,.zoom-group span,
+.item-nav select,.item-nav button,.editor-tabs button,.editor-body label,
+.cost-box h3,.empty-photo-large,.drop-zone,.template-card-actions .btn,
+.upload-inline,.media-card strong,.admin-section-head p,.category-list span,
+.wizard-empty-hint,.ai-btn,.office-auto-info strong{font-size:12.5px}
+
+/* 11px台 → 13px */
+.autosave-chip,.profile-button strong,.local-mode-note,.demo-credentials,
+.demo-credentials button,.list-tabs button,.back-link,.step-dots span,.tab,
+.section-block label,.switch-row,.color-row,.bottom-actions>button,
+.split-action>button,.cost-grid strong,.photo-tools h3,.media-library-card h3,
+.admin-tabs button,.admin-table,.top-nav button,.top-btn{font-size:13px}
+.section-block h2{font-size:14px}
+.flyer-meta h3{font-size:15px}
+.template-card-copy h3{font-size:14.5px}
+
+/* 文字が大きくなった分、詰まって見えないよう最小限の余白調整 */
+.layout-grid button{height:70px}
+.mode-switch button{padding:9px 3px}
+.status-pill{padding:4px 9px}
+.meta-badges span,.scope-badge{padding:4px 7px}
+
+/* --- 戻るボタン --- */
+.page-back{display:inline-flex;align-items:center;gap:6px;border:1px solid #d5cec7;
+  background:#fff;color:#4a3a2c;border-radius:7px;
+  padding:7px 13px;font-size:13px;font-weight:700;margin-bottom:12px}
+.page-back:hover{background:#f6f2ee;border-color:#c0b4a7}
+.page-back:focus-visible{outline:2px solid var(--accent);outline-offset:2px}

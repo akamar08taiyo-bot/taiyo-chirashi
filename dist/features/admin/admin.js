@@ -11,7 +11,7 @@ export async function renderAdmin(root, session, context) {
     }
     let localContext = structuredClone(context);
     let tab = 'employees';
-    root.innerHTML = `${topbar(session)}<main class="standard-page admin-page"><header class="page-heading"><div><h1>管理</h1><p>${session.profile.role === 'org_admin' ? '全社の社員・営業所・会社情報を管理できます。' : '自営業所の社員・営業所情報を管理できます。'}</p></div></header><div class="admin-tabs" id="admin-tabs"><button data-tab="employees" class="active">${icon('users', 17)}社員管理</button><button data-tab="offices">${icon('building', 17)}営業所情報</button>${session.profile.role === 'org_admin' ? `<button data-tab="company">${icon('settings', 17)}会社情報</button><button data-tab="categories">${icon('file', 17)}カテゴリー</button>` : ''}</div><section id="admin-content"></section></main>`;
+    root.innerHTML = `${topbar(session)}<main class="standard-page admin-page"><header class="page-heading"><div><button class="page-back" data-nav="home">← ホームに戻る</button><h1>管理</h1><p>${session.profile.role === 'org_admin' ? '全社の社員・営業所・会社情報を管理できます。' : '自営業所の社員・営業所情報を管理できます。'}</p></div></header><div class="admin-tabs" id="admin-tabs"><button data-tab="employees" class="active">${icon('users', 17)}社員管理</button><button data-tab="offices">${icon('building', 17)}営業所情報</button>${session.profile.role === 'org_admin' ? `<button data-tab="company">${icon('settings', 17)}会社情報</button><button data-tab="categories">${icon('file', 17)}カテゴリー</button>` : ''}</div><section id="admin-content"></section></main>`;
     const content = root.querySelector('#admin-content');
     const render = () => { if (!content)
         return; if (tab === 'employees')
