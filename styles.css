@@ -359,3 +359,39 @@
 .profile-button:hover,.profile-popover button:hover{background:#eef4f9}
 .meta-badges span,.scope-badge,.category-list span{background:#eaf3fa;color:#1d5c85;border-color:#d5e5f1}
 .zoom-group span{border-color:#e3eaf0}
+
+/* ==========================================================================
+   チラシ本文の文字サイズを引き上げ（2026-08-19）
+   ・商品名を主役にした分、カード内の文字を全体的に大きくする
+   ・商品名が未入力のときは見出し（タイトル）が主役になるよう入れ替える
+   ========================================================================== */
+.case-product-main{font-weight:900;color:#2b1f16;font-size:13px;line-height:1.2;
+  margin-bottom:3px;word-break:keep-all;overflow-wrap:anywhere}
+.layout-1 .case-product-main,.layout-2 .case-product-main{font-size:26px;margin-bottom:6px}
+.layout-3 .case-product-main,.layout-4 .case-product-main{font-size:18px;margin-bottom:4px}
+.a4-landscape .layout-9 .case-product-main{font-size:11px}
+
+/* 商品名が空なら枠を詰めて、見出しを大きく見せる */
+.case-product-main:empty{display:none}
+.case-product-main:empty + .case-title{font-size:13px}
+.layout-1 .case-product-main:empty + .case-title,
+.layout-2 .case-product-main:empty + .case-title{font-size:26px}
+.layout-3 .case-product-main:empty + .case-title,
+.layout-4 .case-product-main:empty + .case-title{font-size:18px}
+
+/* 見出し・説明文も底上げ */
+.case-title{font-size:9.5px;color:#5b4a3d}
+.layout-1 .case-title,.layout-2 .case-title{font-size:17px}
+.layout-3 .case-title,.layout-4 .case-title{font-size:13px}
+.case-desc{font-size:9px;line-height:1.45;color:#3f3830}
+.case-desc.compact{font-size:8.4px}
+.case-desc.tight{font-size:7.9px}
+.layout-1 .case-desc,.layout-2 .case-desc{font-size:14px}
+.layout-3 .case-desc,.layout-4 .case-desc{font-size:11px}
+.equip-meta{font-size:8px}
+.layout-3 .equip-meta,.layout-4 .equip-meta{font-size:9.5px}
+.layout-1 .equip-meta,.layout-2 .equip-meta{font-size:12px}
+
+/* 文字を大きくした分、A4横の4枚・9枚で再度あふれるため写真枠をさらに詰める */
+.paper.a4-landscape .layout-4 .case-photo{height:132px}
+.paper.a4-landscape .layout-9 .case-photo{height:58px}
