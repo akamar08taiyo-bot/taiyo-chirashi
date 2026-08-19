@@ -26,6 +26,7 @@ export function normalizeEditorState(state) {
         showBurden2: next.mode === 'consumables' ? false : (next.display?.showBurden2 ?? false),
         showBurden3: next.mode === 'consumables' ? false : (next.display?.showBurden3 ?? false)
     };
+    next.photoShape = next.photoShape === 'tall' ? 'tall' : 'wide';
     next.items = next.items ?? [];
     for (const item of next.items) {
         item.equipmentCategory = item.equipmentCategory ?? '';

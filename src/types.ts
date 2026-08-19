@@ -2,6 +2,7 @@ export type Role = 'employee' | 'office_admin' | 'org_admin';
 export type ShareScope = 'private' | 'office' | 'company';
 export type LayoutCount = 1 | 2 | 3 | 4 | 6 | 9;
 export type Orientation = 'portrait' | 'landscape';
+export type PhotoShape = 'wide' | 'tall';
 export type DesignStyle = 'standard' | 'simple' | 'soft' | 'product' | 'catalog';
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'offline' | 'error' | 'conflict';
 export type MediaKind = 'product' | 'case';
@@ -132,6 +133,8 @@ export interface EditorState {
   footerNote: string;
   layoutCount: LayoutCount;
   orientation: Orientation;
+  /** 写真枠の形。'wide'=横写真メイン、'tall'=縦写真メイン。テンプレートで決める。 */
+  photoShape: PhotoShape;
   display: DisplaySettings;
   design: FlyerDesign;
   contact: FlyerContact;

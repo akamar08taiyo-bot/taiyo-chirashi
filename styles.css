@@ -395,3 +395,36 @@
 /* 文字を大きくした分、A4横の4枚・9枚で再度あふれるため写真枠をさらに詰める */
 .paper.a4-landscape .layout-4 .case-photo{height:132px}
 .paper.a4-landscape .layout-9 .case-photo{height:58px}
+
+/* ==========================================================================
+   写真の向き（縦写真メイン / 横写真メイン）と 説明文の拡大（2026-08-19）
+   テンプレートで選んだ向きに応じて写真枠の高さを変える。
+   出力側は exportRenderer.ts の photoRatio と同じ考え方。
+   ========================================================================== */
+.paper.photo-tall .case-photo{height:150px}
+.paper.photo-tall .layout-6 .case-photo,.paper.photo-tall .layout-4 .case-photo{height:245px}
+.paper.photo-tall .layout-3 .case-photo{height:520px}
+.paper.photo-tall .layout-2 .case-photo{height:560px}
+.paper.photo-tall .layout-1 .case-photo{height:640px}
+.paper.photo-tall.a4-landscape .layout-9 .case-photo{height:78px}
+.paper.photo-tall.a4-landscape .layout-6 .case-photo{height:180px}
+.paper.photo-tall.a4-landscape .layout-4 .case-photo{height:175px}
+.paper.photo-tall.a4-landscape .layout-3 .case-photo{height:400px}
+.paper.photo-tall.a4-landscape .layout-2 .case-photo{height:420px}
+.paper.photo-tall.a4-landscape .layout-1 .case-photo{height:470px}
+
+/* 商品説明の文字をさらに大きく */
+.case-desc{font-size:10px;line-height:1.5}
+.case-desc.compact{font-size:9.2px}
+.case-desc.tight{font-size:8.6px}
+.layout-1 .case-desc,.layout-2 .case-desc{font-size:16px}
+.layout-3 .case-desc,.layout-4 .case-desc{font-size:12.5px}
+
+/* A4横は用紙が低いため、縦写真メインでも写真枠を伸ばしすぎると文字が入らない。
+   実測に基づき、横向きのときは控えめな増加に留める。 */
+.paper.photo-tall.a4-landscape .layout-1 .case-photo{height:400px}
+.paper.photo-tall.a4-landscape .layout-2 .case-photo{height:375px}
+.paper.photo-tall.a4-landscape .layout-3 .case-photo{height:355px}
+.paper.photo-tall.a4-landscape .layout-4 .case-photo{height:135px}
+.paper.photo-tall.a4-landscape .layout-6 .case-photo{height:150px}
+.paper.photo-tall.a4-landscape .layout-9 .case-photo{height:60px}

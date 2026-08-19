@@ -56,7 +56,7 @@ export function createDefaultEditorState(layoutCount: 1|2|3|4|6|9 = 9, mode: Fly
     eyebrow: '屋内編', eyebrowNote: '壁に穴をあけずに、必要な場所へ',
     footerHeadline: '下見・お見積り・設置まで、無料でご相談いただけます。',
     footerNote: '介護保険レンタル対象品目です。単位数・自己負担額は担当者までお気軽にお問い合わせください。',
-    layoutCount, orientation: 'portrait',
+    layoutCount, orientation: 'portrait', photoShape: 'wide',
     display: { showLogo: true, showUnits: true, showPrices: true, showBurden1: true, showBurden2: false, showBurden3: false },
     design: { style: 'standard', color: '#2f86c5' },
     contact: { personName: '', mobilePhone: '' },

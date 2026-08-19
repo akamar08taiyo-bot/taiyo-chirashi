@@ -51,7 +51,8 @@ async function drawCard(ctx:CanvasRenderingContext2D,item:FlyerItem,x:number,y:n
 async function drawCardPhoto(ctx:CanvasRenderingContext2D,item:FlyerItem,x:number,y:number,w:number,h:number,state:FlyerRecord['editorState'],accent:string){
   const border=Math.max(2,w/500);
   ctx.strokeStyle=lighten(accent,0.62);ctx.lineWidth=border;ctx.strokeRect(x,y,w,h);
-  const photoRatio=state.layoutCount<=2?0.62:state.layoutCount<=4?0.53:0.43;
+  const tall=state.photoShape==='tall';
+  const photoRatio=state.layoutCount<=2?(tall?0.72:0.62):state.layoutCount<=4?(tall?0.65:0.53):(tall?0.55:0.43);
   const photoH=h*photoRatio;
   ctx.fillStyle='#eeeae6';ctx.fillRect(x+border,y+border,w-border*2,photoH-border);
   if(item.media){

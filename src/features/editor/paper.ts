@@ -14,7 +14,7 @@ export function renderPaper(record: FlyerRecord, context: AppContext, selectedIn
   const items=state.items.slice(0,state.layoutCount);
   const showLogo=state.display.showLogo!==false;
   const mode=state.mode??'cases';
-  return `<article class="paper a4-${state.orientation} style-${state.design.style} mode-${mode}${interactive?' paper-editable':''}" id="flyer-paper" style="--accent:${escapeAttr(state.design.color)}" data-orientation="${state.orientation}" data-flyer-mode="${mode}">
+  return `<article class="paper a4-${state.orientation} style-${state.design.style} mode-${mode} photo-${state.photoShape}${interactive?' paper-editable':''}" id="flyer-paper" style="--accent:${escapeAttr(state.design.color)}" data-orientation="${state.orientation}" data-flyer-mode="${mode}">
     <header class="flyer-head"><div class="flyer-title-area"><div class="eyeline"><strong${editableAttrs('eyebrow',24,interactive)}>${escapeHtml(state.eyebrow)}</strong><span${editableAttrs('eyebrow-note',60,interactive)}>${escapeHtml(state.eyebrowNote)}</span></div><h1${editableAttrs('document-title',80,interactive)}>${escapeHtml(state.title)}</h1><p${editableAttrs('document-subtitle',220,interactive)}>${escapeHtml(state.subtitle)}</p></div>
     <div class="company-block head-logo-only">${showLogo&&context.organization.logoUrl?`<img class="company-logo" src="${escapeAttr(context.organization.logoUrl)}" alt="会社ロゴ">`:''}</div></header>
     <div class="head-rule"></div>
