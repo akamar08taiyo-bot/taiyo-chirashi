@@ -94,12 +94,50 @@
         </div>
       </sc-if>
 
+      <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 3px solid #b8620f; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
+            <div style="font-size: 20px; font-weight: 900;">ご紹介する商品</div>
+            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #b8620f; padding: 5px 11px; border-radius: 5px;">複数品を同時掲載</div>
+          </div>
+          <div style="display: grid; gap: 9px;">
+            <span style="font-size: 16px; font-weight: 700;">掲載する商品数</span>
+            <div style="display: flex; gap: 9px; flex-wrap: wrap;">
+              <sc-for list="{{ recCountOpts }}" as="o" hint-placeholder-count="5">
+                <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: grid; gap: 10px;">
+            <sc-for list="{{ recRows }}" as="r" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 11px; align-items: center; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
+                <label onDragOver="{{ r.onDragOver }}" onDrop="{{ r.onDrop }}" style="{{ r.photoStyle }}">
+                  <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
+                    <div style="{{ r.thumbStyle }}"></div>
+                  </sc-if>
+                  <sc-if value="{{ r.empty }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size: 16px; font-weight: 900; color: #c2b9a8;">{{ r.n }}</span>
+                  </sc-if>
+                  <input type="file" accept="image/*" onChange="{{ r.onPick }}" style="display: none;" />
+                </label>
+                <div style="display: grid; gap: 7px;">
+                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="商品名" style="width: 100%; padding: 11px 13px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+                  <input value="{{ r.note }}" onChange="{{ r.onNote }}" placeholder="おすすめのポイント（1行）" style="width: 100%; padding: 11px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。コピーした画像は Ctrl+V（⌘V）で空いている枠に順番に貼り付けられます。</div>
+        </div>
+      </sc-if>
+
       <sc-if value="{{ isShomo }}" hint-placeholder-val="{{ false }}">
         <div style="background: #fff; border: 3px solid #8a5a17; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
             <div style="font-size: 20px; font-weight: 900;">消耗品の一覧</div>
-            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #8a5a17; padding: 5px 11px; border-radius: 5px;">介護保険外・全額自己負担</div>
+            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #8a5a17; padding: 5px 11px; border-radius: 5px;">施設向け</div>
           </div>
           <div style="display: grid; gap: 9px;">
             <span style="font-size: 16px; font-weight: 700;">掲載する商品数（最大9商品）</span>
@@ -108,6 +146,15 @@
                 <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
               </sc-for>
             </div>
+          </div>
+          <div style="display: grid; gap: 9px; border-top: 2px solid #f0e8d8; padding-top: 16px;">
+            <span style="font-size: 16px; font-weight: 700;">単価の表示（1枚あたり・100mLあたり など）</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <sc-for list="{{ unitOpts }}" as="u" hint-placeholder-count="2">
+                <button onClick="{{ u.onClick }}" style="{{ u.style }}">{{ u.label }}</button>
+              </sc-for>
+            </div>
+            <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">「規格・入数」の数字から自動で計算します（例：22枚入 → 1枚あたり／200mL → 100mLあたり／10m → 1mあたり）。数量が読み取れない商品は表示されません。</div>
           </div>
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ shomoRows }}" as="r" hint-placeholder-count="6">
@@ -127,6 +174,7 @@
                     <input value="{{ r.spec }}" onChange="{{ r.onSpec }}" placeholder="規格・入数" style="width: 100%; padding: 10px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#8a5a17;box-shadow:0 0 0 3px rgba(138,90,23,.18)" />
                     <input value="{{ r.price }}" onChange="{{ r.onPrice }}" placeholder="価格（税込）" style="width: 100%; padding: 10px 13px; font-size: 16px; font-weight: 900; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#8a5a17;box-shadow:0 0 0 3px rgba(138,90,23,.18)" />
                   </div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #8a5a17;">{{ r.unitHint }}</div>
                 </div>
               </div>
             </sc-for>
@@ -472,7 +520,7 @@
               <div style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
             </div>
 
-            <sc-if value="{{ notShomo }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ showPName }}" hint-placeholder-val="{{ true }}">
               <div style="background: #fdf7ed; border-left: 8px solid #b8620f; padding: 15px 24px; display: grid; gap: 6px;">
                 <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
                 <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
@@ -497,21 +545,49 @@
                         <div style="font-size: 14.5px; font-weight: 900; line-height: 1.35; text-wrap: pretty;">{{ it.name }}</div>
                       </div>
                       <div style="font-size: 12px; font-weight: 500; color: #6b6357;">{{ it.spec }}</div>
-                      <div style="display: flex; align-items: flex-end; gap: 3px; border-top: 1px dashed #ded5c5; padding-top: 5px;">
-                        <div style="font-size: 20px; font-weight: 900; line-height: 1.1;">{{ it.price }}</div>
-                        <div style="font-size: 11.5px; font-weight: 700;">税込</div>
+                      <div style="border-top: 1px dashed #ded5c5; padding-top: 5px; display: grid; gap: 2px; align-content: end;">
+                        <sc-if value="{{ it.hasUnit }}" hint-placeholder-val="{{ true }}">
+                          <div style="font-size: 12px; font-weight: 900; color: #a2550c; line-height: 1.25;">{{ it.unit }}</div>
+                        </sc-if>
+                        <div style="display: flex; align-items: flex-end; gap: 3px;">
+                          <div style="font-size: 20px; font-weight: 900; line-height: 1.1;">{{ it.price }}</div>
+                          <div style="font-size: 11.5px; font-weight: 700;">税込</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </sc-for>
               </div>
-              <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">※ 消耗品は介護保険の給付対象外です。表示価格は税込で、全額自己負担となります。在庫状況により納期が変わる場合があります。</div>
             </sc-if>
 
             <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
               <div style="background: #8a5a17; color: #fff; padding: 11px 20px; display: flex; align-items: center; gap: 15px;">
                 <div style="font-size: 13px; font-weight: 900; letter-spacing: 0.1em; flex: none; border-right: 1.5px solid #d6b483; padding-right: 15px;">こんな方に</div>
                 <div style="font-size: 16.5px; font-weight: 900; line-height: 1.5; text-wrap: pretty;">{{ pRecTarget }}</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ pRecGridStyle }}">
+                <sc-for list="{{ pRec }}" as="it" hint-placeholder-count="4">
+                  <div style="border: 1.5px solid #ded5c5; display: grid; grid-template-rows: minmax(0, 1fr) 96px; min-height: 0; overflow: hidden;">
+                    <div style="background: #f6f2ea; display: grid; place-items: center; overflow: hidden; min-height: 0;">
+                      <sc-if value="{{ it.has }}" hint-placeholder-val="{{ false }}">
+                        <img src="{{ it.src }}" loading="lazy" alt="商品写真" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                      </sc-if>
+                      <sc-if value="{{ it.empty }}" hint-placeholder-val="{{ true }}">
+                        <div style="font-size: 12.5px; font-weight: 700; color: #b3a894;">商品写真</div>
+                      </sc-if>
+                    </div>
+                    <div style="padding: 9px 12px 10px; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4px; background: #fff; min-height: 0;">
+                      <div style="display: flex; align-items: flex-start; gap: 7px; overflow: hidden;">
+                        <div style="width: 19px; height: 19px; flex: none; background: #b8620f; color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900;">{{ it.n }}</div>
+                        <div style="font-size: 15px; font-weight: 900; line-height: 1.35; text-wrap: pretty;">{{ it.name }}</div>
+                      </div>
+                      <div style="font-size: 12.5px; font-weight: 500; line-height: 1.55; color: #453f36; text-wrap: pretty; overflow: hidden;">{{ it.note }}</div>
+                    </div>
+                  </div>
+                </sc-for>
               </div>
             </sc-if>
 
@@ -626,7 +702,9 @@
               </div>
             </sc-if>
 
-            <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">{{ footerNote }}</div>
+            <sc-if value="{{ notShomo }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">{{ footerNote }}</div>
+            </sc-if>
 
             <div style="margin-top: auto; border-top: 3px solid #b8620f; padding-top: 12px; display: grid; gap: 9px;">
               <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 26px;">
@@ -696,7 +774,7 @@ const CATS = [
     feats: F("その場で方向転換できる", "狭い居室・廊下でも回れます。", "肘掛け・脚部が可動", "横移乗や足こぎに合わせられます。", "食卓にそのまま入れる", "移乗の回数を減らせます。") },
   { id: "wcp", g: "貸与", label: "車いす付属品", kyufu: H, name: "車いす用クッション", maker: "", tani: "60", fee1: "60円",
     feats: F("座位姿勢を安定させる", "骨盤の傾きや滑り座りを抑えます。", "座圧を分散", "長時間の座位でも痛みが出にくくなります。", "本体と同時に貸与できる", "車いすと併せて導入します。") },
-  { id: "bed", g: "貸与", label: "特殊寝台（介護ベッド）", kyufu: H, name: "楽匠Zシリーズ 3モーション", maker: PB, tani: "1,000", fee1: "1,000円",
+  { id: "bed", g: "貸与", label: "特殊寝台", kyufu: H, name: "楽匠Zシリーズ 3モーション", maker: PB, tani: "1,000", fee1: "1,000円",
     feats: F("背・膝・高さを個別に調整", "姿勢を細かく整えられます。", "背膝連動でずれを軽減", "ずり下がりを抑え褥瘡に配慮します。", "低床対応で降りやすい", "端座位からの立ち上がりを助けます。") },
   { id: "bedp", g: "貸与", label: "特殊寝台付属品", kyufu: H, name: "スイングアーム介助バー", maker: PB, tani: "160", fee1: "160円",
     feats: F("起き上がりの支えになる", "ベッド上の動作を安全に支えます。", "アームが開閉する", "車いす移乗の動線を確保できます。", "工事不要で設置", "住宅改修をせずに導入できます。") },
@@ -786,8 +864,23 @@ const TPL = [
   { id: "tokka", title: "自費ベッドのレンタル", desc: "1〜3モーターの自費レンタル料をまとめて掲載", headline: "介護保険を使わずに、すぐお使いいただけるベッドのご案内です。" },
   { id: "new", title: "新商品のご紹介", desc: "新しく取り扱う用具を1枚で紹介", headline: "新しく取り扱いを始めた福祉用具のご案内です。" },
   { id: "case", title: "導入事例集", desc: "写真を主役に、導入前後の変化を掲載", headline: "福祉用具を導入して在宅生活を続けられた事例をご紹介します。" },
-  { id: "rec", title: "おすすめ用具", desc: "状態別のおすすめ紹介", headline: "いまの時期におすすめしたい福祉用具のご案内です。" },
-  { id: "shomo", title: "消耗品チラシ", desc: "1〜9商品を写真つきで一覧掲載", headline: "在宅で毎日お使いいただく消耗品のご案内です。" }
+  { id: "rec", title: "複数品同時にご紹介", desc: "1・2・4・6・9商品をまとめて紹介", headline: "おすすめの福祉用具をまとめてご紹介します。" },
+  { id: "shomo", title: "消耗品チラシ", desc: "施設向け・1〜9商品を単価つきで一覧掲載", headline: "施設でお使いの消耗品を見直して、月々の消耗品費の削減につなげませんか。" }
+];
+
+const RCOL = { 1: 1, 2: 2, 4: 2, 6: 3, 9: 3 };
+const RROW = { 1: 420, 2: 420, 4: 295, 6: 295, 9: 193 };
+
+const RECI = [
+  { name: "歩行車（歩行器）", note: "屋外歩行の安定に。座って休めるタイプもあります。" },
+  { name: "手すり（据置式）", note: "工事不要で設置でき、立ち座りを支えます。" },
+  { name: "車いす（自走式・軽量）", note: "折りたたみできる軽量タイプ。車への積み込みも楽です。" },
+  { name: "スロープ（可搬型）", note: "玄関などの段差を解消し、車いすでの出入りを楽にします。" },
+  { name: "特殊寝台付属品（サイドレール）", note: "ベッドからの転落を防ぎ、寝返りや起き上がりを支えます。" },
+  { name: "床ずれ防止用具（エアマットレス）", note: "体圧を分散し、褥瘡の予防に配慮します。" },
+  { name: "入浴補助用具（シャワーチェア）", note: "座ったまま洗体でき、浴室での転倒に配慮します。" },
+  { name: "排泄予測支援機器", note: "排尿のタイミングをお知らせし、トイレ誘導を助けます。" },
+  { name: "移動用リフト（つり具を除く）", note: "移乗時の介助負担を大きく軽減します。" }
 ];
 
 const SHOMO = [
@@ -827,8 +920,11 @@ class Component extends DCLogic {
       { motor: "3モーター", price: "2,000円" }
     ],
     shomoCount: 6,
+    showUnit: true,
     photoFit: "cover",
     shomo: SHOMO.map(x => ({ name: x.name, spec: x.spec, price: x.price })),
+    recCount: 4,
+    recItems: RECI.map(x => ({ name: x.name, note: x.note })),
     recTarget: "夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方",
     cUser: "80代女性・要介護2・娘さんと同居",
     cBefore: "夜間の起き上がりに毎回介助が必要で、ご家族の睡眠不足が続いていた。",
@@ -853,9 +949,9 @@ class Component extends DCLogic {
           const f = items[i].getAsFile();
           if (!f) continue;
           const st = this.state;
-          const multi = st.tpl === "case" || st.tpl === "shomo";
+          const multi = st.tpl === "case" || st.tpl === "shomo" || st.tpl === "rec";
           if (multi) {
-            const max = st.tpl === "case" ? st.photoCount : st.shomoCount;
+            const max = st.tpl === "case" ? st.photoCount : st.tpl === "rec" ? st.recCount : st.shomoCount;
             let idx = 0;
             while (idx < max - 1 && st.photos[idx]) idx++;
             this.loadImage(f, idx);
@@ -915,6 +1011,14 @@ class Component extends DCLogic {
     });
   }
 
+  setRec(i, key, v) {
+    this.setState(s => {
+      const recItems = s.recItems.map(r => ({ name: r.name, note: r.note }));
+      recItems[i][key] = v;
+      return { recItems };
+    });
+  }
+
   setTokka(i, v) {
     this.setState(s => {
       const tokka = s.tokka.map(r => ({ motor: r.motor, price: r.price }));
@@ -934,6 +1038,36 @@ class Component extends DCLogic {
       return { photos };
     });
     r.readAsDataURL(file);
+  }
+
+  unitPrice(spec, price) {
+    const raw = String(price || "").replace(/[,，\s￥¥円]/g, "");
+    const pm = raw.match(/\d+(\.\d+)?/);
+    if (!pm) return "";
+    const yen = parseFloat(pm[0]);
+    if (!(yen > 0)) return "";
+    const sp = String(spec || "").replace(/[,，\s]/g, "");
+    const RULES = [
+      { re: /(\d+(?:\.\d+)?)(?:ml|mL|ML|ｍｌ|cc|CC)(?![a-zA-Z])/, unit: "mL", mul: 1, per: 100 },
+      { re: /(\d+(?:\.\d+)?)(?:L|ℓ|リットル)(?![a-zA-Z])/, unit: "mL", mul: 1000, per: 100 },
+      { re: /(\d+(?:\.\d+)?)kg(?![a-zA-Z])/, unit: "g", mul: 1000, per: 100 },
+      { re: /(\d+(?:\.\d+)?)(?:g|ｇ)(?![a-zA-Z])/, unit: "g", mul: 1, per: 100 },
+      { re: /(\d+(?:\.\d+)?)枚/, unit: "枚", mul: 1, per: 1 },
+      { re: /(\d+(?:\.\d+)?)m(?![a-zA-Z])/, unit: "m", mul: 1, per: 1 },
+      { re: /(\d+(?:\.\d+)?)(個|本|組|回|袋|包|双|ロール|パック|セット)/, unit: "", mul: 1, per: 1 }
+    ];
+    for (let i = 0; i < RULES.length; i++) {
+      const r = RULES[i];
+      const m = sp.match(r.re);
+      if (!m) continue;
+      const qty = parseFloat(m[1]) * r.mul;
+      if (!(qty > 0)) continue;
+      if (r.per === 1 && qty === 1) continue;
+      const v = yen / qty * r.per;
+      const num = v >= 100 ? Math.round(v).toLocaleString("ja-JP") : String(Math.round(v * 10) / 10);
+      return (r.per === 100 ? "100" : "1") + (r.unit || m[2]) + "あたり " + num + "円";
+    }
+    return "";
   }
 
   chip(active, color) {
@@ -961,9 +1095,12 @@ class Component extends DCLogic {
     const isTokka = s.tpl === "tokka";
     const c = cat(s.cat);
     const ki = KI[s.kubun] || KI["貸与"];
-    const catLabel = s.tpl === "shomo" ? "消耗品" : isTokka ? "特殊寝台（介護ベッド）" : (c ? c.label : "福祉用具");
+    const catLabel = s.tpl === "shomo" ? "消耗品" : isTokka ? "特殊寝台" : (c ? c.label : "福祉用具");
     const isCase = s.tpl === "case";
     const isShomo = s.tpl === "shomo";
+    const isRecT = s.tpl === "rec";
+    const recIdx = [];
+    for (let i = 0; i < s.recCount; i++) recIdx.push(i);
     const shomoIdx = [];
     for (let i = 0; i < s.shomoCount; i++) shomoIdx.push(i);
     const shomoRowCount = Math.ceil(s.shomoCount / 3);
@@ -993,11 +1130,12 @@ class Component extends DCLogic {
       isCase,
       isShomo,
       notShomo: !isShomo,
-      showMainRow: !isShomo && !isCase,
-      showCatCard: !isTokka && !isShomo,
-      showNameBox: !isTokka && !isShomo,
-      showFeats: !isShomo && !isCase,
-      showProdPhoto: !isShomo && !isCase,
+      showPName: !isShomo && !isRecT,
+      showMainRow: !isShomo && !isCase && !isRecT,
+      showCatCard: !isTokka && !isShomo && !isRecT,
+      showNameBox: !isTokka && !isShomo && !isRecT,
+      showFeats: !isShomo && !isCase && !isRecT,
+      showProdPhoto: !isShomo && !isCase && !isRecT,
       shomoCountOpts: [1, 2, 3, 4, 6, 9].map(n => ({
         label: n + "商品",
         style: this.chip(s.shomoCount === n, "#8a5a17"),
@@ -1006,6 +1144,7 @@ class Component extends DCLogic {
       shomoRows: shomoIdx.map(i => ({
         n: i + 1,
         name: s.shomo[i].name, spec: s.shomo[i].spec, price: s.shomo[i].price,
+        unitHint: this.unitPrice(s.shomo[i].spec, s.shomo[i].price) || "単価は「規格・入数」の数字から自動計算されます",
         onName: e => this.setShomo(i, "name", e.target.value),
         onSpec: e => this.setShomo(i, "spec", e.target.value),
         onPrice: e => this.setShomo(i, "price", e.target.value),
@@ -1017,12 +1156,21 @@ class Component extends DCLogic {
         onDragOver: e => e.preventDefault(),
         onDrop: e => { e.preventDefault(); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0], i); }
       })),
-      pShomo: shomoIdx.map(i => ({
-        n: i + 1,
-        name: s.shomo[i].name || "商品名を入力",
-        spec: s.shomo[i].spec || "規格・入数",
-        price: s.shomo[i].price || "—",
-        src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i]
+      pShomo: shomoIdx.map(i => {
+        const u = s.showUnit ? this.unitPrice(s.shomo[i].spec, s.shomo[i].price) : "";
+        return {
+          n: i + 1,
+          name: s.shomo[i].name || "商品名を入力",
+          spec: s.shomo[i].spec || "規格・入数",
+          price: s.shomo[i].price || "—",
+          unit: u, hasUnit: !!u, noUnit: !u,
+          src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i]
+        };
+      }),
+      unitOpts: [{ label: "単価を表示する", v: true }, { label: "表示しない", v: false }].map(o => ({
+        label: o.label,
+        style: this.chip(s.showUnit === o.v, "#8a5a17"),
+        onClick: () => this.set("showUnit", o.v)
       })),
       pShomoGridStyle: "display:grid;gap:9px;align-content:start;max-height:666px;overflow:hidden;grid-auto-rows:" + SROW[s.shomoCount] +
         "px;grid-template-columns:repeat(" + SCOL[s.shomoCount] + ",minmax(0,1fr));",
@@ -1030,9 +1178,35 @@ class Component extends DCLogic {
       isRec: s.tpl === "rec",
       recTarget: s.recTarget, onRecTarget: e => this.set("recTarget", e.target.value),
       pRecTarget: s.recTarget || "対象となる方を入力してください",
+      recCountOpts: [1, 2, 4, 6, 9].map(n => ({
+        label: n + "商品",
+        style: this.chip(s.recCount === n, "#b8620f"),
+        onClick: () => this.set("recCount", n)
+      })),
+      recRows: recIdx.map(i => ({
+        n: i + 1,
+        name: s.recItems[i].name, note: s.recItems[i].note,
+        onName: e => this.setRec(i, "name", e.target.value),
+        onNote: e => this.setRec(i, "note", e.target.value),
+        src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
+        thumbStyle: "width:100%;height:100%;background-image:url(" + JSON.stringify(s.photos[i] || "") +
+          ");background-size:cover;background-position:center;",
+        photoStyle: "width:66px;height:66px;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
+        onPick: e => this.loadImage(e.target.files && e.target.files[0], i),
+        onDragOver: e => e.preventDefault(),
+        onDrop: e => { e.preventDefault(); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0], i); }
+      })),
+      pRec: recIdx.map(i => ({
+        n: i + 1,
+        name: s.recItems[i].name || "商品名を入力",
+        note: s.recItems[i].note || "おすすめのポイントを入力",
+        src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i]
+      })),
+      pRecGridStyle: "display:grid;gap:10px;align-content:start;max-height:610px;overflow:hidden;grid-auto-rows:" + RROW[s.recCount] +
+        "px;grid-template-columns:repeat(" + RCOL[s.recCount] + ",minmax(0,1fr));",
       isSelf: s.kubun === "自費",
-      useMotor: !isShomo && (isTokka || s.kubun === "自費"),
-      showMoneyBox: !isTokka && !isShomo && !isCase && s.kubun !== "自費",
+      useMotor: !isShomo && !isRecT && (isTokka || s.kubun === "自費"),
+      showMoneyBox: !isTokka && !isShomo && !isCase && !isRecT && s.kubun !== "自費",
       showBarNote: isTokka && s.showBar,
       motorCardTitle: isTokka ? "自費ベッドのレンタル設定" : "自費レンタルの月額設定",
 
@@ -1173,8 +1347,8 @@ class Component extends DCLogic {
       onClearPhoto: () => this.set("photo", ""),
 
       pCatLabel: catLabel,
-      pKubunLabel: isShomo ? "介護保険外・全額自己負担" : isTokka ? "介護保険外・自費レンタル" : ki.label,
-      pKubunColor: isShomo ? "#8a5a17" : isTokka ? "#c0392b" : ki.color,
+      pKubunLabel: isShomo ? "施設の経費削減ご提案" : isRecT ? "福祉用具のご紹介" : isTokka ? "介護保険外・自費レンタル" : ki.label,
+      pKubunColor: isShomo ? "#8a5a17" : isRecT ? "#b8620f" : isTokka ? "#c0392b" : ki.color,
       pHeadline: s.headline || "見出しを入力してください",
       pName: isTokka ? "自費ベッドのレンタル" : (s.name || "（商品名を入力してください）"),
       pMakerLine: isTokka
