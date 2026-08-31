@@ -18,11 +18,22 @@
   input, textarea, button { font-family: inherit; }
   input::placeholder, textarea::placeholder { color: #9d9384; font-weight: 400; }
   input[type="range"] { accent-color: #b8620f; }
+  /* プレビューの写真に「ドラッグで動かせます」と出す（画面のみ・印刷には出ない） */
+  [data-pdrag="1"]::after {
+    content: "✥ ドラッグで位置を調整";
+    position: absolute; right: 5px; bottom: 5px; z-index: 2;
+    padding: 3px 7px; border-radius: 5px; background: rgba(22, 20, 15, .72); color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: .02em; white-space: nowrap;
+    opacity: 0; transition: opacity .12s; pointer-events: none;
+  }
+  [data-pdrag="1"]:hover::after { opacity: 1; }
+  [data-pdrop="1"] { outline: 3px dashed #b8620f; outline-offset: -3px; }
   @media print {
     @page { size: A4; margin: 0; }
     html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     [data-print="hide"] { display: none !important; }
-    [data-pframe] { box-shadow: none !important; }
+    [data-pframe] { box-shadow: none !important; outline: none !important; }
+    [data-pframe]::after { display: none !important; }
     [data-print="page"] { min-height: 0 !important; height: 297mm !important; overflow: hidden !important; background: #fff !important; }
     [data-print="wrap"] { max-width: none !important; margin: 0 !important; padding: 0 !important; display: block !important; gap: 0 !important; }
     [data-print="col"] { position: static !important; max-width: none !important; flex: none !important; width: 210mm !important; display: block !important; justify-items: start !important; }
@@ -118,7 +129,7 @@
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ recRows }}" as="r" hint-placeholder-count="4">
               <div style="display: grid; grid-template-columns: 66px minmax(0, 1fr) 30px; gap: 11px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
-                <label onDragOver="{{ r.onDragOver }}" onDrop="{{ r.onDrop }}" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
+                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
@@ -142,14 +153,14 @@
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
                       <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
-                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
+                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                   </div>
                 </div>
                 <button onClick="{{ r.onDelete }}" title="この商品を削除" style="width: 30px; height: 30px; display: grid; place-items: center; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 8px; cursor: pointer;" style-hover="background:#fdf3f1"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6" /></svg></button>
               </div>
             </sc-for>
           </div>
-          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。</div>
+          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。画像ファイルはプレビューの枠へ直接ドロップでき、写真枠どうしをつまんで入れ替えることもできます。</div>
         </div>
       </sc-if>
 
@@ -198,7 +209,7 @@
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ shomoRows }}" as="r" hint-placeholder-count="6">
               <div style="display: grid; grid-template-columns: 66px minmax(0, 1fr) 30px; gap: 11px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
-                <label onDragOver="{{ r.onDragOver }}" onDrop="{{ r.onDrop }}" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
+                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
@@ -227,14 +238,14 @@
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
                       <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
-                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
+                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                   </div>
                 </div>
                 <button onClick="{{ r.onDelete }}" title="この商品を削除" style="width: 30px; height: 30px; display: grid; place-items: center; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 8px; cursor: pointer;" style-hover="background:#fdf3f1"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6" /></svg></button>
               </div>
             </sc-for>
           </div>
-          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。</div>
+          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。画像ファイルはプレビューの枠へ直接ドロップでき、写真枠どうしをつまんで入れ替えることもできます。</div>
         </div>
       </sc-if>
 
@@ -377,7 +388,7 @@
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
               <sc-for list="{{ slots }}" as="sl" hint-placeholder-count="4">
                 <div style="display: grid; gap: 6px;">
-                  <label onDragOver="{{ sl.onDragOver }}" onDrop="{{ sl.onDrop }}" style="{{ sl.style }}">
+                  <label draggable="true" onDragStart="{{ sl.onSlotDragStart }}" onDragOver="{{ sl.onSlotDragOver }}" onDrop="{{ sl.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ sl.style }}">
                     <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
                       <img sc-camel-src="{{ sl.src }}" alt="" style="{{ sl.thumbStyle }}" />
                     </sc-if>
@@ -400,7 +411,7 @@
                         <span style="color: #8a5a17; font-weight: 700;">大きさ {{ sl.zoomLabel }}</span>
                       </div>
                       <input type="range" min="40" max="250" step="5" value="{{ sl.zoom }}" onChange="{{ sl.onZoom }}" style="width: 100%;" />
-                      <div style="color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
+                      <div style="color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                       <sc-if value="{{ showCase }}" hint-placeholder-val="{{ true }}">
                         <input value="{{ sl.user }}" onChange="{{ sl.onUser }}" placeholder="例）80代女性・要介護2・娘さんと同居" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
                         <input value="{{ sl.change }}" onChange="{{ sl.onChange }}" placeholder="例）夜間の転倒不安が軽減しました" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
@@ -420,7 +431,7 @@
               </div>
             </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-              <span style="font-size: 12.5px; color: #5d564b;">枠をクリックして選択、ドラッグ＆ドロップ、スクリーンショットの貼り付け（「貼り付け」ボタン／Ctrl+V・⌘V）に対応</span>
+              <span style="font-size: 12.5px; color: #5d564b;">枠をクリックして選択、ドラッグ＆ドロップ（プレビューの枠へ直接／写真枠どうしの入れ替えも可）、スクリーンショットの貼り付けに対応</span>
               <button onClick="{{ onClearPhotos }}" style="padding: 10px 16px; font-size: 14px; font-weight: 700; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf3f1">全て外す</button>
             </div>
           </div>
@@ -468,7 +479,7 @@
                 <input type="range" min="40" max="250" step="5" value="{{ mainPhoto.zoom }}" onChange="{{ mainPhoto.onZoom }}" style="width: 100%;" />
                 <span style="font-size: 12px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ mainPhoto.zoomLabel }}</span>
               </div>
-              <div style="font-size: 11.5px; color: #8a8175; line-height: 1.6;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
+              <div style="font-size: 11.5px; color: #8a8175; line-height: 1.6;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
             </div>
           </sc-if>
         </div>
@@ -654,7 +665,7 @@
               <div style="{{ pShomoGridStyle }}">
                 <sc-for list="{{ pShomo }}" as="it" hint-placeholder-count="6">
                   <div style="border: 1.5px solid #ded5c5; display: grid; grid-template-rows: minmax(0, 1fr) 142px; min-height: 0; overflow: hidden;">
-                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
+                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" data-pdrag="{{ it.pdrag }}" data-pdrop="{{ it.pdrop }}" onDragOver="{{ it.onFrameDragOver }}" onDragLeave="{{ it.onFrameDragLeave }}" onDrop="{{ it.onFrameDrop }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
                       <sc-if value="{{ it.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
@@ -696,7 +707,7 @@
               <div style="{{ pRecGridStyle }}">
                 <sc-for list="{{ pRec }}" as="it" hint-placeholder-count="4">
                   <div style="{{ pRecCellStyle }}">
-                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
+                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" data-pdrag="{{ it.pdrag }}" data-pdrop="{{ it.pdrop }}" onDragOver="{{ it.onFrameDragOver }}" onDragLeave="{{ it.onFrameDragLeave }}" onDrop="{{ it.onFrameDrop }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
                       <sc-if value="{{ it.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
@@ -730,7 +741,7 @@
                   </div>
                 </sc-for>
               </div>
-              <div data-pframe="main" data-pset="{{ mainPhoto.pset }}" title="{{ mainPhoto.dragHint }}" style="{{ mainPhoto.frameStyle }}">
+              <div data-pframe="main" data-pset="{{ mainPhoto.pset }}" data-pdrag="{{ mainPhoto.pdrag }}" data-pdrop="{{ mainPhoto.pdrop }}" onDragOver="{{ mainPhoto.onFrameDragOver }}" onDragLeave="{{ mainPhoto.onFrameDragLeave }}" onDrop="{{ mainPhoto.onFrameDrop }}" title="{{ mainPhoto.dragHint }}" style="{{ mainPhoto.frameStyle }}">
                 <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
                   <img sc-camel-src="{{ photo }}" alt="商品写真" style="{{ mainPhoto.imgStyle }}" />
                 </sc-if>
@@ -746,7 +757,7 @@
                 <div style="{{ pGridStyle }}">
                   <sc-for list="{{ pPhotos }}" as="p" hint-placeholder-count="4">
                     <div style="border: 1px solid #ded5c5; display: grid; grid-template-rows: minmax(0, 1fr) 68px; min-height: 0; overflow: hidden;">
-                      <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" title="{{ p.dragHint }}" style="{{ p.frameStyle }}">
+                      <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" data-pdrag="{{ p.pdrag }}" data-pdrop="{{ p.pdrop }}" onDragOver="{{ p.onFrameDragOver }}" onDragLeave="{{ p.onFrameDragLeave }}" onDrop="{{ p.onFrameDrop }}" title="{{ p.dragHint }}" style="{{ p.frameStyle }}">
                         <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}">
                           <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                         </sc-if>
@@ -765,7 +776,7 @@
               <sc-if value="{{ notShowCase }}" hint-placeholder-val="{{ false }}">
                 <div style="{{ pGridStyle }}">
                   <sc-for list="{{ pPhotos }}" as="p" hint-placeholder-count="4">
-                    <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" title="{{ p.dragHint }}" style="{{ p.frameStyleBare }}">
+                    <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" data-pdrag="{{ p.pdrag }}" data-pdrop="{{ p.pdrop }}" onDragOver="{{ p.onFrameDragOver }}" onDragLeave="{{ p.onFrameDragLeave }}" onDrop="{{ p.onFrameDrop }}" title="{{ p.dragHint }}" style="{{ p.frameStyleBare }}">
                       <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                       </sc-if>
@@ -1248,6 +1259,7 @@ class Component extends DCLogic {
     photoZoom: {},
     photoPos: {},
     pasteTarget: null,
+    dropFrame: null,
     notice: "",
     company: "太陽シルバーサービス株式会社",
     office: "行橋営業所",
@@ -1433,7 +1445,7 @@ class Component extends DCLogic {
   }
 
   saveDraft() {
-    const { photo, photos, photoZoom, photoPos, photoFitEach, photoBg, dragging, pasteTarget, notice, ...rest } = this.state;
+    const { photo, photos, photoZoom, photoPos, photoFitEach, photoBg, dragging, pasteTarget, dropFrame, notice, ...rest } = this.state;
     try {
       const serialized = JSON.stringify(rest);
       if (this._lastSaved === serialized) return;
@@ -1574,7 +1586,8 @@ class Component extends DCLogic {
     const m = html.match(/<img[^>]+src\s*=\s*["']([^"']+)["']/i);
     if (m && m[1]) return m[1];
     let text = "";
-    try { text = (dt.getData("text/plain") || "").trim(); } catch (e) { text = ""; }
+    try { text = (dt.getData("text/uri-list") || "").split("\n")[0].trim(); } catch (e) { text = ""; }
+    if (!text) { try { text = (dt.getData("text/plain") || "").trim(); } catch (e) { text = ""; } }
     if (/^data:image\//i.test(text)) return text;
     if (/^https?:\/\/\S+\.(png|jpe?g|gif|webp|bmp)(\?\S*)?$/i.test(text)) return text;
     return "";
@@ -1653,6 +1666,77 @@ class Component extends DCLogic {
     const idx = key === "main" ? null : parseInt(key, 10);
     this.setState({ pasteTarget: key });
     this.setNotice(this.slotLabel(idx) + "を選びました。Ctrl+V（⌘V）を押すと、コピーした画像やスクリーンショットを貼り付けます。");
+  }
+
+  /** 2つの枠の写真を、表示方法・大きさ・位置ごと入れ替える */
+  swapPhotos(a, b) {
+    if (a == null || b == null || a === b || a < 0 || b < 0) return;
+    const ka = String(a), kb = String(b);
+    const swapMap = m => {
+      const next = Object.assign({}, m);
+      if (m[kb] === undefined) delete next[ka]; else next[ka] = m[kb];
+      if (m[ka] === undefined) delete next[kb]; else next[kb] = m[ka];
+      return next;
+    };
+    this.setState(s => {
+      const photos = s.photos.slice();
+      while (photos.length <= Math.max(a, b)) photos.push("");
+      const t = photos[a]; photos[a] = photos[b]; photos[b] = t;
+      return {
+        photos: photos,
+        photoZoom: swapMap(s.photoZoom),
+        photoPos: swapMap(s.photoPos),
+        photoFitEach: swapMap(s.photoFitEach),
+        photoBg: swapMap(s.photoBg)
+      };
+    });
+    if (this._orig) this._orig = swapMap(this._orig);
+    this.setNotice((a + 1) + "番と" + (b + 1) + "番の写真を入れ替えました。");
+  }
+
+  /** 枠へ画像ファイル・他の枠の写真・ブラウザからの画像をドロップしたとき */
+  dropOnFrame(e, idx) {
+    e.preventDefault();
+    if (this.state.dropFrame != null) this.setState({ dropFrame: null });
+    const dt = e.dataTransfer;
+    if (!dt) return;
+    let from = "";
+    try { from = dt.getData("text/x-tss-photo") || ""; } catch (err) { from = ""; }
+    if (from !== "" && idx != null) { this.swapPhotos(parseInt(from, 10), idx); return; }
+    const file = this.imageFromTransfer(dt);
+    if (file) {
+      const slot = this.pasteSlot(this.pkey(idx));
+      this.loadImage(file, slot.idx);
+      this.setNotice(this.slotLabel(slot.idx) + (slot.replaced ? "の写真を差し替えました。" : "に写真を入れました。"));
+      return;
+    }
+    const url = this.imageUrlFromTransfer(dt);
+    if (url) this.acceptPastedUrl(url, this.pkey(idx));
+  }
+
+  /** 編集欄の写真枠をつまんで、別の枠へ移せるようにする */
+  startSlotDrag(e, idx) {
+    const dt = e.dataTransfer;
+    const has = idx == null ? !!this.state.photo : !!this.state.photos[idx];
+    // 空の枠をつまむと、移動先を空にしてしまうので何もしない
+    if (!dt || idx == null || !has) { if (e.preventDefault) e.preventDefault(); return; }
+    try {
+      dt.setData("text/x-tss-photo", String(idx));
+      dt.effectAllowed = "move";
+    } catch (err) { /* 対応していないブラウザでは通常のクリック操作のみ */ }
+  }
+
+  dropOnSlot(e, idx) {
+    e.preventDefault();
+    const dt = e.dataTransfer;
+    if (!dt) return;
+    let from = "";
+    try { from = dt.getData("text/x-tss-photo") || ""; } catch (err) { from = ""; }
+    if (from !== "") { this.swapPhotos(parseInt(from, 10), idx); return; }
+    const file = this.imageFromTransfer(dt);
+    if (file) { this.loadImage(file, idx); return; }
+    const url = this.imageUrlFromTransfer(dt);
+    if (url) this.acceptPastedUrl(url, this.pkey(idx));
   }
 
   /* ---------- 写真の取り込みと自動調整 ---------- */
@@ -1957,6 +2041,16 @@ class Component extends DCLogic {
       onReset: () => this.resetPhoto(idx),
       onCenter: () => this.centerPhoto(idx),
       onPasteHere: () => this.pasteHere(idx),
+      // プレビューの枠へ直接ドロップできるようにする（画像ファイル・他の枠の写真・ブラウザからの画像）
+      pdrag: has ? "1" : "0",
+      pdrop: s.dropFrame === key ? "1" : "0",
+      onFrameDragOver: e => { e.preventDefault(); if (this.state.dropFrame !== key) this.setState({ dropFrame: key }); },
+      onFrameDragLeave: () => { if (this.state.dropFrame === key) this.setState({ dropFrame: null }); },
+      onFrameDrop: e => this.dropOnFrame(e, idx),
+      // 編集欄の写真枠は、つまんで別の枠へ移せる
+      onSlotDragStart: e => this.startSlotDrag(e, idx),
+      onSlotDragOver: e => e.preventDefault(),
+      onSlotDrop: e => this.dropOnSlot(e, idx),
       pasteBtnStyle: targeted
         ? btn + "color:#fff;background:#b8620f;border:2px solid #b8620f;font-weight:900;"
         : btn + "color:#16140f;background:#fff;border:2px solid #b8620f;",
@@ -1968,7 +2062,7 @@ class Component extends DCLogic {
         ? "ドラッグすると写真の位置（切り取る場所）を動かせます。クリックすると、この枠が貼り付け先になります"
         : "クリックすると、この枠が貼り付け先になります（Ctrl+V／⌘V で貼り付け）",
       imgStyle: "position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;object-fit:" + fit +
-        ";object-position:" + pos.x + "% " + pos.y + "%;display:block;user-select:none;-webkit-user-drag:none;",
+        ";object-position:" + pos.x + "% " + pos.y + "%;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none;",
       frameStyle: frameBase,
       frameStyleBare: "border:1px solid #ded5c5;" + frameBase
     };
@@ -2098,9 +2192,7 @@ class Component extends DCLogic {
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
         thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
         photoStyle: "width:66px;height:66px;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
-        onPick: e => this.loadImage(e.target.files && e.target.files[0], i),
-        onDragOver: e => e.preventDefault(),
-        onDrop: e => { e.preventDefault(); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0], i); }
+        onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pShomo: shomoIdx.map(i => {
         const u = s.showUnit ? (s.shomo[i].unit || this.unitPrice(s.shomo[i].spec, s.shomo[i].price, s.unitBase)) : "";
@@ -2150,9 +2242,7 @@ class Component extends DCLogic {
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
         thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
         photoStyle: "width:66px;height:66px;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
-        onPick: e => this.loadImage(e.target.files && e.target.files[0], i),
-        onDragOver: e => e.preventDefault(),
-        onDrop: e => { e.preventDefault(); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0], i); }
+        onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pRec: recIdx.map(i => Object.assign(this.photoView(i, "cover"), {
         n: i + 1,
@@ -2277,8 +2367,6 @@ class Component extends DCLogic {
         style: "aspect-ratio:3/4;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
         thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i),
-        onDragOver: e => e.preventDefault(),
-        onDrop: e => { e.preventDefault(); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0], i); },
         onDelete: () => this.clearItem(i, "caseItems", { user: "", change: "" }),
         user: s.caseItems[i].user, change: s.caseItems[i].change,
         onUser: e => this.setCaseItem(i, "user", e.target.value),
@@ -2311,7 +2399,7 @@ class Component extends DCLogic {
         (s.dragging ? "#fdf6ec" : "#faf8f3") + ";border:3px dashed " + (s.dragging ? "#b8620f" : "#cfc5b4") + ";",
       onDragOver: e => { e.preventDefault(); if (!this.state.dragging) this.setState({ dragging: true }); },
       onDragLeave: () => { if (this.state.dragging) this.setState({ dragging: false }); },
-      onDrop: e => { e.preventDefault(); this.setState({ dragging: false }); this.loadImage(e.dataTransfer.files && e.dataTransfer.files[0]); },
+      onDrop: e => { this.setState({ dragging: false }); this.dropOnFrame(e, null); },
       onPickFile: e => this.loadImage(e.target.files && e.target.files[0]),
       onClearPhoto: () => { if (this._orig) delete this._orig.main; this.setState({ photo: "" }); },
       mainPhoto: this.photoView(null, "contain"),
