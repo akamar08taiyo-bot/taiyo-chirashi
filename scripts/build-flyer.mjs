@@ -18,8 +18,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const bundlePath = path.join(root, 'index.html');
 const srcPath = path.join(root, 'dc-src', 'index.dc.html');
 
-const bundle = fs.readFileSync(bundlePath, 'utf8');
-const src = fs.readFileSync(srcPath, 'utf8');
+// Windows でチェックアウトすると改行が CRLF になるため、読み込み時に LF へ揃える
+const bundle = fs.readFileSync(bundlePath, 'utf8').replace(/\r\n/g, '\n');
+const src = fs.readFileSync(srcPath, 'utf8').replace(/\r\n/g, '\n');
 
 const TPL_RE = /(<script type="__bundler\/template">\n)([\s\S]*?)(\n  <\/script>)/;
 const m = bundle.match(TPL_RE);

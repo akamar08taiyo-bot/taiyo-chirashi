@@ -128,13 +128,13 @@
           </div>
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ recRows }}" as="r" hint-placeholder-count="4">
-              <div style="display: grid; grid-template-columns: 66px minmax(0, 1fr) 30px; gap: 11px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
+              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
                 <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
                   <sc-if value="{{ r.empty }}" hint-placeholder-val="{{ true }}">
-                    <span style="font-size: 11px; font-weight: 900; color: #c2b9a8; text-align: center; line-height: 1.3;">クリック／<br/>D&amp;D</span>
+                    <span style="font-size: 13px; font-weight: 900; color: #b3a894; text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
                   </sc-if>
                   <input type="file" accept="image/*" onChange="{{ r.onPick }}" style="display: none;" />
                 </label>
@@ -208,13 +208,13 @@
           </sc-if>
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ shomoRows }}" as="r" hint-placeholder-count="6">
-              <div style="display: grid; grid-template-columns: 66px minmax(0, 1fr) 30px; gap: 11px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
+              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
                 <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
                   <sc-if value="{{ r.empty }}" hint-placeholder-val="{{ true }}">
-                    <span style="font-size: 11px; font-weight: 900; color: #c2b9a8; text-align: center; line-height: 1.3;">クリック／<br/>D&amp;D</span>
+                    <span style="font-size: 13px; font-weight: 900; color: #b3a894; text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
                   </sc-if>
                   <input type="file" accept="image/*" onChange="{{ r.onPick }}" style="display: none;" />
                 </label>
@@ -327,41 +327,6 @@
           <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
           <div style="font-size: 20px; font-weight: 700;">チラシの内容</div>
         </div>
-
-        <label style="display: grid; gap: 8px;">
-          <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシ最上部の帯（区分バッジ）の文言</span>
-          <input value="{{ badgeText }}" onChange="{{ onBadgeText }}" placeholder="{{ badgePlaceholder }}" style="width: 100%; padding: 12px 14px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-          <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシの見出し（用紙のいちばん上）</span>
-          <select value="{{ headlinePickValue }}" onChange="{{ onHeadlinePick }}" style="width: 100%; padding: 11px 13px; font-size: 13.5px; font-weight: 700; color: #8a5a17; background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 9px; appearance: none;">
-            <option value="">例文から選ぶ（15種）… 選ぶと下の欄に入り、そのまま手入力で編集できます</option>
-            <sc-for list="{{ headlineOpts }}" as="h" hint-placeholder-count="15">
-              <option value="{{ h.value }}">{{ h.label }}</option>
-            </sc-for>
-          </select>
-          <input value="{{ headline }}" onChange="{{ onHeadline }}" placeholder="例）在宅の起き上がりを楽にする ベッドのご案内" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
-        </label>
-
-        <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
-          <label style="display: grid; gap: 8px;">
-            <span style="font-size: 15px; font-weight: 700; color: #5d564b;">こんな方におすすめ（チラシに黒帯で入ります）</span>
-            <input value="{{ recTarget }}" onChange="{{ onRecTarget }}" placeholder="例）夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
-          </label>
-        </sc-if>
-
-        <sc-if value="{{ showNameBox }}" hint-placeholder-val="{{ false }}">
-          <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 20px; display: grid; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 9px; flex-wrap: wrap;">
-              <span style="font-size: 17px; font-weight: 900;">商品名</span>
-              <span style="font-size: 12px; font-weight: 700; color: #fff; background: #c0392b; padding: 4px 8px; border-radius: 4px;">必須</span>
-              <span style="font-size: 12px; font-weight: 700; color: #a2550c;">→ チラシで一番大きく出ます</span>
-            </div>
-            <input value="{{ name }}" onChange="{{ onName }}" placeholder="例）楽匠Zシリーズ 3モーション" style="width: 100%; padding: 19px 18px; font-size: 25px; font-weight: 900; line-height: 1.45; color: #16140f; background: #fff; border: 3px solid #b8620f; border-radius: 12px;" style-focus="outline:none;box-shadow:0 0 0 5px rgba(184,98,15,.22)" />
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <input value="{{ maker }}" onChange="{{ onMaker }}" placeholder="メーカー名" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-              <input value="{{ model }}" onChange="{{ onModel }}" placeholder="型番" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </div>
-          </div>
-        </sc-if>
 
         <sc-if value="{{ isCase }}" hint-placeholder-val="{{ false }}">
           <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 20px; display: grid; gap: 16px;">
@@ -485,6 +450,41 @@
         </div>
         </sc-if>
 
+        <label style="display: grid; gap: 8px;">
+          <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシ最上部の帯（区分バッジ）の文言</span>
+          <input value="{{ badgeText }}" onChange="{{ onBadgeText }}" placeholder="{{ badgePlaceholder }}" style="width: 100%; padding: 12px 14px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシの見出し（用紙のいちばん上）</span>
+          <select value="{{ headlinePickValue }}" onChange="{{ onHeadlinePick }}" style="width: 100%; padding: 11px 13px; font-size: 13.5px; font-weight: 700; color: #8a5a17; background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 9px; appearance: none;">
+            <option value="">例文から選ぶ（15種）… 選ぶと下の欄に入り、そのまま手入力で編集できます</option>
+            <sc-for list="{{ headlineOpts }}" as="h" hint-placeholder-count="15">
+              <option value="{{ h.value }}">{{ h.label }}</option>
+            </sc-for>
+          </select>
+          <input value="{{ headline }}" onChange="{{ onHeadline }}" placeholder="例）在宅の起き上がりを楽にする ベッドのご案内" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
+        </label>
+
+        <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
+          <label style="display: grid; gap: 8px;">
+            <span style="font-size: 15px; font-weight: 700; color: #5d564b;">こんな方におすすめ（チラシに黒帯で入ります）</span>
+            <input value="{{ recTarget }}" onChange="{{ onRecTarget }}" placeholder="例）夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
+          </label>
+        </sc-if>
+
+        <sc-if value="{{ showNameBox }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 20px; display: grid; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 9px; flex-wrap: wrap;">
+              <span style="font-size: 17px; font-weight: 900;">商品名</span>
+              <span style="font-size: 12px; font-weight: 700; color: #fff; background: #c0392b; padding: 4px 8px; border-radius: 4px;">必須</span>
+              <span style="font-size: 12px; font-weight: 700; color: #a2550c;">→ チラシで一番大きく出ます</span>
+            </div>
+            <input value="{{ name }}" onChange="{{ onName }}" placeholder="例）楽匠Zシリーズ 3モーション" style="width: 100%; padding: 19px 18px; font-size: 25px; font-weight: 900; line-height: 1.45; color: #16140f; background: #fff; border: 3px solid #b8620f; border-radius: 12px;" style-focus="outline:none;box-shadow:0 0 0 5px rgba(184,98,15,.22)" />
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <input value="{{ maker }}" onChange="{{ onMaker }}" placeholder="メーカー名" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+              <input value="{{ model }}" onChange="{{ onModel }}" placeholder="型番" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            </div>
+          </div>
+        </sc-if>
+
         <sc-if value="{{ showMoneyBox }}" hint-placeholder-val="{{ false }}">
           <div style="background: #f3f6f8; border: 2px solid #b9cfd9; border-radius: 12px; padding: 20px; display: grid; gap: 14px;">
             <span style="font-size: 17px; font-weight: 900; color: #17495f;">{{ moneyTitle }}</span>
@@ -596,44 +596,27 @@
         <div data-print="hide" style="width: 100%; background: #fdf7ed; border: 2px solid #d8a45e; border-radius: 10px; padding: 9px 13px; font-size: 13px; font-weight: 700; color: #6f4712; line-height: 1.6;">{{ notice }}</div>
       </sc-if>
 
-      <div data-print="hide" style="width: 100%; background: #fff; border: 2px solid #ddd3c0; border-radius: 13px; padding: 13px 15px; display: grid; gap: 11px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-          <span style="font-size: 14px; font-weight: 900;">仕上がり・印刷の設定</span>
-          <span data-fitlabel style="font-size: 12px; font-weight: 700; color: #2d6a4f;">A4・1枚に収まっています</span>
-        </div>
-        <div style="display: grid; gap: 6px;">
-          <span style="font-size: 12.5px; font-weight: 700; color: #5d564b;">写真を取り込んだとき自動で調整する</span>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <sc-for list="{{ autoPhotoOpts }}" as="o" hint-placeholder-count="2">
-              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
-            </sc-for>
+      <div data-print="hide" style="width: 100%; background: #fff; border: 2px solid #ddd3c0; border-radius: 11px; padding: 9px 11px; display: grid; gap: 7px;">
+        <span data-fitlabel style="font-size: 11.5px; font-weight: 700; color: #2d6a4f;">A4・1枚に収まっています</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="display: grid; gap: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: #7b7365;">写真の自動調整</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+              <sc-for list="{{ autoPhotoOpts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: grid; gap: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: #7b7365;">プレビューの大きさ</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+              <sc-for list="{{ previewOpts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
           </div>
         </div>
-        <div style="display: grid; gap: 6px;">
-          <span style="font-size: 12.5px; font-weight: 700; color: #5d564b;">A4 1枚に自動で収める</span>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <sc-for list="{{ autoFitOpts }}" as="o" hint-placeholder-count="2">
-              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div style="display: grid; gap: 6px;">
-          <span style="font-size: 12.5px; font-weight: 700; color: #5d564b;">用紙のふち（余白）</span>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-            <sc-for list="{{ marginOpts }}" as="o" hint-placeholder-count="3">
-              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div style="display: grid; gap: 6px;">
-          <span style="font-size: 12.5px; font-weight: 700; color: #5d564b;">プレビューの大きさ</span>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <sc-for list="{{ previewOpts }}" as="o" hint-placeholder-count="2">
-              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div style="font-size: 11.5px; color: #8a8175; line-height: 1.65;">印刷画面では「用紙サイズ：A4」「余白：既定（なし）」「背景のグラフィック：オン」を選んでください。</div>
+        <div style="font-size: 10.5px; color: #a89e8c; line-height: 1.55;">印刷画面では「用紙サイズ：A4」「余白：なし」「背景のグラフィック：オン」を選んでください。</div>
       </div>
 
       <div data-print="frame" data-frame style="{{ frameStyle }}">
@@ -1205,7 +1188,6 @@ function fixDraft(d) {
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
-  if ([0, 5, 8].indexOf(d.pageMargin) < 0) d.pageMargin = 0;
   return d;
 }
 
@@ -1248,8 +1230,6 @@ class Component extends DCLogic {
     photoFitEach: {},
     photoBg: {},
     autoPhoto: true,
-    autoFit: true,
-    pageMargin: 0,
     previewBig: false,
     shomo: SHOMO.map(x => ({ name: x.name, spec: x.spec, price: x.price, unit: "" })),
     recCount: 4,
@@ -1360,7 +1340,7 @@ class Component extends DCLogic {
       let k = 1;
       apply(1);
       let over = fit.scrollHeight - fit.clientHeight;
-      if (this.state.autoFit && over > 1) {
+      if (over > 1) {
         let guard = 0;
         while (over > 1 && k > 0.62 && guard++ < 8) {
           k = Math.max(0.62, Math.round((k * fit.clientHeight / fit.scrollHeight - 0.004) * 1000) / 1000);
@@ -2104,6 +2084,12 @@ class Component extends DCLogic {
     return "";
   }
 
+  miniChip(active, color) {
+    const c = color || "#b8620f";
+    return "padding:6px 8px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer;text-align:center;" +
+      (active ? "color:#fff;background:" + c + ";border:2px solid " + c + ";" : "color:#453f36;background:#fff;border:2px solid #cfc5b4;");
+  }
+
   chip(active, color) {
     const c = color || "#b8620f";
     return "padding:11px 15px;font-size:15px;font-weight:700;border-radius:9px;cursor:pointer;transition:all .12s;text-align:left;" +
@@ -2190,8 +2176,8 @@ class Component extends DCLogic {
         onSpec: e => this.setShomo(i, "spec", e.target.value),
         onPrice: e => this.setShomo(i, "price", e.target.value),
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
-        thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
-        photoStyle: "width:66px;height:66px;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
+        thumbStyle: "width:100%;height:100%;object-fit:contain;display:block;",
+        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:#f6f2ea;border:2px dashed #cfc5b4;",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pShomo: shomoIdx.map(i => {
@@ -2240,8 +2226,8 @@ class Component extends DCLogic {
         onNote: e => this.setRec(i, "note", e.target.value),
         onDelete: () => this.clearItem(i, "recItems", { name: "", note: "" }),
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
-        thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
-        photoStyle: "width:66px;height:66px;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
+        thumbStyle: "width:100%;height:100%;object-fit:contain;display:block;",
+        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:#f6f2ea;border:2px dashed #cfc5b4;",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pRec: recIdx.map(i => Object.assign(this.photoView(i, "cover"), {
@@ -2408,27 +2394,16 @@ class Component extends DCLogic {
         "; max-width: " + (s.previewBig ? 820 : 500) + "px; display: grid; gap: 12px; justify-items: center;",
       frameStyle: "width: 100%; max-width: " + (s.previewBig ? 794 : 480) +
         "px; aspect-ratio: 794 / 1123; overflow: hidden; border-radius: 4px; box-shadow: 0 12px 34px rgba(60, 48, 30, 0.16);",
-      sheetStyle: "width: 794px; height: 1123px; transform-origin: top left; background: #fff; display: block; padding: " +
-        s.pageMargin + "mm;",
+      sheetStyle: "width: 794px; height: 1123px; transform-origin: top left; background: #fff; display: block;",
       fitStyle: "width: 100%; height: 100%; transform-origin: top left; padding: 22px 42px 26px; display: flex; flex-direction: column; gap: 14px;",
-      autoFitOpts: [{ label: "自動で収める", v: true }, { label: "そのまま", v: false }].map(o => ({
+      autoPhotoOpts: [{ label: "する", v: true }, { label: "しない", v: false }].map(o => ({
         label: o.label,
-        style: this.chip(s.autoFit === o.v, "#2d6a4f"),
-        onClick: () => this.set("autoFit", o.v)
-      })),
-      autoPhotoOpts: [{ label: "自動で調整する", v: true }, { label: "そのまま使う", v: false }].map(o => ({
-        label: o.label,
-        style: this.chip(s.autoPhoto === o.v, "#8a5a17"),
+        style: this.miniChip(s.autoPhoto === o.v, "#8a5a17"),
         onClick: () => this.set("autoPhoto", o.v)
       })),
-      marginOpts: [{ label: "なし", v: 0 }, { label: "5mm", v: 5 }, { label: "8mm", v: 8 }].map(o => ({
+      previewOpts: [{ label: "標準", v: false }, { label: "大きく", v: true }].map(o => ({
         label: o.label,
-        style: this.chip(s.pageMargin === o.v, "#1f5d7a"),
-        onClick: () => this.set("pageMargin", o.v)
-      })),
-      previewOpts: [{ label: "標準", v: false }, { label: "大きく表示", v: true }].map(o => ({
-        label: o.label,
-        style: this.chip(s.previewBig === o.v, "#b8620f"),
+        style: this.miniChip(s.previewBig === o.v, "#b8620f"),
         onClick: () => this.set("previewBig", o.v)
       })),
 
