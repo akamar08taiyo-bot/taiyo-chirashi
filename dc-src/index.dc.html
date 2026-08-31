@@ -134,11 +134,13 @@
                       <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
                       <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
                       <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
+                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
                   </div>
                 </div>
                 <button onClick="{{ r.onDelete }}" title="この商品を削除" style="width: 30px; height: 30px; display: grid; place-items: center; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 8px; cursor: pointer;" style-hover="background:#fdf3f1"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6" /></svg></button>
@@ -216,11 +218,13 @@
                       <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
                       <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
                       <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
+                    <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
                   </div>
                 </div>
                 <button onClick="{{ r.onDelete }}" title="この商品を削除" style="width: 30px; height: 30px; display: grid; place-items: center; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 8px; cursor: pointer;" style-hover="background:#fdf3f1"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6" /></svg></button>
@@ -386,11 +390,13 @@
                         <button onClick="{{ sl.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 5px 9px; font-size: 11px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 6px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                         <button onClick="{{ sl.onFit }}" title="写真の入れ方を切り替えます" style="{{ sl.fitBtnStyle }}">{{ sl.fitLabel }}</button>
                         <button onClick="{{ sl.onReset }}" title="元の写真・等倍に戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                        <button onClick="{{ sl.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                       </div>
                       <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
                         <span style="color: #8a5a17; font-weight: 700;">大きさ {{ sl.zoomLabel }}</span>
                       </div>
                       <input type="range" min="40" max="250" step="5" value="{{ sl.zoom }}" onChange="{{ sl.onZoom }}" style="width: 100%;" />
+                      <div style="color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
                       <sc-if value="{{ showCase }}" hint-placeholder-val="{{ true }}">
                         <input value="{{ sl.user }}" onChange="{{ sl.onUser }}" placeholder="例）80代女性・要介護2・娘さんと同居" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
                         <input value="{{ sl.change }}" onChange="{{ sl.onChange }}" placeholder="例）夜間の転倒不安が軽減しました" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
@@ -450,11 +456,13 @@
                 <button onClick="{{ mainPhoto.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 7px 12px; font-size: 12px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                 <button onClick="{{ mainPhoto.onFit }}" style="{{ mainPhoto.fitBtnStyle }}">{{ mainPhoto.fitLabel }}</button>
                 <button onClick="{{ mainPhoto.onReset }}" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                <button onClick="{{ mainPhoto.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
               </div>
               <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
                 <input type="range" min="40" max="250" step="5" value="{{ mainPhoto.zoom }}" onChange="{{ mainPhoto.onZoom }}" style="width: 100%;" />
                 <span style="font-size: 12px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ mainPhoto.zoomLabel }}</span>
               </div>
+              <div style="font-size: 11.5px; color: #8a8175; line-height: 1.6;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。</div>
             </div>
           </sc-if>
         </div>
@@ -636,7 +644,7 @@
               <div style="{{ pShomoGridStyle }}">
                 <sc-for list="{{ pShomo }}" as="it" hint-placeholder-count="6">
                   <div style="border: 1.5px solid #ded5c5; display: grid; grid-template-rows: minmax(0, 1fr) 142px; min-height: 0; overflow: hidden;">
-                    <div data-pframe="{{ it.key }}" style="{{ it.frameStyle }}">
+                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
                       <sc-if value="{{ it.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
@@ -678,7 +686,7 @@
               <div style="{{ pRecGridStyle }}">
                 <sc-for list="{{ pRec }}" as="it" hint-placeholder-count="4">
                   <div style="{{ pRecCellStyle }}">
-                    <div data-pframe="{{ it.key }}" style="{{ it.frameStyle }}">
+                    <div data-pframe="{{ it.key }}" data-pset="{{ it.pset }}" title="{{ it.dragHint }}" style="{{ it.frameStyle }}">
                       <sc-if value="{{ it.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
@@ -712,7 +720,7 @@
                   </div>
                 </sc-for>
               </div>
-              <div data-pframe="main" style="{{ mainPhoto.frameStyle }}">
+              <div data-pframe="main" data-pset="{{ mainPhoto.pset }}" title="{{ mainPhoto.dragHint }}" style="{{ mainPhoto.frameStyle }}">
                 <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
                   <img sc-camel-src="{{ photo }}" alt="商品写真" style="{{ mainPhoto.imgStyle }}" />
                 </sc-if>
@@ -728,7 +736,7 @@
                 <div style="{{ pGridStyle }}">
                   <sc-for list="{{ pPhotos }}" as="p" hint-placeholder-count="4">
                     <div style="border: 1px solid #ded5c5; display: grid; grid-template-rows: minmax(0, 1fr) 68px; min-height: 0; overflow: hidden;">
-                      <div data-pframe="{{ p.key }}" style="{{ p.frameStyle }}">
+                      <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" title="{{ p.dragHint }}" style="{{ p.frameStyle }}">
                         <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}">
                           <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                         </sc-if>
@@ -747,7 +755,7 @@
               <sc-if value="{{ notShowCase }}" hint-placeholder-val="{{ false }}">
                 <div style="{{ pGridStyle }}">
                   <sc-for list="{{ pPhotos }}" as="p" hint-placeholder-count="4">
-                    <div data-pframe="{{ p.key }}" style="{{ p.frameStyleBare }}">
+                    <div data-pframe="{{ p.key }}" data-pset="{{ p.pset }}" title="{{ p.dragHint }}" style="{{ p.frameStyleBare }}">
                       <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}">
                         <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                       </sc-if>
@@ -1228,6 +1236,7 @@ class Component extends DCLogic {
     recTarget: "夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方",
     caseItems: CASEI.map(x => ({ user: x.user, change: x.change })),
     photoZoom: {},
+    photoPos: {},
     company: "太陽シルバーサービス株式会社",
     office: "行橋営業所",
     address: OFC("行橋営業所").a,
@@ -1261,6 +1270,10 @@ class Component extends DCLogic {
     };
     document.addEventListener("paste", this._onPaste);
 
+    // プレビュー上の写真をドラッグして位置を決められるようにする
+    this._onPhotoDown = e => this.startPhotoDrag(e);
+    document.addEventListener("pointerdown", this._onPhotoDown);
+
     this._orig = {};
     this._onResize = () => this.layoutPass();
     window.addEventListener("resize", this._onResize);
@@ -1275,6 +1288,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     document.removeEventListener("paste", this._onPaste);
+    document.removeEventListener("pointerdown", this._onPhotoDown);
     window.removeEventListener("resize", this._onResize);
     window.removeEventListener("beforeprint", this._onResize);
     if (this._ro) this._ro.disconnect();
@@ -1399,11 +1413,13 @@ class Component extends DCLogic {
           label.style.color = "#2d6a4f";
         }
       }
+      // 5) 写真を枠へ実寸で配置する（大きさ・切り取り位置の反映）
+      this.placePhotos();
     } finally { this._inLayout = false; }
   }
 
   saveDraft() {
-    const { photo, photos, photoZoom, photoFitEach, photoBg, dragging, ...rest } = this.state;
+    const { photo, photos, photoZoom, photoPos, photoFitEach, photoBg, dragging, ...rest } = this.state;
     try {
       const serialized = JSON.stringify(rest);
       if (this._lastSaved === serialized) return;
@@ -1544,6 +1560,7 @@ class Component extends DCLogic {
     this.setPhotoAt(idx, url);
     this.setState(s => ({
       photoZoom: Object.assign({}, s.photoZoom, { [key]: 100 }),
+      photoPos: Object.assign({}, s.photoPos, { [key]: { x: 50, y: 50 } }),
       photoFitEach: Object.assign({}, s.photoFitEach, { [key]: "" }),
       photoBg: Object.assign({}, s.photoBg, { [key]: "" })
     }));
@@ -1563,6 +1580,7 @@ class Component extends DCLogic {
     const orig = this._orig && this._orig[key];
     this.setState(s => ({
       photoZoom: Object.assign({}, s.photoZoom, { [key]: 100 }),
+      photoPos: Object.assign({}, s.photoPos, { [key]: { x: 50, y: 50 } }),
       photoFitEach: Object.assign({}, s.photoFitEach, { [key]: "" }),
       photoBg: Object.assign({}, s.photoBg, { [key]: "" })
     }));
@@ -1575,6 +1593,102 @@ class Component extends DCLogic {
     if (!el) return 0;
     const r = el.getBoundingClientRect();
     return r.height > 2 ? r.width / r.height : 0;
+  }
+
+  /** 枠の data-pset（表示方法・大きさ・位置）を読み取る */
+  readPhotoSet(frame) {
+    const parts = String(frame.getAttribute("data-pset") || "").split(",");
+    const z = parseFloat(parts[1]), x = parseFloat(parts[2]), y = parseFloat(parts[3]);
+    return {
+      fit: parts[0] === "contain" ? "contain" : "cover",
+      zoom: z > 0 ? z : 100,
+      x: isFinite(x) ? x : 50,
+      y: isFinite(y) ? y : 50
+    };
+  }
+
+  /** 枠と写真の実寸から、表示サイズと動かせる範囲を求める */
+  photoGeom(frame, set) {
+    const img = frame.querySelector("img");
+    if (!img) return null;
+    const fw = frame.clientWidth, fh = frame.clientHeight;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    if (!(fw > 0 && fh > 0 && iw > 0 && ih > 0)) return null;
+    const p = set || this.readPhotoSet(frame);
+    const base = p.fit === "contain" ? Math.min(fw / iw, fh / ih) : Math.max(fw / iw, fh / ih);
+    const k = base * (p.zoom / 100);
+    return { img: img, fw: fw, fh: fh, w: iw * k, h: ih * k, x: p.x, y: p.y, set: p };
+  }
+
+  /**
+   * 写真1枚を枠へ実寸で置く。
+   * 位置0%=左端／上端、100%=右端／下端。枠より写真が大きいときは、そのまま切り取り位置になる。
+   */
+  placePhoto(frame, set) {
+    const img = frame.querySelector("img");
+    if (!img) return null;
+    if (!img._dcPlaceOnLoad) {
+      // 読み込み中は実寸が取れないため、読み込み完了後にもう一度配置する
+      img._dcPlaceOnLoad = () => this.placePhotos();
+      img.addEventListener("load", img._dcPlaceOnLoad);
+    }
+    const g = this.photoGeom(frame, set);
+    if (!g) return null;
+    const st = img.style;
+    st.position = "absolute";
+    st.maxWidth = "none";
+    st.maxHeight = "none";
+    st.objectFit = "fill";
+    st.width = g.w + "px";
+    st.height = g.h + "px";
+    st.left = ((g.fw - g.w) * g.x / 100) + "px";
+    st.top = ((g.fh - g.h) * g.y / 100) + "px";
+    return g;
+  }
+
+  placePhotos() {
+    const frames = document.querySelectorAll("[data-pframe]");
+    for (let i = 0; i < frames.length; i++) this.placePhoto(frames[i]);
+  }
+
+  /** プレビューの写真をドラッグして、写す場所（切り取る位置）を決める */
+  startPhotoDrag(e) {
+    if (e.button != null && e.button !== 0) return;
+    const frame = e.target && e.target.closest ? e.target.closest("[data-pframe]") : null;
+    if (!frame) return;
+    const g = this.placePhoto(frame);
+    if (!g || !g.img.getAttribute("src")) return;
+    const rangeX = g.fw - g.w, rangeY = g.fh - g.h;
+    // 枠とぴったり同じ大きさなら動かせる余地がない
+    if (Math.abs(rangeX) < 0.5 && Math.abs(rangeY) < 0.5) return;
+    // プレビューは縮小表示されているので、画面上の移動量を実寸へ戻す
+    const shown = frame.getBoundingClientRect().width;
+    const view = frame.clientWidth > 0 ? shown / frame.clientWidth : 1;
+    const sc = view > 0.05 ? view : 1;
+    const key = frame.getAttribute("data-pframe");
+    const sx = e.clientX, sy = e.clientY;
+    let x = g.x, y = g.y, moved = false;
+    e.preventDefault();
+    frame.style.cursor = "grabbing";
+    const move = ev => {
+      const dx = (ev.clientX - sx) / sc, dy = (ev.clientY - sy) / sc;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < 1.2) return;
+      moved = true;
+      if (Math.abs(rangeX) >= 0.5) x = Math.max(0, Math.min(100, g.x + dx * 100 / rangeX));
+      if (Math.abs(rangeY) >= 0.5) y = Math.max(0, Math.min(100, g.y + dy * 100 / rangeY));
+      this.placePhoto(frame, { fit: g.set.fit, zoom: g.set.zoom, x: x, y: y });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      frame.style.cursor = "grab";
+      if (!moved) return;
+      this.setState(s => ({ photoPos: Object.assign({}, s.photoPos, { [key]: { x: x, y: y } }) }));
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   }
 
   /** 写真を縮小版で解析し、背景色と「商品が写っている範囲」を求める */
@@ -1658,13 +1772,19 @@ class Component extends DCLogic {
         if (out) { url = out.url; ratio = out.ratio; }
       }
       const fr = this.frameRatio(key);
-      // 商品の切り抜き写真は切れないように控えめに、風景・現場写真は枠いっぱいに寄せる
-      const tol = info.box ? 0.24 : 0.5;
-      const fit = (fr > 0 && ratio > 0 && Math.abs(Math.log(ratio / fr)) < tol) ? "cover" : "contain";
+      // 背景が単色の商品写真は、余白がその背景色で埋まるため「全体を写す」でも不自然にならない。
+      // 一方、風景・現場写真の余白は灰色の帯として上下に残ってしまうので、原則「枠いっぱい」にする。
+      // 枠の縦横比が取れなかったとき(fr=0)も、余白を作らない側へ倒す。
+      // 1.35 は縦横比が約4倍ちがう場合。ふつうの写真（4:3・3:4・16:9・9:16）はすべて「枠いっぱい」になる
+      const diff = (fr > 0 && ratio > 0) ? Math.abs(Math.log(ratio / fr)) : 0;
+      const fit = info.box
+        ? ((fr > 0 && ratio > 0 && diff < 0.24) ? "cover" : "contain")
+        : (diff > 1.35 ? "contain" : "cover");
       this.setState(s => {
         const next = {
           photoFitEach: Object.assign({}, s.photoFitEach, { [key]: fit }),
           photoZoom: Object.assign({}, s.photoZoom, { [key]: 100 }),
+          photoPos: Object.assign({}, s.photoPos, { [key]: { x: 50, y: 50 } }),
           photoBg: Object.assign({}, s.photoBg, { [key]: info.bg || "" })
         };
         if (url) {
@@ -1687,9 +1807,14 @@ class Component extends DCLogic {
     const key = this.pkey(idx);
     const fit = this.fitOf(key, fallbackFit);
     const z = s.photoZoom[key] == null ? 100 : s.photoZoom[key];
+    const pos = s.photoPos[key] || { x: 50, y: 50 };
+    const has = idx == null ? !!s.photo : !!s.photos[idx];
     const bg = s.photoBg[key] || "#f6f2ea";
     const pad = small ? "5px 9px" : "6px 11px";
     const fsz = small ? "11px" : "11.5px";
+    // 写真が入っている枠だけ、プレビュー上でドラッグして位置を動かせるようにする
+    const grab = has ? "cursor:grab;touch-action:none;" : "";
+    const frameBase = "position:relative;background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;" + grab;
     return {
       key: key,
       zoom: z,
@@ -1698,12 +1823,23 @@ class Component extends DCLogic {
       onAuto: () => this.autoAdjust(idx),
       onFit: () => this.toggleFit(idx, fallbackFit),
       onReset: () => this.resetPhoto(idx),
+      onCenter: () => this.centerPhoto(idx),
       fitLabel: fit === "cover" ? "枠いっぱい" : "全体を写す",
       fitBtnStyle: "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;color:#16140f;background:#fff;border:2px solid #b8620f;border-radius:7px;cursor:pointer;white-space:nowrap;",
-      imgStyle: "width:100%;height:100%;object-fit:" + fit + ";display:block;transform:scale(" + (z / 100) + ");",
-      frameStyle: "background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;",
-      frameStyleBare: "border:1px solid #ded5c5;background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;"
+      // 実際の表示位置・大きさは placePhoto() が枠と写真の実寸から決める。その入力値をDOMへ渡す
+      pset: fit + "," + z + "," + (Math.round(pos.x * 10) / 10) + "," + (Math.round(pos.y * 10) / 10),
+      dragHint: has ? "ドラッグすると写真の位置（切り取る場所）を動かせます" : "",
+      imgStyle: "position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;object-fit:" + fit +
+        ";object-position:" + pos.x + "% " + pos.y + "%;display:block;user-select:none;-webkit-user-drag:none;",
+      frameStyle: frameBase,
+      frameStyleBare: "border:1px solid #ded5c5;" + frameBase
     };
+  }
+
+  /** 写真の位置を枠の中央へ戻す */
+  centerPhoto(idx) {
+    const key = this.pkey(idx);
+    this.setState(s => ({ photoPos: Object.assign({}, s.photoPos, { [key]: { x: 50, y: 50 } }) }));
   }
 
   unitPrice(spec, price, base) {
