@@ -22,6 +22,7 @@
     @page { size: A4; margin: 0; }
     html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     [data-print="hide"] { display: none !important; }
+    [data-pframe] { box-shadow: none !important; }
     [data-print="page"] { min-height: 0 !important; height: 297mm !important; overflow: hidden !important; background: #fff !important; }
     [data-print="wrap"] { max-width: none !important; margin: 0 !important; padding: 0 !important; display: block !important; gap: 0 !important; }
     [data-print="col"] { position: static !important; max-width: none !important; flex: none !important; width: 210mm !important; display: block !important; justify-items: start !important; }
@@ -131,6 +132,7 @@
                   <input value="{{ r.note }}" onChange="{{ r.onNote }}" placeholder="おすすめのポイント（1行）" style="width: 100%; padding: 11px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
                   <div style="display: grid; gap: 6px;">
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <button onClick="{{ r.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ r.pasteBtnStyle }}">貼り付け</button>
                       <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
                       <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
@@ -147,7 +149,7 @@
               </div>
             </sc-for>
           </div>
-          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。コピーした画像は Ctrl+V（⌘V）で空いている枠に順番に貼り付けられます。</div>
+          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。</div>
         </div>
       </sc-if>
 
@@ -215,6 +217,7 @@
                   <div style="font-size: 11px; color: #a89e8c;">自動計算：{{ r.unitHint }}</div>
                   <div style="display: grid; gap: 6px;">
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <button onClick="{{ r.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ r.pasteBtnStyle }}">貼り付け</button>
                       <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
                       <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
@@ -231,7 +234,7 @@
               </div>
             </sc-for>
           </div>
-          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。コピーした画像は Ctrl+V（⌘V）でも貼り付けられます。</div>
+          <div style="font-size: 13px; color: #5d564b; line-height: 1.7;">枠をクリックして写真を選ぶか、ドラッグ＆ドロップ。スクリーンショットなどコピーした画像は、行の「貼り付け」ボタン、または Ctrl+V（⌘V）で入ります。貼り付け先はプレビューの枠をクリックして選べます（選ばないときは空いている枠へ順番に入ります）。</div>
         </div>
       </sc-if>
 
@@ -383,6 +386,7 @@
                     </sc-if>
                     <input type="file" accept="image/*" onChange="{{ sl.onPick }}" style="display: none;" />
                   </label>
+                  <button onClick="{{ sl.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ sl.pasteBtnStyle }}">貼り付け</button>
                   <details style="font-size: 11.5px;">
                     <summary style="cursor: pointer; list-style: none; color: #8a5a17; font-weight: 700;">写真の調整・事例を入力 ▾</summary>
                     <div style="display: grid; gap: 6px; padding-top: 6px;">
@@ -416,7 +420,7 @@
               </div>
             </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-              <span style="font-size: 12.5px; color: #5d564b;">枠をクリックして選択、ドラッグ＆ドロップ、Ctrl+V（⌘V）の貼り付けにも対応</span>
+              <span style="font-size: 12.5px; color: #5d564b;">枠をクリックして選択、ドラッグ＆ドロップ、スクリーンショットの貼り付け（「貼り付け」ボタン／Ctrl+V・⌘V）に対応</span>
               <button onClick="{{ onClearPhotos }}" style="padding: 10px 16px; font-size: 14px; font-weight: 700; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf3f1">全て外す</button>
             </div>
           </div>
@@ -426,7 +430,7 @@
         <div style="display: grid; gap: 11px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-size: 16px; font-weight: 700;">{{ prodPhotoLabel }}</span>
-            <span style="font-size: 12.5px; color: #5d564b;">ボタンで選ぶか、枠にドラッグしてください</span>
+            <span style="font-size: 12.5px; color: #5d564b;">ボタンで選ぶか、枠にドラッグ。スクリーンショットは「スクショを貼り付け」または Ctrl+V（⌘V）</span>
           </div>
           <label onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="{{ dropStyle }}">
             <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
@@ -435,7 +439,7 @@
             <sc-if value="{{ noPhoto }}" hint-placeholder-val="{{ true }}">
               <div style="display: grid; gap: 6px; justify-items: center; padding: 30px 12px;">
                 <div style="font-size: 15px; font-weight: 700; color: #5d564b;">クリックまたはドラッグで写真を追加</div>
-                <div style="font-size: 13px; color: #8a8175;">Ctrl+V（⌘V）の貼り付けにも対応</div>
+                <div style="font-size: 13px; color: #8a8175;">スクリーンショットは下の「スクショを貼り付け」ボタン、または Ctrl+V（⌘V）で入ります</div>
               </div>
             </sc-if>
             <input type="file" accept="image/*" onChange="{{ onPickFile }}" style="display: none;" />
@@ -445,6 +449,7 @@
               ファイルを選ぶ
               <input type="file" accept="image/*" onChange="{{ onPickFile }}" style="display: none;" />
             </label>
+            <button onClick="{{ mainPhoto.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="padding: 12px 18px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #b8620f; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf7ed">スクショを貼り付け</button>
             <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ onClearPhoto }}" style="padding: 12px 18px; font-size: 15px; font-weight: 700; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf3f1">写真を外す</button>
             </sc-if>
@@ -453,6 +458,7 @@
             <div style="display: grid; gap: 8px; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 11px 13px;">
               <div style="display: flex; gap: 7px; flex-wrap: wrap; align-items: center;">
                 <span style="font-size: 12.5px; font-weight: 900; color: #5d564b;">チラシでの見え方</span>
+                <button onClick="{{ mainPhoto.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ mainPhoto.pasteBtnStyle }}">貼り付け</button>
                 <button onClick="{{ mainPhoto.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 7px 12px; font-size: 12px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
                 <button onClick="{{ mainPhoto.onFit }}" style="{{ mainPhoto.fitBtnStyle }}">{{ mainPhoto.fitLabel }}</button>
                 <button onClick="{{ mainPhoto.onReset }}" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
@@ -574,6 +580,10 @@
         <div style="font-size: 14px; font-weight: 700; color: #5d564b;">プレビュー（A4・そのまま印刷）</div>
         <div style="font-size: 13px; color: #7b7365;">{{ tplName }}</div>
       </div>
+
+      <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ true }}">
+        <div data-print="hide" style="width: 100%; background: #fdf7ed; border: 2px solid #d8a45e; border-radius: 10px; padding: 9px 13px; font-size: 13px; font-weight: 700; color: #6f4712; line-height: 1.6;">{{ notice }}</div>
+      </sc-if>
 
       <div data-print="hide" style="width: 100%; background: #fff; border: 2px solid #ddd3c0; border-radius: 13px; padding: 13px 15px; display: grid; gap: 11px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
@@ -1237,6 +1247,8 @@ class Component extends DCLogic {
     caseItems: CASEI.map(x => ({ user: x.user, change: x.change })),
     photoZoom: {},
     photoPos: {},
+    pasteTarget: null,
+    notice: "",
     company: "太陽シルバーサービス株式会社",
     office: "行橋営業所",
     address: OFC("行橋営業所").a,
@@ -1250,22 +1262,23 @@ class Component extends DCLogic {
   componentDidMount() {
     if (!_draft) this.applyCat("bed");
     this._onPaste = e => {
-      const items = (e.clipboardData && e.clipboardData.items) || [];
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type && items[i].type.indexOf("image/") === 0) {
-          const f = items[i].getAsFile();
-          if (!f) continue;
-          const st = this.state;
-          const multi = st.tpl === "case" || st.tpl === "shomo" || st.tpl === "rec";
-          if (multi) {
-            const max = st.tpl === "case" ? st.photoCount : st.tpl === "rec" ? st.recCount : st.shomoCount;
-            let idx = 0;
-            while (idx < max - 1 && st.photos[idx]) idx++;
-            this.loadImage(f, idx);
-          } else this.loadImage(f);
-          e.preventDefault();
-          return;
-        }
+      const dt = e.clipboardData;
+      if (!dt) return;
+      // スクリーンショットなど、画像そのものがクリップボードにある場合
+      const blob = this.imageFromTransfer(dt);
+      if (blob) {
+        e.preventDefault();
+        this.acceptPastedImage(blob);
+        return;
+      }
+      // Webページからコピーした画像（クリップボードにはHTMLやURLだけが入る）
+      const el = e.target;
+      const typing = !!el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+      if (typing) return;
+      const url = this.imageUrlFromTransfer(dt);
+      if (url) {
+        e.preventDefault();
+        this.acceptPastedUrl(url);
       }
     };
     document.addEventListener("paste", this._onPaste);
@@ -1295,6 +1308,7 @@ class Component extends DCLogic {
     if (this._raf) cancelAnimationFrame(this._raf);
     clearTimeout(this._layoutTimer);
     clearTimeout(this._saveTimer);
+    clearTimeout(this._noticeTimer);
   }
 
   componentDidUpdate() {
@@ -1419,7 +1433,7 @@ class Component extends DCLogic {
   }
 
   saveDraft() {
-    const { photo, photos, photoZoom, photoPos, photoFitEach, photoBg, dragging, ...rest } = this.state;
+    const { photo, photos, photoZoom, photoPos, photoFitEach, photoBg, dragging, pasteTarget, notice, ...rest } = this.state;
     try {
       const serialized = JSON.stringify(rest);
       if (this._lastSaved === serialized) return;
@@ -1526,6 +1540,119 @@ class Component extends DCLogic {
       tokka[i].price = v;
       return { tokka };
     });
+  }
+
+  /* ---------- 画像の貼り付け（スクリーンショット・コピーした画像） ---------- */
+
+  /** 数秒で消える案内文を出す */
+  setNotice(message) {
+    clearTimeout(this._noticeTimer);
+    this.setState({ notice: message });
+    if (message) this._noticeTimer = setTimeout(() => this.setState({ notice: "" }), 7000);
+  }
+
+  /** クリップボードの中身から画像データを取り出す */
+  imageFromTransfer(dt) {
+    const items = dt.items || [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type && items[i].type.indexOf("image/") === 0) {
+        const f = items[i].getAsFile();
+        if (f) return f;
+      }
+    }
+    const files = dt.files || [];
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type && files[i].type.indexOf("image/") === 0) return files[i];
+    }
+    return null;
+  }
+
+  /** Webページからコピーしたときの、画像のURLを取り出す */
+  imageUrlFromTransfer(dt) {
+    let html = "";
+    try { html = dt.getData("text/html") || ""; } catch (e) { html = ""; }
+    const m = html.match(/<img[^>]+src\s*=\s*["']([^"']+)["']/i);
+    if (m && m[1]) return m[1];
+    let text = "";
+    try { text = (dt.getData("text/plain") || "").trim(); } catch (e) { text = ""; }
+    if (/^data:image\//i.test(text)) return text;
+    if (/^https?:\/\/\S+\.(png|jpe?g|gif|webp|bmp)(\?\S*)?$/i.test(text)) return text;
+    return "";
+  }
+
+  /** どの枠へ貼り付けるかを決める。選ばれた枠がなければ空いている枠へ順番に入れる */
+  pasteSlot(forcedKey) {
+    const s = this.state;
+    const target = forcedKey === undefined ? s.pasteTarget : forcedKey;
+    const multi = s.tpl === "case" || s.tpl === "shomo" || s.tpl === "rec";
+    if (!multi) return { idx: null, replaced: !!s.photo };
+    const max = s.tpl === "case" ? s.photoCount : s.tpl === "rec" ? s.recCount : s.shomoCount;
+    if (target != null && target !== "main") {
+      const i = parseInt(target, 10);
+      if (i >= 0 && i < max) return { idx: i, replaced: !!s.photos[i] };
+    }
+    let i = 0;
+    while (i < max && s.photos[i]) i++;
+    if (i < max) return { idx: i, replaced: false };
+    return { idx: max - 1, replaced: true };
+  }
+
+  slotLabel(idx) { return idx == null ? "商品写真" : (idx + 1) + "番の枠"; }
+
+  /** 取り出した画像を枠へ入れる */
+  acceptPastedImage(blob, forcedKey) {
+    if (!blob || !/^image\//.test(blob.type || "")) return false;
+    const slot = this.pasteSlot(forcedKey);
+    this.setState({ pasteTarget: null });
+    this.loadImage(blob, slot.idx);
+    this.setNotice(this.slotLabel(slot.idx) + (slot.replaced ? "の写真を差し替えました。" : "に貼り付けました。"));
+    return true;
+  }
+
+  /** URLしかコピーされていないときは、画像を取得してから枠へ入れる */
+  acceptPastedUrl(url, forcedKey) {
+    if (/^data:image\//i.test(url)) {
+      const slot = this.pasteSlot(forcedKey);
+      this.setState({ pasteTarget: null });
+      this.ingestPhoto(url, slot.idx);
+      this.setNotice(this.slotLabel(slot.idx) + (slot.replaced ? "の写真を差し替えました。" : "に貼り付けました。"));
+      return;
+    }
+    this.setNotice("コピーした画像を読み込んでいます…");
+    fetch(url, { mode: "cors" })
+      .then(r => { if (!r.ok) throw new Error("http " + r.status); return r.blob(); })
+      .then(blob => {
+        if (!this.acceptPastedImage(blob, forcedKey)) throw new Error("not an image");
+      })
+      .catch(() => this.setNotice("この画像は直接貼り付けられませんでした。画像を保存してから、枠へドラッグするか「ファイルを選ぶ」で読み込んでください。"));
+  }
+
+  /** 「貼り付け」ボタン。クリップボードを直接読み、読めない環境では枠を選ぶだけにする */
+  pasteHere(idx) {
+    const key = this.pkey(idx);
+    this.setState({ pasteTarget: key });
+    const board = navigator.clipboard;
+    const askManual = () => this.setNotice(
+      this.slotLabel(idx) + "を選びました。Ctrl+V（⌘V）を押すと、コピーした画像やスクリーンショットを貼り付けます。");
+    if (!board || !board.read) { askManual(); return; }
+    board.read().then(items => {
+      for (let i = 0; i < items.length; i++) {
+        const types = items[i].types || [];
+        let type = "";
+        for (let t = 0; t < types.length; t++) if (types[t].indexOf("image/") === 0) { type = types[t]; break; }
+        if (!type) continue;
+        return items[i].getType(type).then(blob => { this.acceptPastedImage(blob, key); });
+      }
+      this.setNotice("クリップボードに画像がありません。スクリーンショットを撮ってから、もう一度押してください。");
+      this.setState({ pasteTarget: null });
+    }).catch(askManual);
+  }
+
+  /** プレビューの枠をクリックしたとき、そこを貼り付け先にする */
+  selectPasteTarget(key) {
+    const idx = key === "main" ? null : parseInt(key, 10);
+    this.setState({ pasteTarget: key });
+    this.setNotice(this.slotLabel(idx) + "を選びました。Ctrl+V（⌘V）を押すと、コピーした画像やスクリーンショットを貼り付けます。");
   }
 
   /* ---------- 写真の取り込みと自動調整 ---------- */
@@ -1656,24 +1783,25 @@ class Component extends DCLogic {
     if (e.button != null && e.button !== 0) return;
     const frame = e.target && e.target.closest ? e.target.closest("[data-pframe]") : null;
     if (!frame) return;
+    const key = frame.getAttribute("data-pframe");
     const g = this.placePhoto(frame);
-    if (!g || !g.img.getAttribute("src")) return;
-    const rangeX = g.fw - g.w, rangeY = g.fh - g.h;
-    // 枠とぴったり同じ大きさなら動かせる余地がない
-    if (Math.abs(rangeX) < 0.5 && Math.abs(rangeY) < 0.5) return;
+    const rangeX = g ? g.fw - g.w : 0, rangeY = g ? g.fh - g.h : 0;
+    // 写真が入っていて、枠との差があるときだけ位置を動かせる。
+    // 動かさずに押しただけのときは、その枠を貼り付け先にする（空の枠でも同じ）
+    const canDrag = !!g && !!g.img.getAttribute("src") && (Math.abs(rangeX) >= 0.5 || Math.abs(rangeY) >= 0.5);
     // プレビューは縮小表示されているので、画面上の移動量を実寸へ戻す
     const shown = frame.getBoundingClientRect().width;
     const view = frame.clientWidth > 0 ? shown / frame.clientWidth : 1;
     const sc = view > 0.05 ? view : 1;
-    const key = frame.getAttribute("data-pframe");
     const sx = e.clientX, sy = e.clientY;
-    let x = g.x, y = g.y, moved = false;
-    e.preventDefault();
-    frame.style.cursor = "grabbing";
+    let x = g ? g.x : 50, y = g ? g.y : 50, moved = false;
+    if (canDrag) { e.preventDefault(); frame.style.cursor = "grabbing"; }
     const move = ev => {
-      const dx = (ev.clientX - sx) / sc, dy = (ev.clientY - sy) / sc;
-      if (!moved && Math.abs(dx) + Math.abs(dy) < 1.2) return;
+      const rawX = ev.clientX - sx, rawY = ev.clientY - sy;
+      if (!moved && Math.abs(rawX) + Math.abs(rawY) < 3) return;
       moved = true;
+      if (!canDrag) return;
+      const dx = rawX / sc, dy = rawY / sc;
       if (Math.abs(rangeX) >= 0.5) x = Math.max(0, Math.min(100, g.x + dx * 100 / rangeX));
       if (Math.abs(rangeY) >= 0.5) y = Math.max(0, Math.min(100, g.y + dy * 100 / rangeY));
       this.placePhoto(frame, { fit: g.set.fit, zoom: g.set.zoom, x: x, y: y });
@@ -1682,8 +1810,8 @@ class Component extends DCLogic {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
-      frame.style.cursor = "grab";
-      if (!moved) return;
+      if (canDrag) frame.style.cursor = "grab";
+      if (!moved) { this.selectPasteTarget(key); return; }
       this.setState(s => ({ photoPos: Object.assign({}, s.photoPos, { [key]: { x: x, y: y } }) }));
     };
     window.addEventListener("pointermove", move);
@@ -1809,12 +1937,16 @@ class Component extends DCLogic {
     const z = s.photoZoom[key] == null ? 100 : s.photoZoom[key];
     const pos = s.photoPos[key] || { x: 50, y: 50 };
     const has = idx == null ? !!s.photo : !!s.photos[idx];
+    const targeted = s.pasteTarget === key;
     const bg = s.photoBg[key] || "#f6f2ea";
     const pad = small ? "5px 9px" : "6px 11px";
     const fsz = small ? "11px" : "11.5px";
-    // 写真が入っている枠だけ、プレビュー上でドラッグして位置を動かせるようにする
-    const grab = has ? "cursor:grab;touch-action:none;" : "";
-    const frameBase = "position:relative;background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;" + grab;
+    const btn = "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;border-radius:7px;cursor:pointer;white-space:nowrap;";
+    // 写真が入っている枠はドラッグで位置を動かせる。空の枠はクリックで貼り付け先にできる
+    const grab = has ? "cursor:grab;touch-action:none;" : "cursor:pointer;";
+    // 貼り付け先に選ばれている枠を、画面上だけで囲って示す（印刷には出ない）
+    const mark = targeted ? "box-shadow:inset 0 0 0 3px #b8620f;" : "";
+    const frameBase = "position:relative;background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;" + grab + mark;
     return {
       key: key,
       zoom: z,
@@ -1824,11 +1956,17 @@ class Component extends DCLogic {
       onFit: () => this.toggleFit(idx, fallbackFit),
       onReset: () => this.resetPhoto(idx),
       onCenter: () => this.centerPhoto(idx),
+      onPasteHere: () => this.pasteHere(idx),
+      pasteBtnStyle: targeted
+        ? btn + "color:#fff;background:#b8620f;border:2px solid #b8620f;font-weight:900;"
+        : btn + "color:#16140f;background:#fff;border:2px solid #b8620f;",
       fitLabel: fit === "cover" ? "枠いっぱい" : "全体を写す",
       fitBtnStyle: "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;color:#16140f;background:#fff;border:2px solid #b8620f;border-radius:7px;cursor:pointer;white-space:nowrap;",
       // 実際の表示位置・大きさは placePhoto() が枠と写真の実寸から決める。その入力値をDOMへ渡す
       pset: fit + "," + z + "," + (Math.round(pos.x * 10) / 10) + "," + (Math.round(pos.y * 10) / 10),
-      dragHint: has ? "ドラッグすると写真の位置（切り取る場所）を動かせます" : "",
+      dragHint: has
+        ? "ドラッグすると写真の位置（切り取る場所）を動かせます。クリックすると、この枠が貼り付け先になります"
+        : "クリックすると、この枠が貼り付け先になります（Ctrl+V／⌘V で貼り付け）",
       imgStyle: "position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;object-fit:" + fit +
         ";object-position:" + pos.x + "% " + pos.y + "%;display:block;user-select:none;-webkit-user-drag:none;",
       frameStyle: frameBase,
@@ -1929,6 +2067,8 @@ class Component extends DCLogic {
         onClick: () => this.setState({ tpl: t.id, headline: headlineBucket(t.id, this.state.kubun)[0] })
       })),
       tplName: tpl.title,
+      notice: s.notice,
+      hasNotice: !!s.notice,
       isTokka,
       notTokka: !isTokka,
       isCase,
