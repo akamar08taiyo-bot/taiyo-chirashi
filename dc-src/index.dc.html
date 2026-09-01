@@ -192,8 +192,8 @@
           </div>
           <div style="display: grid; gap: 9px;">
             <span style="font-size: 15px; font-weight: 700;">価格の横に出す税の表記</span>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-              <sc-for list="{{ taxOpts }}" as="tx" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+              <sc-for list="{{ taxOpts }}" as="tx" hint-placeholder-count="4">
                 <button onClick="{{ tx.onClick }}" style="{{ tx.style }}">{{ tx.label }}</button>
               </sc-for>
             </div>
@@ -672,7 +672,9 @@
                         </sc-if>
                         <div style="display: flex; align-items: flex-end; gap: 3px;">
                           <div style="font-size: 20px; font-weight: 900; line-height: 1.1;">{{ it.price }}</div>
-                          <div style="font-size: 11.5px; font-weight: 700;">{{ taxLabel }}</div>
+                          <sc-if value="{{ showTax }}" hint-placeholder-val="{{ true }}">
+                            <div style="font-size: 11.5px; font-weight: 700;">{{ taxLabel }}</div>
+                          </sc-if>
                         </div>
                       </div>
                     </div>
@@ -1187,7 +1189,7 @@ function fixDraft(d) {
   if (!Array.isArray(d.tokka) || d.tokka.length !== 3) delete d.tokka;
   if (!Array.isArray(d.kyufu)) d.kyufu = [];
   if (!Array.isArray(d.photos)) d.photos = [];
-  if (["税込", "税抜", "非課税"].indexOf(d.taxLabel) < 0) d.taxLabel = "税込";
+  if (["税込", "税抜", "非課税", ""].indexOf(d.taxLabel) < 0) d.taxLabel = "税込";
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
@@ -2134,6 +2136,7 @@ class Component extends DCLogic {
     const slotIdx = [];
     for (let i = 0; i < s.photoCount; i++) slotIdx.push(i);
     const kyufuText = s.kyufu.length ? s.kyufu.join("・") : "—";
+    const taxLabel = s.taxLabel == null ? "税込" : s.taxLabel;
 
     const mk = list => list.map(x => ({
       label: x.label,
@@ -2195,11 +2198,17 @@ class Component extends DCLogic {
         });
       }),
       showUnit: s.showUnit,
-      taxLabel: s.taxLabel || "税込",
-      taxOpts: ["税込", "税抜", "非課税"].map(v => ({
-        label: v,
-        style: this.chip((s.taxLabel || "税込") === v, "#8a5a17"),
-        onClick: () => this.set("taxLabel", v)
+      taxLabel: taxLabel,
+      showTax: !!taxLabel,
+      taxOpts: [
+        { label: "税込", v: "税込" },
+        { label: "税抜", v: "税抜" },
+        { label: "非課税", v: "非課税" },
+        { label: "表示しない", v: "" }
+      ].map(o => ({
+        label: o.label,
+        style: this.chip(taxLabel === o.v, "#8a5a17"),
+        onClick: () => this.set("taxLabel", o.v)
       })),
       unitOpts: [{ label: "単価を表示する", v: true }, { label: "表示しない", v: false }].map(o => ({
         label: o.label,
