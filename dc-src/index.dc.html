@@ -18,6 +18,10 @@
   input, textarea, button { font-family: inherit; }
   input::placeholder, textarea::placeholder { color: #9d9384; font-weight: 400; }
   input[type="range"] { accent-color: #b8620f; }
+  /* 読み込み中、Reactが差し替える前の生のテンプレート（{{ }} や両方の分岐）が
+     一瞬映る「バグって見える」瞬間を防ぐ。x-dc は React マウント時に
+     まるごと入れ替わるため、外す処理は不要（消えるとき道連れで消える）。 */
+  x-dc { visibility: hidden; }
   /* プレビューの写真に「ドラッグで動かせます」と出す（画面のみ・印刷には出ない） */
   [data-pdrag="1"]::after {
     content: "✥ ドラッグで位置を調整";
@@ -912,7 +916,7 @@ const CATS = [
   { id: "pos", g: "貸与", label: "体位変換器", kyufu: H, name: "体位変換クッション", maker: "", tani: "80", fee1: "80円",
     feats: F("少ない力で体位を変える", "介助者の腰への負担を軽くします。", "安楽な姿勢を保つ", "側臥位の保持に使えます。", "除圧の時間を確保", "同一部位への圧迫を避けられます。") },
   { id: "rail", g: "貸与", label: "手すり", kyufu: A, name: "歩行サポート手すり スムーディ（屋外用）片手すり 標準タイプ", maker: "パナソニック エイジフリー株式会社", tani: "150", fee1: "150円",
-    feats: F("工事不要で置くだけ", "玄関前アプローチなどに設置でき、住宅改修を伴いません。", "支柱位置を左・中央・右から選べる", "設置場所や利き手に合わせて選べます。", "やさしい端部形状", "つかみやすく、袖口が引っかかりにくい設計です。") },
+    feats: F("工事不要で置くだけ", "玄関前アプローチなどに設置でき、住宅改修を伴いません。", "支柱位置を左・中央・右から選べる", "設置場所や利き手に合わせて選べます。", "端から端までしっかりつかめる", "耐荷重100kg。手を離さず移動でき、袖口も引っかかりにくい設計です。") },
   { id: "slope", g: "貸与", label: "スロープ", kyufu: A, name: "段差解消スロープ", maker: "", tani: "100", fee1: "100円",
     feats: F("玄関・掃出し窓の段差に", "工事なしで段差を越えられます。", "車いすでの出入りが可能", "外出・通院の負担を軽くします。", "長さを選べる", "段差の高さに合わせて選定します。") },
   { id: "walker", g: "貸与", label: "歩行器", kyufu: A, name: "ウォルウォル", maker: PB, tani: "250", fee1: "250円",
@@ -1445,6 +1449,14 @@ class Component extends DCLogic {
   }
 
   set(k, v) { this.setState({ [k]: v }); }
+
+  /** チラシの型を切り替える。「新商品のご紹介」に初めて切り替えたときは、
+   *  手すり スムーディ（パナソニック エイジフリー）を既定の例として選ぶ。 */
+  selectTpl(id) {
+    const wasNew = this.state.tpl === "new";
+    this.setState({ tpl: id, headline: headlineBucket(id, this.state.kubun)[0] });
+    if (id === "new" && !wasNew) this.applyCat("rail");
+  }
 
   applyCat(id, subIdx) {
     const c = cat(id);
@@ -2155,7 +2167,7 @@ class Component extends DCLogic {
         desc: t.desc,
         style: "display:grid;gap:6px;text-align:left;padding:17px 18px;border-radius:12px;cursor:pointer;transition:all .12s;" +
           (t.id === s.tpl ? "color:#fff;background:#b8620f;border:3px solid #b8620f;box-shadow:0 3px 0 #8a4708;" : "color:#16140f;background:#fff;border:3px solid #ddd3c0;"),
-        onClick: () => this.setState({ tpl: t.id, headline: headlineBucket(t.id, this.state.kubun)[0] })
+        onClick: () => this.selectTpl(t.id)
       })),
       tplName: tpl.title,
       notice: s.notice,
