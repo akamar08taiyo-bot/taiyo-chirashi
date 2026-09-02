@@ -80,6 +80,56 @@
         </div>
       </div>
 
+      <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
+        <div style="display: flex; align-items: center; gap: 11px;">
+          <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
+          <div style="font-size: 20px; font-weight: 700;">会社名・担当者</div>
+          <div style="font-size: 12.5px; color: #7b7365;">（チラシ下部に入ります）</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px;">
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">会社名</span>
+            <input value="{{ company }}" onChange="{{ onCompany }}" placeholder="太陽シルバーサービス株式会社" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">営業所（選ぶと住所・TEL・FAXが入ります）</span>
+            <select value="{{ office }}" onChange="{{ onOfficePick }}" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px; appearance: none;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)">
+              <sc-for list="{{ officeList }}" as="o" hint-placeholder-count="19">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+        <label style="display: grid; gap: 7px;">
+          <span style="font-size: 14px; font-weight: 700; color: #5d564b;">住所</span>
+          <input value="{{ address }}" onChange="{{ onAddress }}" placeholder="例）〒824-0000 福岡県行橋市◯◯ 1-2-3" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+        </label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 12px;">
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">TEL</span>
+            <input value="{{ tel }}" onChange="{{ onTel }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">FAX</span>
+            <input value="{{ fax }}" onChange="{{ onFax }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">介護保険事業所番号</span>
+            <input value="{{ jigyosho }}" onChange="{{ onJigyosho }}" placeholder="4070000000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px solid #edeade; padding-top: 14px;">
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 15px; font-weight: 900; color: #a2550c;">担当者名（福祉用具専門相談員）</span>
+            <input value="{{ staff }}" onChange="{{ onStaff }}" placeholder="例）田中 太郎" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fdf7ed; border: 2px solid #d8a45e; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+          <label style="display: grid; gap: 7px;">
+            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">担当者 携帯番号</span>
+            <input value="{{ mobile }}" onChange="{{ onMobile }}" placeholder="090-0000-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          </label>
+        </div>
+      </div>
+
       <sc-if value="{{ useMotor }}" hint-placeholder-val="{{ true }}">
         <div style="background: #fff; border: 3px solid #c0392b; border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -114,7 +164,7 @@
       <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
         <div style="background: #fff; border: 3px solid #b8620f; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
+            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 900;">ご紹介する商品</div>
             <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #b8620f; padding: 5px 11px; border-radius: 5px;">複数品を同時掲載</div>
           </div>
@@ -169,7 +219,7 @@
       <sc-if value="{{ isShomo }}" hint-placeholder-val="{{ false }}">
         <div style="background: #fff; border: 3px solid #8a5a17; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
+            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 900;">消耗品の一覧</div>
             <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #8a5a17; padding: 5px 11px; border-radius: 5px;">施設向け</div>
           </div>
@@ -256,7 +306,7 @@
       <sc-if value="{{ showCatCard }}" hint-placeholder-val="{{ false }}">
         <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
           <div style="display: flex; align-items: center; gap: 11px; flex-wrap: wrap;">
-            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
+            <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 700;">用具の種類</div>
             <div style="font-size: 13px; font-weight: 700; color: #fff; background: #b8620f; padding: 4px 11px; border-radius: 5px;">{{ catLabel }}</div>
           </div>
@@ -328,7 +378,7 @@
 
       <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 24px; display: grid; gap: 24px;">
         <div style="display: flex; align-items: center; gap: 11px; border-bottom: 2px solid #edeade; padding-bottom: 14px;">
-          <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
+          <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">4</div>
           <div style="font-size: 20px; font-weight: 700;">チラシの内容</div>
         </div>
 
@@ -542,51 +592,6 @@
         </div>
         </sc-if>
 
-        <div style="display: grid; gap: 13px; border-top: 2px solid #edeade; padding-top: 20px;">
-          <span style="font-size: 16px; font-weight: 700;">事業所情報（チラシ下部）</span>
-          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px;">
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">会社名</span>
-              <input value="{{ company }}" onChange="{{ onCompany }}" placeholder="太陽シルバーサービス株式会社" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">営業所（選ぶと住所・TEL・FAXが入ります）</span>
-              <select value="{{ office }}" onChange="{{ onOfficePick }}" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px; appearance: none;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)">
-                <sc-for list="{{ officeList }}" as="o" hint-placeholder-count="19">
-                  <option value="{{ o }}">{{ o }}</option>
-                </sc-for>
-              </select>
-            </label>
-          </div>
-          <label style="display: grid; gap: 7px;">
-            <span style="font-size: 14px; font-weight: 700; color: #5d564b;">住所</span>
-            <input value="{{ address }}" onChange="{{ onAddress }}" placeholder="例）〒824-0000 福岡県行橋市◯◯ 1-2-3" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-          </label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 12px;">
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">TEL</span>
-              <input value="{{ tel }}" onChange="{{ onTel }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">FAX</span>
-              <input value="{{ fax }}" onChange="{{ onFax }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">介護保険事業所番号</span>
-              <input value="{{ jigyosho }}" onChange="{{ onJigyosho }}" placeholder="4070000000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px solid #edeade; padding-top: 14px;">
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">担当者（福祉用具専門相談員）</span>
-              <input value="{{ staff }}" onChange="{{ onStaff }}" placeholder="例）田中 太郎" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-            <label style="display: grid; gap: 7px;">
-              <span style="font-size: 14px; font-weight: 700; color: #5d564b;">担当者 携帯番号</span>
-              <input value="{{ mobile }}" onChange="{{ onMobile }}" placeholder="090-0000-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-            </label>
-          </div>
-        </div>
       </div>
     </div>
 
