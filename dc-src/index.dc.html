@@ -11,13 +11,31 @@
 <helmet>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
 <style>
-  body { margin: 0; background: #edeade; font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; -webkit-font-smoothing: antialiased; }
+  /* 配色（既定は水色）。ヘッダー右上のスイッチで <html data-theme="brown"> に切り替えられる。
+     区分バッジの色（貸与=緑・販売=紫・住宅改修=紺・自費/削除=赤）はここでは変えない。 */
+  :root {
+    --c-accent: #0e78a9; --c-accent-rgb: 14,120,169; --c-accent-hover: #086590; --c-accent-shadow: #07597f;
+    --c-link: #0e6e9b; --c-link-hover: #064e70;
+    --c-accent2: #155d7f; --c-accent2-rgb: 21,93,127; --c-accent2-hover: #114b66; --c-accent3: #0b6995;
+    --c-bg-highlight: #edf8fd; --c-bg-panel: #f3f8fa; --c-bg-soft: #eaf2f6; --c-bg-page: #dee8ed;
+    --c-border-card: #c0d4dd; --c-border-row: #d0e0e7; --c-border-dash: #b4c6cf; --c-border-input: #94a9b3;
+    --c-border-highlight: #a3d1e6; --c-border-notice: #5eb1d8; --c-border-field: #84949c; --c-border-chip: #a0b4bd;
+  }
+  :root[data-theme="brown"] {
+    --c-accent: #b8620f; --c-accent-rgb: 184,98,15; --c-accent-hover: #9c5109; --c-accent-shadow: #8a4708;
+    --c-link: #a8580f; --c-link-hover: #7a3d06;
+    --c-accent2: #8a5a17; --c-accent2-rgb: 138,90,23; --c-accent2-hover: #6f4712; --c-accent3: #a2550c;
+    --c-bg-highlight: #fdf7ed; --c-bg-panel: #faf8f3; --c-bg-soft: #f6f2ea; --c-bg-page: #edeade;
+    --c-border-card: #ddd3c0; --c-border-row: #e7dfd0; --c-border-dash: #cfc5b4; --c-border-input: #b3a894;
+    --c-border-highlight: #e6cda3; --c-border-notice: #d8a45e; --c-border-field: #9c9284; --c-border-chip: #bdb2a0;
+  }
+  body { margin: 0; background: var(--c-bg-page); font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; -webkit-font-smoothing: antialiased; }
   * { box-sizing: border-box; }
-  a { color: #a8580f; }
-  a:hover { color: #7a3d06; }
+  a { color: var(--c-link); }
+  a:hover { color: var(--c-link-hover); }
   input, textarea, button { font-family: inherit; }
   input::placeholder, textarea::placeholder { color: #9d9384; font-weight: 400; }
-  input[type="range"] { accent-color: #b8620f; }
+  input[type="range"] { accent-color: var(--c-accent); }
   /* 読み込み中、Reactが差し替える前の生のテンプレート（{{ }} や両方の分岐）が
      一瞬映る「バグって見える」瞬間を防ぐ。x-dc は React マウント時に
      まるごと入れ替わるため、外す処理は不要（消えるとき道連れで消える）。 */
@@ -31,7 +49,7 @@
     opacity: 0; transition: opacity .12s; pointer-events: none;
   }
   [data-pdrag="1"]:hover::after { opacity: 1; }
-  [data-pdrop="1"] { outline: 3px dashed #b8620f; outline-offset: -3px; }
+  [data-pdrop="1"] { outline: 3px dashed var(--c-accent); outline-offset: -3px; }
   @media print {
     @page { size: A4; margin: 0; }
     html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -46,19 +64,28 @@
   }
 </style>
 </helmet>
-<div data-print="page" style="min-height: 100vh; background: #edeade; color: #16140f;">
+<div data-print="page" style="min-height: 100vh; background: var(--c-bg-page); color: #16140f;">
 
-  <div data-print="hide" style="background: #fff; border-bottom: 2px solid #ddd3c0; position: sticky; top: 0; z-index: 30;">
+  <div data-print="hide" style="background: #fff; border-bottom: 2px solid var(--c-border-card); position: sticky; top: 0; z-index: 30;">
     <div style="max-width: 1440px; margin: 0 auto; padding: 14px 32px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;">
       <div style="display: flex; align-items: center; gap: 14px;">
-        <div style="width: 46px; height: 46px; border-radius: 13px; background: #b8620f; color: #fff; display: grid; place-items: center; font-size: 23px;">☀</div>
+        <div style="width: 46px; height: 46px; border-radius: 13px; background: var(--c-accent); color: #fff; display: grid; place-items: center; font-size: 23px;">☀</div>
         <div style="display: grid; gap: 3px;">
           <div style="font-size: 19px; font-weight: 700;">太陽シルバーサービス</div>
           <div style="font-size: 14px; color: #5d564b;">ケアマネジャー様向け チラシ作成ツール</div>
         </div>
       </div>
-      <button onClick="{{ onPrint }}" style="padding: 13px 22px; font-size: 16px; font-weight: 700; color: #fff; background: #b8620f; border: none; border-radius: 10px; cursor: pointer;" style-hover="background:#9c5109">印刷 / PDF</button>
-      <div style="text-align: right;">
+      <button onClick="{{ onPrint }}" style="padding: 13px 22px; font-size: 16px; font-weight: 700; color: #fff; background: var(--c-accent); border: none; border-radius: 10px; cursor: pointer;" style-hover="background:var(--c-accent-hover)">印刷 / PDF</button>
+      <div style="display: grid; gap: 6px; justify-items: end;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 10.5px; font-weight: 700; color: #8a8175;">配色</span>
+          <sc-for list="{{ themeOpts }}" as="th" hint-placeholder-count="2">
+            <button onClick="{{ th.onClick }}" title="{{ th.label }}" style="display: grid; gap: 3px; justify-items: center; background: none; border: none; padding: 0; cursor: pointer;">
+              <div style="{{ th.dotStyle }}"></div>
+              <span style="{{ th.labelStyle }}">{{ th.label }}</span>
+            </button>
+          </sc-for>
+        </div>
         <a href="https://akamar08taiyo-bot.github.io/taiyo-portal/" style="font-size: 12px; color: #8a8175; text-decoration: none;">← 業務アプリポータルへ戻る</a>
       </div>
     </div>
@@ -69,7 +96,7 @@
 
     <div data-print="hide" style="flex: 1 1 580px; min-width: min(580px, 100%); display: grid; gap: 18px;">
 
-      <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 22px; display: grid; gap: 14px;">
+      <div style="background: #fff; border: 2px solid var(--c-border-card); border-radius: 16px; padding: 22px; display: grid; gap: 14px;">
         <div style="display: flex; align-items: center; gap: 11px;">
           <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">1</div>
           <div style="font-size: 20px; font-weight: 700;">チラシの型</div>
@@ -84,7 +111,7 @@
         </div>
       </div>
 
-      <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
+      <div style="background: #fff; border: 2px solid var(--c-border-card); border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
         <div style="display: flex; align-items: center; gap: 11px;">
           <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">2</div>
           <div style="font-size: 20px; font-weight: 700;">会社名・担当者</div>
@@ -93,11 +120,11 @@
         <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px;">
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">会社名</span>
-            <input value="{{ company }}" onChange="{{ onCompany }}" placeholder="太陽シルバーサービス株式会社" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <input value="{{ company }}" onChange="{{ onCompany }}" placeholder="太陽シルバーサービス株式会社" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">営業所（選ぶと住所・TEL・FAXが入ります）</span>
-            <select value="{{ office }}" onChange="{{ onOfficePick }}" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px; appearance: none;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)">
+            <select value="{{ office }}" onChange="{{ onOfficePick }}" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px; appearance: none;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)">
               <sc-for list="{{ officeList }}" as="o" hint-placeholder-count="19">
                 <option value="{{ o }}">{{ o }}</option>
               </sc-for>
@@ -106,30 +133,30 @@
         </div>
         <label style="display: grid; gap: 7px;">
           <span style="font-size: 14px; font-weight: 700; color: #5d564b;">住所</span>
-          <input value="{{ address }}" onChange="{{ onAddress }}" placeholder="例）〒824-0000 福岡県行橋市◯◯ 1-2-3" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          <input value="{{ address }}" onChange="{{ onAddress }}" placeholder="例）〒824-0000 福岡県行橋市◯◯ 1-2-3" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
         </label>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 12px;">
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">TEL</span>
-            <input value="{{ tel }}" onChange="{{ onTel }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <input value="{{ tel }}" onChange="{{ onTel }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">FAX</span>
-            <input value="{{ fax }}" onChange="{{ onFax }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <input value="{{ fax }}" onChange="{{ onFax }}" placeholder="0930-00-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">介護保険事業所番号</span>
-            <input value="{{ jigyosho }}" onChange="{{ onJigyosho }}" placeholder="4070000000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <input value="{{ jigyosho }}" onChange="{{ onJigyosho }}" placeholder="4070000000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px solid #edeade; padding-top: 14px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px solid var(--c-bg-page); padding-top: 14px;">
           <label style="display: grid; gap: 7px;">
-            <span style="font-size: 15px; font-weight: 900; color: #a2550c;">担当者名（福祉用具専門相談員）</span>
-            <input value="{{ staff }}" onChange="{{ onStaff }}" placeholder="例）田中 太郎" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: #fdf7ed; border: 2px solid #d8a45e; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <span style="font-size: 15px; font-weight: 900; color: var(--c-accent3);">担当者名（福祉用具専門相談員）</span>
+            <input value="{{ staff }}" onChange="{{ onStaff }}" placeholder="例）田中 太郎" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 700; color: #16140f; background: var(--c-bg-highlight); border: 2px solid var(--c-border-notice); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
           <label style="display: grid; gap: 7px;">
             <span style="font-size: 14px; font-weight: 700; color: #5d564b;">担当者 携帯番号</span>
-            <input value="{{ mobile }}" onChange="{{ onMobile }}" placeholder="090-0000-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+            <input value="{{ mobile }}" onChange="{{ onMobile }}" placeholder="090-0000-0000" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           </label>
         </div>
       </div>
@@ -146,7 +173,7 @@
               <sc-for list="{{ tokkaRows }}" as="r" hint-placeholder-count="3">
                 <div style="display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; align-items: center;">
                   <div style="font-size: 16px; font-weight: 900; padding: 12px 13px; background: #fff5ea; border: 2px solid #e0a04a; border-radius: 9px; text-align: center;">{{ r.motor }}</div>
-                  <input value="{{ r.price }}" onChange="{{ r.onPrice }}" placeholder="例）1,000円" style="width: 100%; padding: 13px 15px; font-size: 20px; font-weight: 900; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#c0392b;box-shadow:0 0 0 4px rgba(192,57,43,.18)" />
+                  <input value="{{ r.price }}" onChange="{{ r.onPrice }}" placeholder="例）1,000円" style="width: 100%; padding: 13px 15px; font-size: 20px; font-weight: 900; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:#c0392b;box-shadow:0 0 0 4px rgba(192,57,43,.18)" />
                 </div>
               </sc-for>
             </div>
@@ -166,11 +193,11 @@
       </sc-if>
 
       <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
-        <div style="background: #fff; border: 3px solid #b8620f; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
+        <div style="background: #fff; border: 3px solid var(--c-accent); border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 900;">ご紹介する商品</div>
-            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #b8620f; padding: 5px 11px; border-radius: 5px;">複数品を同時掲載</div>
+            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: var(--c-accent); padding: 5px 11px; border-radius: 5px;">複数品を同時掲載</div>
           </div>
           <div style="display: grid; gap: 9px;">
             <span style="font-size: 16px; font-weight: 700;">掲載する商品数</span>
@@ -182,32 +209,32 @@
           </div>
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ recRows }}" as="r" hint-placeholder-count="4">
-              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
+              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: var(--c-bg-panel); border: 2px solid var(--c-border-row); border-radius: 11px; padding: 9px;">
                 <div style="display: grid; gap: 6px;">
-                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
+                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:var(--c-accent2);background:var(--c-bg-highlight);">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
                   <sc-if value="{{ r.empty }}" hint-placeholder-val="{{ true }}">
-                    <span style="font-size: 13px; font-weight: 900; color: #b3a894; text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
+                    <span style="font-size: 13px; font-weight: 900; color: var(--c-border-input); text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
                   </sc-if>
                   <input type="file" accept="image/*" onChange="{{ r.onPick }}" style="display: none;" />
                 </label>
                 <button onClick="{{ r.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ r.pasteBtnStyle }}">貼り付け</button>
                 </div>
                 <div style="display: grid; gap: 7px;">
-                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="商品名" style="width: 100%; padding: 11px 13px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-                  <input value="{{ r.note }}" onChange="{{ r.onNote }}" placeholder="おすすめのポイント（1行）" style="width: 100%; padding: 11px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="商品名" style="width: 100%; padding: 11px 13px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 8px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
+                  <input value="{{ r.note }}" onChange="{{ r.onNote }}" placeholder="おすすめのポイント（1行）" style="width: 100%; padding: 11px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 8px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
                   <div style="display: grid; gap: 6px;">
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                      <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
+                      <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: var(--c-accent2); border: none; border-radius: 7px; cursor: pointer;" style-hover="background:var(--c-accent2-hover)">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
-                      <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
-                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
+                      <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
-                      <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
+                      <span style="font-size: 11px; font-weight: 700; color: var(--c-accent2); white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
                     <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                   </div>
@@ -221,11 +248,11 @@
       </sc-if>
 
       <sc-if value="{{ isShomo }}" hint-placeholder-val="{{ false }}">
-        <div style="background: #fff; border: 3px solid #8a5a17; border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
+        <div style="background: #fff; border: 3px solid var(--c-accent2); border-radius: 16px; padding: 22px; display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 900;">消耗品の一覧</div>
-            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: #8a5a17; padding: 5px 11px; border-radius: 5px;">施設向け</div>
+            <div style="font-size: 12.5px; font-weight: 700; color: #fff; background: var(--c-accent2); padding: 5px 11px; border-radius: 5px;">施設向け</div>
           </div>
           <div style="display: grid; gap: 9px;">
             <span style="font-size: 16px; font-weight: 700;">掲載する商品数（最大9商品）</span>
@@ -264,37 +291,37 @@
           </sc-if>
           <div style="display: grid; gap: 10px;">
             <sc-for list="{{ shomoRows }}" as="r" hint-placeholder-count="6">
-              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 9px;">
+              <div style="display: grid; grid-template-columns: clamp(88px, 17vw, 132px) minmax(0, 1fr) 30px; gap: 12px; align-items: start; background: var(--c-bg-panel); border: 2px solid var(--c-border-row); border-radius: 11px; padding: 9px;">
                 <div style="display: grid; gap: 6px;">
-                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:#8a5a17;background:#fdf7ed;">
+                <label draggable="true" onDragStart="{{ r.onSlotDragStart }}" onDragOver="{{ r.onSlotDragOver }}" onDrop="{{ r.onSlotDrop }}" title="つまんで別の枠へ移せます" style="{{ r.photoStyle }}" style-hover="border-color:var(--c-accent2);background:var(--c-bg-highlight);">
                   <sc-if value="{{ r.has }}" hint-placeholder-val="{{ false }}">
                     <img sc-camel-src="{{ r.src }}" alt="" style="{{ r.thumbStyle }}" />
                   </sc-if>
                   <sc-if value="{{ r.empty }}" hint-placeholder-val="{{ true }}">
-                    <span style="font-size: 13px; font-weight: 900; color: #b3a894; text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
+                    <span style="font-size: 13px; font-weight: 900; color: var(--c-border-input); text-align: center; line-height: 1.45;">クリック<br/>または<br/>ドラッグ</span>
                   </sc-if>
                   <input type="file" accept="image/*" onChange="{{ r.onPick }}" style="display: none;" />
                 </label>
                 <button onClick="{{ r.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ r.pasteBtnStyle }}">貼り付け</button>
                 </div>
                 <div style="display: grid; gap: 7px;">
-                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="商品名" style="width: 100%; padding: 11px 13px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#8a5a17;box-shadow:0 0 0 3px rgba(138,90,23,.18)" />
+                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="商品名" style="width: 100%; padding: 11px 13px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 8px;" style-focus="outline:none;border-color:var(--c-accent2);box-shadow:0 0 0 3px rgba(var(--c-accent2-rgb),.18)" />
                   <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px;">
-                    <input value="{{ r.spec }}" onChange="{{ r.onSpec }}" placeholder="規格・入数" style="width: 100%; padding: 10px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#8a5a17;box-shadow:0 0 0 3px rgba(138,90,23,.18)" />
-                    <input value="{{ r.price }}" onChange="{{ r.onPrice }}" placeholder="価格" style="width: 100%; padding: 10px 13px; font-size: 16px; font-weight: 900; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 8px;" style-focus="outline:none;border-color:#8a5a17;box-shadow:0 0 0 3px rgba(138,90,23,.18)" />
+                    <input value="{{ r.spec }}" onChange="{{ r.onSpec }}" placeholder="規格・入数" style="width: 100%; padding: 10px 13px; font-size: 15px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 8px;" style-focus="outline:none;border-color:var(--c-accent2);box-shadow:0 0 0 3px rgba(var(--c-accent2-rgb),.18)" />
+                    <input value="{{ r.price }}" onChange="{{ r.onPrice }}" placeholder="価格" style="width: 100%; padding: 10px 13px; font-size: 16px; font-weight: 900; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 8px;" style-focus="outline:none;border-color:var(--c-accent2);box-shadow:0 0 0 3px rgba(var(--c-accent2-rgb),.18)" />
                   </div>
-                  <input value="{{ r.unit }}" onChange="{{ r.onUnit }}" placeholder="単位を手入力（例：1本あたり）" style="width: 100%; padding: 7px 10px; font-size: 12px; font-weight: 700; color: #8a5a17; background: #fff; border: 1.5px dashed #d8c9a8; border-radius: 6px;" style-focus="outline:none;border-style:solid;border-color:#8a5a17;" />
+                  <input value="{{ r.unit }}" onChange="{{ r.onUnit }}" placeholder="単位を手入力（例：1本あたり）" style="width: 100%; padding: 7px 10px; font-size: 12px; font-weight: 700; color: var(--c-accent2); background: #fff; border: 1.5px dashed #d8c9a8; border-radius: 6px;" style-focus="outline:none;border-style:solid;border-color:var(--c-accent2);" />
                   <div style="font-size: 11px; color: #a89e8c;">自動計算：{{ r.unitHint }}</div>
                   <div style="display: grid; gap: 6px;">
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                      <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
+                      <button onClick="{{ r.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 900; color: #fff; background: var(--c-accent2); border: none; border-radius: 7px; cursor: pointer;" style-hover="background:var(--c-accent2-hover)">自動調整</button>
                       <button onClick="{{ r.onFit }}" title="写真の入れ方を切り替えます" style="{{ r.fitBtnStyle }}">{{ r.fitLabel }}</button>
-                      <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
-                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
+                      <button onClick="{{ r.onReset }}" title="元の写真・等倍に戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                      <button onClick="{{ r.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 6px 11px; font-size: 11.5px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
                       <input type="range" min="40" max="250" step="5" value="{{ r.zoom }}" onChange="{{ r.onZoom }}" style="width: 100%;" />
-                      <span style="font-size: 11px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
+                      <span style="font-size: 11px; font-weight: 700; color: var(--c-accent2); white-space: nowrap;">大きさ {{ r.zoomLabel }}</span>
                     </div>
                     <div style="font-size: 11px; color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                   </div>
@@ -308,11 +335,11 @@
       </sc-if>
 
       <sc-if value="{{ showCatCard }}" hint-placeholder-val="{{ false }}">
-        <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
+        <div style="background: #fff; border: 2px solid var(--c-border-card); border-radius: 16px; padding: 22px; display: grid; gap: 18px;">
           <div style="display: flex; align-items: center; gap: 11px; flex-wrap: wrap;">
             <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">3</div>
             <div style="font-size: 20px; font-weight: 700;">用具の種類</div>
-            <div style="font-size: 13px; font-weight: 700; color: #fff; background: #b8620f; padding: 4px 11px; border-radius: 5px;">{{ catLabel }}</div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff; background: var(--c-accent); padding: 4px 11px; border-radius: 5px;">{{ catLabel }}</div>
           </div>
 
           <div style="display: grid; gap: 9px;">
@@ -358,7 +385,7 @@
           </div>
 
           <sc-if value="{{ hasSubs }}" hint-placeholder-val="{{ false }}">
-            <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 16px; display: grid; gap: 10px;">
+            <div style="background: var(--c-bg-highlight); border: 2px solid var(--c-border-highlight); border-radius: 12px; padding: 16px; display: grid; gap: 10px;">
               <span style="font-size: 15px; font-weight: 900;">入浴補助用具の種類</span>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <sc-for list="{{ subOpts }}" as="s" hint-placeholder-count="7">
@@ -368,7 +395,7 @@
             </div>
           </sc-if>
 
-          <div style="display: grid; gap: 10px; border-top: 2px solid #edeade; padding-top: 16px;">
+          <div style="display: grid; gap: 10px; border-top: 2px solid var(--c-bg-page); padding-top: 16px;">
             <span style="font-size: 16px; font-weight: 700;">介護保険の区分</span>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
               <sc-for list="{{ kubunOpts }}" as="k" hint-placeholder-count="4">
@@ -380,17 +407,17 @@
         </div>
       </sc-if>
 
-      <div style="background: #fff; border: 2px solid #ddd3c0; border-radius: 16px; padding: 24px; display: grid; gap: 24px;">
-        <div style="display: flex; align-items: center; gap: 11px; border-bottom: 2px solid #edeade; padding-bottom: 14px;">
+      <div style="background: #fff; border: 2px solid var(--c-border-card); border-radius: 16px; padding: 24px; display: grid; gap: 24px;">
+        <div style="display: flex; align-items: center; gap: 11px; border-bottom: 2px solid var(--c-bg-page); padding-bottom: 14px;">
           <div style="width: 30px; height: 30px; border-radius: 8px; background: #16140f; color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700;">4</div>
           <div style="font-size: 20px; font-weight: 700;">チラシの内容</div>
         </div>
 
         <sc-if value="{{ isCase }}" hint-placeholder-val="{{ false }}">
-          <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 20px; display: grid; gap: 16px;">
+          <div style="background: var(--c-bg-highlight); border: 2px solid var(--c-border-highlight); border-radius: 12px; padding: 20px; display: grid; gap: 16px;">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
               <span style="font-size: 17px; font-weight: 900;">事例写真</span>
-              <span style="font-size: 12.5px; font-weight: 700; color: #a2550c;">→ チラシの主役として大きく並びます</span>
+              <span style="font-size: 12.5px; font-weight: 700; color: var(--c-accent3);">→ チラシの主役として大きく並びます</span>
             </div>
             <div style="display: grid; gap: 9px;">
               <span style="font-size: 15px; font-weight: 700;">枚数</span>
@@ -422,22 +449,22 @@
                   </label>
                   <button onClick="{{ sl.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ sl.pasteBtnStyle }}">貼り付け</button>
                   <details style="font-size: 11.5px;">
-                    <summary style="cursor: pointer; list-style: none; color: #8a5a17; font-weight: 700;">写真の調整・事例を入力 ▾</summary>
+                    <summary style="cursor: pointer; list-style: none; color: var(--c-accent2); font-weight: 700;">写真の調整・事例を入力 ▾</summary>
                     <div style="display: grid; gap: 6px; padding-top: 6px;">
                       <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                        <button onClick="{{ sl.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 5px 9px; font-size: 11px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 6px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
+                        <button onClick="{{ sl.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 5px 9px; font-size: 11px; font-weight: 900; color: #fff; background: var(--c-accent2); border: none; border-radius: 6px; cursor: pointer;" style-hover="background:var(--c-accent2-hover)">自動調整</button>
                         <button onClick="{{ sl.onFit }}" title="写真の入れ方を切り替えます" style="{{ sl.fitBtnStyle }}">{{ sl.fitLabel }}</button>
-                        <button onClick="{{ sl.onReset }}" title="元の写真・等倍に戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
-                        <button onClick="{{ sl.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
+                        <button onClick="{{ sl.onReset }}" title="元の写真・等倍に戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                        <button onClick="{{ sl.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 5px 9px; font-size: 11px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 6px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
                       </div>
                       <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
-                        <span style="color: #8a5a17; font-weight: 700;">大きさ {{ sl.zoomLabel }}</span>
+                        <span style="color: var(--c-accent2); font-weight: 700;">大きさ {{ sl.zoomLabel }}</span>
                       </div>
                       <input type="range" min="40" max="250" step="5" value="{{ sl.zoom }}" onChange="{{ sl.onZoom }}" style="width: 100%;" />
                       <div style="color: #8a8175; line-height: 1.55;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
                       <sc-if value="{{ showCase }}" hint-placeholder-val="{{ true }}">
-                        <input value="{{ sl.user }}" onChange="{{ sl.onUser }}" placeholder="例）80代女性・要介護2・娘さんと同居" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-                        <input value="{{ sl.change }}" onChange="{{ sl.onChange }}" placeholder="例）夜間の転倒不安が軽減しました" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 7px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+                        <input value="{{ sl.user }}" onChange="{{ sl.onUser }}" placeholder="例）80代女性・要介護2・娘さんと同居" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 7px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
+                        <input value="{{ sl.change }}" onChange="{{ sl.onChange }}" placeholder="例）夜間の転倒不安が軽減しました" style="width: 100%; padding: 8px 10px; font-size: 12.5px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 7px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
                       </sc-if>
                     </div>
                   </details>
@@ -483,24 +510,24 @@
               ファイルを選ぶ
               <input type="file" accept="image/*" onChange="{{ onPickFile }}" style="display: none;" />
             </label>
-            <button onClick="{{ mainPhoto.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="padding: 12px 18px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #b8620f; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf7ed">スクショを貼り付け</button>
+            <button onClick="{{ mainPhoto.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="padding: 12px 18px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-accent); border-radius: 9px; cursor: pointer;" style-hover="background:var(--c-bg-highlight)">スクショを貼り付け</button>
             <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ onClearPhoto }}" style="padding: 12px 18px; font-size: 15px; font-weight: 700; color: #a03428; background: #fff; border: 2px solid #e0bfb9; border-radius: 9px; cursor: pointer;" style-hover="background:#fdf3f1">写真を外す</button>
             </sc-if>
           </div>
           <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
-            <div style="display: grid; gap: 8px; background: #faf8f3; border: 2px solid #e7dfd0; border-radius: 11px; padding: 11px 13px;">
+            <div style="display: grid; gap: 8px; background: var(--c-bg-panel); border: 2px solid var(--c-border-row); border-radius: 11px; padding: 11px 13px;">
               <div style="display: flex; gap: 7px; flex-wrap: wrap; align-items: center;">
                 <span style="font-size: 12.5px; font-weight: 900; color: #5d564b;">チラシでの見え方</span>
                 <button onClick="{{ mainPhoto.onPasteHere }}" title="スクリーンショットなど、コピーした画像をこの枠へ貼り付けます" style="{{ mainPhoto.pasteBtnStyle }}">貼り付け</button>
-                <button onClick="{{ mainPhoto.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 7px 12px; font-size: 12px; font-weight: 900; color: #fff; background: #8a5a17; border: none; border-radius: 7px; cursor: pointer;" style-hover="background:#6f4712">自動調整</button>
+                <button onClick="{{ mainPhoto.onAuto }}" title="余白を切り取り、枠に合わせて自動で調整します" style="padding: 7px 12px; font-size: 12px; font-weight: 900; color: #fff; background: var(--c-accent2); border: none; border-radius: 7px; cursor: pointer;" style-hover="background:var(--c-accent2-hover)">自動調整</button>
                 <button onClick="{{ mainPhoto.onFit }}" style="{{ mainPhoto.fitBtnStyle }}">{{ mainPhoto.fitLabel }}</button>
-                <button onClick="{{ mainPhoto.onReset }}" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
-                <button onClick="{{ mainPhoto.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid #cfc5b4; border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
+                <button onClick="{{ mainPhoto.onReset }}" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">元に戻す</button>
+                <button onClick="{{ mainPhoto.onCenter }}" title="写真の位置を枠の中央へ戻します" style="padding: 7px 12px; font-size: 12px; font-weight: 700; color: #5d564b; background: #fff; border: 2px solid var(--c-border-dash); border-radius: 7px; cursor: pointer;" style-hover="background:#f4efe6">位置を中央</button>
               </div>
               <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
                 <input type="range" min="40" max="250" step="5" value="{{ mainPhoto.zoom }}" onChange="{{ mainPhoto.onZoom }}" style="width: 100%;" />
-                <span style="font-size: 12px; font-weight: 700; color: #8a5a17; white-space: nowrap;">大きさ {{ mainPhoto.zoomLabel }}</span>
+                <span style="font-size: 12px; font-weight: 700; color: var(--c-accent2); white-space: nowrap;">大きさ {{ mainPhoto.zoomLabel }}</span>
               </div>
               <div style="font-size: 11.5px; color: #8a8175; line-height: 1.6;">プレビューの写真をドラッグすると、写す位置（切り取る場所）を動かせます。左の写真枠はつまんで別の枠へ移せます。</div>
             </div>
@@ -510,35 +537,35 @@
 
         <label style="display: grid; gap: 8px;">
           <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシ最上部の帯（区分バッジ）の文言</span>
-          <input value="{{ badgeText }}" onChange="{{ onBadgeText }}" placeholder="{{ badgePlaceholder }}" style="width: 100%; padding: 12px 14px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+          <input value="{{ badgeText }}" onChange="{{ onBadgeText }}" placeholder="{{ badgePlaceholder }}" style="width: 100%; padding: 12px 14px; font-size: 15px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
           <span style="font-size: 15px; font-weight: 700; color: #5d564b;">チラシの見出し（用紙のいちばん上）</span>
-          <select value="{{ headlinePickValue }}" onChange="{{ onHeadlinePick }}" style="width: 100%; padding: 11px 13px; font-size: 13.5px; font-weight: 700; color: #8a5a17; background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 9px; appearance: none;">
+          <select value="{{ headlinePickValue }}" onChange="{{ onHeadlinePick }}" style="width: 100%; padding: 11px 13px; font-size: 13.5px; font-weight: 700; color: var(--c-accent2); background: var(--c-bg-highlight); border: 2px solid var(--c-border-highlight); border-radius: 9px; appearance: none;">
             <option value="">例文から選ぶ（15種）… 選ぶと下の欄に入り、そのまま手入力で編集できます</option>
             <sc-for list="{{ headlineOpts }}" as="h" hint-placeholder-count="15">
               <option value="{{ h.value }}">{{ h.label }}</option>
             </sc-for>
           </select>
-          <input value="{{ headline }}" onChange="{{ onHeadline }}" placeholder="例）在宅の起き上がりを楽にする ベッドのご案内" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
+          <input value="{{ headline }}" onChange="{{ onHeadline }}" placeholder="例）在宅の起き上がりを楽にする ベッドのご案内" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 10px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 4px rgba(var(--c-accent-rgb),.2)" />
         </label>
 
         <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
           <label style="display: grid; gap: 8px;">
             <span style="font-size: 15px; font-weight: 700; color: #5d564b;">こんな方におすすめ（チラシに黒帯で入ります）</span>
-            <input value="{{ recTarget }}" onChange="{{ onRecTarget }}" placeholder="例）夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 10px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 4px rgba(184,98,15,.2)" />
+            <input value="{{ recTarget }}" onChange="{{ onRecTarget }}" placeholder="例）夜間のトイレ移動が不安な方・ご家族の介助負担が増えてきた方" style="width: 100%; padding: 14px 16px; font-size: 17px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 10px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 4px rgba(var(--c-accent-rgb),.2)" />
           </label>
         </sc-if>
 
         <sc-if value="{{ showNameBox }}" hint-placeholder-val="{{ false }}">
-          <div style="background: #fdf7ed; border: 2px solid #e6cda3; border-radius: 12px; padding: 20px; display: grid; gap: 10px;">
+          <div style="background: var(--c-bg-highlight); border: 2px solid var(--c-border-highlight); border-radius: 12px; padding: 20px; display: grid; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 9px; flex-wrap: wrap;">
               <span style="font-size: 17px; font-weight: 900;">商品名</span>
               <span style="font-size: 12px; font-weight: 700; color: #fff; background: #c0392b; padding: 4px 8px; border-radius: 4px;">必須</span>
-              <span style="font-size: 12px; font-weight: 700; color: #a2550c;">→ チラシで一番大きく出ます</span>
+              <span style="font-size: 12px; font-weight: 700; color: var(--c-accent3);">→ チラシで一番大きく出ます</span>
             </div>
-            <input value="{{ name }}" onChange="{{ onName }}" placeholder="例）楽匠Zシリーズ 3モーション" style="width: 100%; padding: 19px 18px; font-size: 25px; font-weight: 900; line-height: 1.45; color: #16140f; background: #fff; border: 3px solid #b8620f; border-radius: 12px;" style-focus="outline:none;box-shadow:0 0 0 5px rgba(184,98,15,.22)" />
+            <input value="{{ name }}" onChange="{{ onName }}" placeholder="例）楽匠Zシリーズ 3モーション" style="width: 100%; padding: 19px 18px; font-size: 25px; font-weight: 900; line-height: 1.45; color: #16140f; background: #fff; border: 3px solid var(--c-accent); border-radius: 12px;" style-focus="outline:none;box-shadow:0 0 0 5px rgba(var(--c-accent-rgb),.22)" />
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <input value="{{ maker }}" onChange="{{ onMaker }}" placeholder="メーカー名" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-              <input value="{{ model }}" onChange="{{ onModel }}" placeholder="型番" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #b3a894; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+              <input value="{{ maker }}" onChange="{{ onMaker }}" placeholder="メーカー名" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
+              <input value="{{ model }}" onChange="{{ onModel }}" placeholder="型番" style="width: 100%; padding: 13px 15px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-input); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
             </div>
           </div>
         </sc-if>
@@ -588,8 +615,8 @@
             <sc-for list="{{ featRows }}" as="r" hint-placeholder-count="3">
               <div style="display: grid; grid-template-columns: 30px 190px minmax(0, 1fr); gap: 10px; align-items: center;">
                 <div style="width: 30px; height: 30px; border-radius: 50%; background: #f0e3cd; color: #7d4f10; display: grid; place-items: center; font-size: 15px; font-weight: 700;">{{ r.n }}</div>
-                <input value="{{ r.title }}" onChange="{{ r.onTitle }}" placeholder="見出し" style="width: 100%; padding: 13px 14px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
-                <input value="{{ r.body }}" onChange="{{ r.onBody }}" placeholder="説明" style="width: 100%; padding: 13px 14px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid #9c9284; border-radius: 9px;" style-focus="outline:none;border-color:#b8620f;box-shadow:0 0 0 3px rgba(184,98,15,.18)" />
+                <input value="{{ r.title }}" onChange="{{ r.onTitle }}" placeholder="見出し" style="width: 100%; padding: 13px 14px; font-size: 16px; font-weight: 700; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
+                <input value="{{ r.body }}" onChange="{{ r.onBody }}" placeholder="説明" style="width: 100%; padding: 13px 14px; font-size: 16px; font-weight: 500; color: #16140f; background: #fff; border: 2px solid var(--c-border-field); border-radius: 9px;" style-focus="outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(var(--c-accent-rgb),.18)" />
               </div>
             </sc-for>
           </div>
@@ -606,10 +633,10 @@
       </div>
 
       <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ true }}">
-        <div data-print="hide" style="width: 100%; background: #fdf7ed; border: 2px solid #d8a45e; border-radius: 10px; padding: 9px 13px; font-size: 13px; font-weight: 700; color: #6f4712; line-height: 1.6;">{{ notice }}</div>
+        <div data-print="hide" style="width: 100%; background: var(--c-bg-highlight); border: 2px solid var(--c-border-notice); border-radius: 10px; padding: 9px 13px; font-size: 13px; font-weight: 700; color: var(--c-accent2-hover); line-height: 1.6;">{{ notice }}</div>
       </sc-if>
 
-      <div data-print="hide" style="width: 100%; background: #fff; border: 2px solid #ddd3c0; border-radius: 11px; padding: 9px 11px; display: grid; gap: 7px;">
+      <div data-print="hide" style="width: 100%; background: #fff; border: 2px solid var(--c-border-card); border-radius: 11px; padding: 9px 11px; display: grid; gap: 7px;">
         <span data-fitlabel style="font-size: 11.5px; font-weight: 700; color: #2d6a4f;">A4・1枚に収まっています</span>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div style="display: grid; gap: 4px;">
@@ -651,7 +678,7 @@
             </div>
 
             <sc-if value="{{ showPName }}" hint-placeholder-val="{{ true }}">
-              <div style="background: #fdf7ed; border-left: 8px solid #b8620f; padding: 15px 24px; display: grid; gap: 6px;">
+              <div style="background: var(--c-bg-highlight); border-left: 8px solid var(--c-accent); padding: 15px 24px; display: grid; gap: 6px;">
                 <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
                 <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
               </div>
@@ -666,18 +693,18 @@
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
                       <sc-if value="{{ it.empty }}" hint-placeholder-val="{{ true }}">
-                        <div style="font-size: 12.5px; font-weight: 700; color: #b3a894;">商品写真</div>
+                        <div style="font-size: 12.5px; font-weight: 700; color: var(--c-border-input);">商品写真</div>
                       </sc-if>
                     </div>
                     <div style="padding: 8px 11px 9px; display: grid; grid-template-rows: 40px auto 1fr; gap: 2px; background: #fff; min-height: 0;">
                       <div style="display: flex; align-items: flex-start; gap: 7px; overflow: hidden;">
-                        <div style="width: 19px; height: 19px; flex: none; background: #b8620f; color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900;">{{ it.n }}</div>
+                        <div style="width: 19px; height: 19px; flex: none; background: var(--c-accent); color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900;">{{ it.n }}</div>
                         <div data-shrink="14.5,10" style="font-size: 14.5px; font-weight: 900; line-height: 1.35; text-wrap: pretty; overflow-wrap: anywhere;">{{ it.name }}</div>
                       </div>
                       <div data-shrink="12,9.5" style="font-size: 12px; font-weight: 500; color: #6b6357; overflow-wrap: anywhere;">{{ it.spec }}</div>
                       <div style="border-top: 1px dashed #ded5c5; padding-top: 5px; display: grid; gap: 2px; align-content: end;">
                         <sc-if value="{{ it.hasUnit }}" hint-placeholder-val="{{ true }}">
-                          <div style="font-size: 12px; font-weight: 900; color: #a2550c; line-height: 1.25;">{{ it.unit }}</div>
+                          <div style="font-size: 12px; font-weight: 900; color: var(--c-accent3); line-height: 1.25;">{{ it.unit }}</div>
                         </sc-if>
                         <div style="display: flex; align-items: flex-end; gap: 3px;">
                           <div style="font-size: 20px; font-weight: 900; line-height: 1.1;">{{ it.price }}</div>
@@ -693,7 +720,7 @@
             </sc-if>
 
             <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
-              <div style="background: #8a5a17; color: #fff; padding: 11px 20px; display: flex; align-items: center; gap: 15px;">
+              <div style="background: var(--c-accent2); color: #fff; padding: 11px 20px; display: flex; align-items: center; gap: 15px;">
                 <div style="font-size: 13px; font-weight: 900; letter-spacing: 0.1em; flex: none; border-right: 1.5px solid #d6b483; padding-right: 15px;">こんな方に</div>
                 <div style="font-size: 16.5px; font-weight: 900; line-height: 1.5; text-wrap: pretty;">{{ pRecTarget }}</div>
               </div>
@@ -708,12 +735,12 @@
                         <img sc-camel-src="{{ it.src }}" alt="商品写真" style="{{ it.imgStyle }}" />
                       </sc-if>
                       <sc-if value="{{ it.empty }}" hint-placeholder-val="{{ true }}">
-                        <div style="font-size: 12.5px; font-weight: 700; color: #b3a894;">商品写真</div>
+                        <div style="font-size: 12.5px; font-weight: 700; color: var(--c-border-input);">商品写真</div>
                       </sc-if>
                     </div>
                     <div style="{{ pRecTextStyle }}">
                       <div style="display: flex; align-items: flex-start; gap: 7px; overflow: hidden;">
-                        <div style="width: 19px; height: 19px; flex: none; background: #b8620f; color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900;">{{ it.n }}</div>
+                        <div style="width: 19px; height: 19px; flex: none; background: var(--c-accent); color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900;">{{ it.n }}</div>
                         <div data-shrink="15,10.5" style="font-size: 15px; font-weight: 900; line-height: 1.35; text-wrap: pretty; overflow-wrap: anywhere;">{{ it.name }}</div>
                       </div>
                       <div data-shrink="12.5,9.5" style="font-size: 12.5px; font-weight: 500; line-height: 1.55; color: #453f36; text-wrap: pretty; overflow: hidden; overflow-wrap: anywhere;">{{ it.note }}</div>
@@ -726,10 +753,10 @@
             <sc-if value="{{ showMainRow }}" hint-placeholder-val="{{ true }}">
             <div style="{{ pMainRowStyle }}">
               <div style="display: grid; gap: 9px; align-content: start;">
-                <div style="font-size: 15px; font-weight: 900; color: #a2550c; letter-spacing: 0.05em;">特徴</div>
+                <div style="font-size: 15px; font-weight: 900; color: var(--c-accent3); letter-spacing: 0.05em;">特徴</div>
                 <sc-for list="{{ pFeats }}" as="f" hint-placeholder-count="3">
-                  <div style="display: flex; align-items: flex-start; gap: 11px; background: #f6f2ea; padding: 9px 14px;">
-                    <div style="width: 23px; height: 23px; flex: none; border-radius: 50%; background: #b8620f; color: #fff; display: grid; place-items: center; font-size: 12.5px; font-weight: 900;">{{ f.n }}</div>
+                  <div style="display: flex; align-items: flex-start; gap: 11px; background: var(--c-bg-soft); padding: 9px 14px;">
+                    <div style="width: 23px; height: 23px; flex: none; border-radius: 50%; background: var(--c-accent); color: #fff; display: grid; place-items: center; font-size: 12.5px; font-weight: 900;">{{ f.n }}</div>
                     <div style="display: grid; gap: 2px;">
                       <div style="font-size: 16.5px; font-weight: 900; line-height: 1.4;">{{ f.title }}</div>
                       <div style="font-size: 14px; font-weight: 500; line-height: 1.6; color: #453f36;">{{ f.body }}</div>
@@ -758,11 +785,11 @@
                           <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                         </sc-if>
                         <sc-if value="{{ p.empty }}" hint-placeholder-val="{{ true }}">
-                          <div style="font-size: 13px; font-weight: 700; color: #b3a894;">事例写真 {{ p.n }}</div>
+                          <div style="font-size: 13px; font-weight: 700; color: var(--c-border-input);">事例写真 {{ p.n }}</div>
                         </sc-if>
                       </div>
                       <div style="padding: 6px 9px 7px; display: grid; gap: 1px; background: #fff; min-height: 0; overflow: hidden;">
-                        <div data-shrink="10.5,8.5" style="font-size: 10.5px; font-weight: 900; color: #a2550c; overflow: hidden; overflow-wrap: anywhere;">{{ p.user }}</div>
+                        <div data-shrink="10.5,8.5" style="font-size: 10.5px; font-weight: 900; color: var(--c-accent3); overflow: hidden; overflow-wrap: anywhere;">{{ p.user }}</div>
                         <div data-shrink="11,8.5" style="font-size: 11px; font-weight: 500; line-height: 1.3; color: #453f36; overflow: hidden; overflow-wrap: anywhere;">{{ p.change }}</div>
                       </div>
                     </div>
@@ -777,7 +804,7 @@
                         <img sc-camel-src="{{ p.src }}" alt="事例写真" style="{{ p.imgStyle }}" />
                       </sc-if>
                       <sc-if value="{{ p.empty }}" hint-placeholder-val="{{ true }}">
-                        <div style="font-size: 13px; font-weight: 700; color: #b3a894;">事例写真 {{ p.n }}</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--c-border-input);">事例写真 {{ p.n }}</div>
                       </sc-if>
                     </div>
                   </sc-for>
@@ -802,13 +829,13 @@
                 <sc-if value="{{ showBarNote }}" hint-placeholder-val="{{ true }}">
                   <div style="background: #fdf1ef; border-top: 2px solid #c0392b; padding: 9px 19px; font-size: 14.5px; font-weight: 900; color: #a33529;">介助バー 1本 無料サービス付き</div>
                 </sc-if>
-                <div style="background: #f6f2ea; border-top: 2px solid #c0392b; padding: 8px 19px; font-size: 13px; font-weight: 700; line-height: 1.5;">{{ pMotorFoot }}</div>
+                <div style="background: var(--c-bg-soft); border-top: 2px solid #c0392b; padding: 8px 19px; font-size: 13px; font-weight: 700; line-height: 1.5;">{{ pMotorFoot }}</div>
               </div>
             </sc-if>
 
             <sc-if value="{{ showMoneyBox }}" hint-placeholder-val="{{ false }}">
-              <div style="border: 3px solid #8a5a17;">
-                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 10px 19px; border-bottom: 2px dashed #bdb2a0;">
+              <div style="border: 3px solid var(--c-accent2);">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 10px 19px; border-bottom: 2px dashed var(--c-border-chip);">
                   <div style="font-size: 14px; font-weight: 900; letter-spacing: 0.04em;">{{ pAmountLabel }}</div>
                   <div style="display: flex; align-items: baseline; gap: 5px;">
                     <div style="font-size: 29px; font-weight: 900; line-height: 1.1;">{{ pAmount }}</div>
@@ -820,7 +847,7 @@
                     <div style="font-size: 14px; font-weight: 900; letter-spacing: 0.04em;">{{ pBurdenTitle }}</div>
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px;">
                       <sc-for list="{{ pBurdens }}" as="b" hint-placeholder-count="3">
-                        <div style="background: #f6f2ea; border: 1.5px solid #ddd3c0; padding: 8px 12px; display: grid; gap: 1px;">
+                        <div style="background: var(--c-bg-soft); border: 1.5px solid var(--c-border-card); padding: 8px 12px; display: grid; gap: 1px;">
                           <div style="font-size: 12.5px; font-weight: 700; color: #5d564b;">{{ b.label }}</div>
                           <div style="display: flex; align-items: baseline; gap: 3px;">
                             <div style="font-size: 24px; font-weight: 900; line-height: 1.1;">{{ b.amount }}</div>
@@ -831,7 +858,7 @@
                     </div>
                   </div>
                 </sc-if>
-                <div style="background: #f6f2ea; border-top: 2px solid #8a5a17; padding: 8px 19px; font-size: 13.5px; font-weight: 700; line-height: 1.5;">{{ pFootText }}</div>
+                <div style="background: var(--c-bg-soft); border-top: 2px solid var(--c-accent2); padding: 8px 19px; font-size: 13.5px; font-weight: 700; line-height: 1.5;">{{ pFootText }}</div>
               </div>
             </sc-if>
 
@@ -839,7 +866,7 @@
               <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">{{ footerNote }}</div>
             </sc-if>
 
-            <div style="margin-top: auto; border-top: 3px solid #b8620f; padding-top: 12px; display: grid; gap: 9px;">
+            <div style="margin-top: auto; border-top: 3px solid var(--c-accent); padding-top: 12px; display: grid; gap: 9px;">
               <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 26px;">
                 <div style="display: grid; gap: 4px; min-width: 0;">
                   <div style="font-size: 17px; font-weight: 900; line-height: 1.35;">{{ pCompanyLine }}</div>
@@ -857,7 +884,7 @@
                   </div>
                 </div>
               </div>
-              <div style="background: #8a5a17; color: #fff; padding: 9px 17px; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+              <div style="background: var(--c-accent2); color: #fff; padding: 9px 17px; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
                 <div style="font-size: 15px; font-weight: 900;">福祉用具専門相談員　{{ pStaff }}</div>
                 <div style="display: flex; align-items: baseline; gap: 8px;">
                   <span style="font-size: 12px; font-weight: 900; color: #e3c79b; letter-spacing: 0.06em;">携帯</span>
@@ -986,7 +1013,7 @@ const KI = {
   "貸与": { label: "福祉用具貸与（レンタル）", color: "#2d6a4f", note: "介護保険の給付限度額に含まれます", amountLabel: "貸与単位数（1か月）", unit: "単位", feeLabel: "1割負担額（月）", ph: "例）1,000", burdenTitle: "自己負担額（1か月）", burdenUnit: "／月", money: "単位数・ご負担額", foot: "給付対象：" },
   "販売": { label: "特定福祉用具販売", color: "#6d3a72", note: "年間10万円まで／購入後に9〜7割が支給されます", amountLabel: "本体価格（税込）", unit: "", feeLabel: "1割負担額（購入時）", ph: "例）38,000円", burdenTitle: "自己負担額（ご購入時）", burdenUnit: "", money: "販売価格・ご負担額", foot: "特定福祉用具販売（年間10万円まで）／給付対象：" },
   "住宅改修": { label: "住宅改修", color: "#1f5d7a", note: "支給限度基準額20万円まで／同一住宅につき原則1回", amountLabel: "工事費用（税込）", unit: "", feeLabel: "1割負担額", ph: "例）120,000円", burdenTitle: "自己負担額（工事費）", burdenUnit: "", money: "工事費用・ご負担額", foot: "住宅改修（支給限度基準額20万円）／給付対象：" },
-  "自費": { label: "福祉用具貸与（自費）", color: "#8a5a17", note: "介護保険外です。給付限度額に影響しません", amountLabel: "月額レンタル料（税込）", unit: "／月", feeLabel: "（自費のため負担額＝表示金額）", ph: "例）3,000円", burdenTitle: "", burdenUnit: "", money: "月額レンタル料", foot: "介護保険外／想定される方：" }
+  "自費": { label: "福祉用具貸与（自費）", color: "var(--c-accent2)", note: "介護保険外です。給付限度額に影響しません", amountLabel: "月額レンタル料（税込）", unit: "／月", feeLabel: "（自費のため負担額＝表示金額）", ph: "例）3,000円", burdenTitle: "", burdenUnit: "", money: "月額レンタル料", foot: "介護保険外／想定される方：" }
 };
 
 const GRID = { 1: [1, 1], 2: [2, 1], 4: [2, 2], 6: [3, 2], 9: [3, 3] };
@@ -1178,6 +1205,9 @@ const SHOMO = [
 
 const cat = id => CATS.filter(c => c.id === id)[0];
 
+// 配色スイッチの見本丸。実際の配色は <style> の :root / :root[data-theme="brown"] のCSS変数。
+const THEME_SWATCH = { blue: "#0e78a9", brown: "#b8620f" };
+
 const DRAFT_KEY = "taiyo_chirashi_draft_v1";
 
 /** 保存済みの下書きに欠けや壊れがあってもアプリが止まらないよう整える */
@@ -1199,6 +1229,7 @@ function fixDraft(d) {
   if (!Array.isArray(d.kyufu)) d.kyufu = [];
   if (!Array.isArray(d.photos)) d.photos = [];
   if (["税込", "税抜", "非課税", ""].indexOf(d.taxLabel) < 0) d.taxLabel = "税込";
+  if (["blue", "brown"].indexOf(d.theme) < 0) d.theme = "blue";
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
@@ -1239,6 +1270,7 @@ class Component extends DCLogic {
     showUnit: true,
     unitBase: 1,
     taxLabel: "税込",
+    theme: "blue",
     badgeText: "",
     photoFit: "cover",
     photoFitEach: {},
@@ -1267,6 +1299,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     if (!_draft) this.applyCat("bed");
+    this.applyTheme();
     this._onPaste = e => {
       const dt = e.clipboardData;
       if (!dt) return;
@@ -1320,7 +1353,19 @@ class Component extends DCLogic {
   componentDidUpdate() {
     clearTimeout(this._saveTimer);
     this._saveTimer = setTimeout(() => this.saveDraft(), 500);
+    this.applyTheme();
     this.layoutPass();
+  }
+
+  /** 配色の切り替え。<html> に data-theme を立てるだけで、実際の色は
+   *  <style> の :root / :root[data-theme="brown"] のCSS変数が決める。
+   *  画面編集中もプレビュー内も印刷も、この1箇所の切り替えで揃って変わる。 */
+  applyTheme() {
+    const v = this.state.theme === "brown" ? "brown" : "";
+    if (document.documentElement.getAttribute("data-theme") !== v) {
+      if (v) document.documentElement.setAttribute("data-theme", v);
+      else document.documentElement.removeAttribute("data-theme");
+    }
   }
 
   /* ---------- レイアウト調整（描画のたびにDOMを直接調整する） ---------- */
@@ -1427,7 +1472,7 @@ class Component extends DCLogic {
           label.style.color = "#a03428";
         } else if (k < 0.999) {
           label.textContent = "A4・1枚に自動で収めました（" + Math.round(k * 100) + "%）";
-          label.style.color = "#8a5a17";
+          label.style.color = "var(--c-accent2)";
         } else {
           label.textContent = "A4・1枚に収まっています";
           label.style.color = "#2d6a4f";
@@ -2024,14 +2069,14 @@ class Component extends DCLogic {
     const pos = s.photoPos[key] || { x: 50, y: 50 };
     const has = idx == null ? !!s.photo : !!s.photos[idx];
     const targeted = s.pasteTarget === key;
-    const bg = s.photoBg[key] || "#f6f2ea";
+    const bg = s.photoBg[key] || "var(--c-bg-soft)";
     const pad = small ? "5px 9px" : "6px 11px";
     const fsz = small ? "11px" : "11.5px";
     const btn = "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;border-radius:7px;cursor:pointer;white-space:nowrap;";
     // 写真が入っている枠はドラッグで位置を動かせる。空の枠はクリックで貼り付け先にできる
     const grab = has ? "cursor:grab;touch-action:none;" : "cursor:pointer;";
     // 貼り付け先に選ばれている枠を、画面上だけで囲って示す（印刷には出ない）
-    const mark = targeted ? "box-shadow:inset 0 0 0 3px #b8620f;" : "";
+    const mark = targeted ? "box-shadow:inset 0 0 0 3px var(--c-accent);" : "";
     const frameBase = "position:relative;background:" + bg + ";display:grid;place-items:center;overflow:hidden;min-height:0;" + grab + mark;
     return {
       key: key,
@@ -2054,10 +2099,10 @@ class Component extends DCLogic {
       onSlotDragOver: e => e.preventDefault(),
       onSlotDrop: e => this.dropOnSlot(e, idx),
       pasteBtnStyle: targeted
-        ? btn + "color:#fff;background:#b8620f;border:2px solid #b8620f;font-weight:900;"
-        : btn + "color:#16140f;background:#fff;border:2px solid #b8620f;",
+        ? btn + "color:#fff;background:var(--c-accent);border:2px solid var(--c-accent);font-weight:900;"
+        : btn + "color:#16140f;background:#fff;border:2px solid var(--c-accent);",
       fitLabel: fit === "cover" ? "枠いっぱい" : "全体を写す",
-      fitBtnStyle: "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;color:#16140f;background:#fff;border:2px solid #b8620f;border-radius:7px;cursor:pointer;white-space:nowrap;",
+      fitBtnStyle: "padding:" + pad + ";font-size:" + fsz + ";font-weight:700;color:#16140f;background:#fff;border:2px solid var(--c-accent);border-radius:7px;cursor:pointer;white-space:nowrap;",
       // 実際の表示位置・大きさは placePhoto() が枠と写真の実寸から決める。その入力値をDOMへ渡す
       pset: fit + "," + z + "," + (Math.round(pos.x * 10) / 10) + "," + (Math.round(pos.y * 10) / 10),
       dragHint: has
@@ -2107,15 +2152,15 @@ class Component extends DCLogic {
   }
 
   miniChip(active, color) {
-    const c = color || "#b8620f";
+    const c = color || "var(--c-accent)";
     return "padding:6px 8px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer;text-align:center;" +
-      (active ? "color:#fff;background:" + c + ";border:2px solid " + c + ";" : "color:#453f36;background:#fff;border:2px solid #cfc5b4;");
+      (active ? "color:#fff;background:" + c + ";border:2px solid " + c + ";" : "color:#453f36;background:#fff;border:2px solid var(--c-border-dash);");
   }
 
   chip(active, color) {
-    const c = color || "#b8620f";
+    const c = color || "var(--c-accent)";
     return "padding:11px 15px;font-size:15px;font-weight:700;border-radius:9px;cursor:pointer;transition:all .12s;text-align:left;" +
-      (active ? "color:#fff;background:" + c + ";border:2px solid " + c + ";" : "color:#453f36;background:#fff;border:2px solid #bdb2a0;");
+      (active ? "color:#fff;background:" + c + ";border:2px solid " + c + ";" : "color:#453f36;background:#fff;border:2px solid var(--c-border-chip);");
   }
 
   burdens() {
@@ -2166,7 +2211,7 @@ class Component extends DCLogic {
         title: t.title,
         desc: t.desc,
         style: "display:grid;gap:6px;text-align:left;padding:17px 18px;border-radius:12px;cursor:pointer;transition:all .12s;" +
-          (t.id === s.tpl ? "color:#fff;background:#b8620f;border:3px solid #b8620f;box-shadow:0 3px 0 #8a4708;" : "color:#16140f;background:#fff;border:3px solid #ddd3c0;"),
+          (t.id === s.tpl ? "color:#fff;background:var(--c-accent);border:3px solid var(--c-accent);box-shadow:0 3px 0 var(--c-accent-shadow);" : "color:#16140f;background:#fff;border:3px solid var(--c-border-card);"),
         onClick: () => this.selectTpl(t.id)
       })),
       tplName: tpl.title,
@@ -2185,7 +2230,7 @@ class Component extends DCLogic {
       showProdPhoto: !isShomo && !isCase && !isRecT,
       shomoCountOpts: [1, 2, 3, 4, 6, 9].map(n => ({
         label: n + "商品",
-        style: this.chip(s.shomoCount === n, "#8a5a17"),
+        style: this.chip(s.shomoCount === n, "var(--c-accent2)"),
         onClick: () => this.set("shomoCount", n)
       })),
       shomoRows: shomoIdx.map(i => Object.assign(this.photoView(i, "cover"), {
@@ -2200,7 +2245,7 @@ class Component extends DCLogic {
         onPrice: e => this.setShomo(i, "price", e.target.value),
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
         thumbStyle: "width:100%;height:100%;object-fit:contain;display:block;",
-        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:#f6f2ea;border:2px dashed #cfc5b4;",
+        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--c-bg-soft);border:2px dashed var(--c-border-dash);",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pShomo: shomoIdx.map(i => {
@@ -2224,17 +2269,17 @@ class Component extends DCLogic {
         { label: "表示しない", v: "" }
       ].map(o => ({
         label: o.label,
-        style: this.chip(taxLabel === o.v, "#8a5a17"),
+        style: this.chip(taxLabel === o.v, "var(--c-accent2)"),
         onClick: () => this.set("taxLabel", o.v)
       })),
       unitOpts: [{ label: "単価を表示する", v: true }, { label: "表示しない", v: false }].map(o => ({
         label: o.label,
-        style: this.chip(s.showUnit === o.v, "#8a5a17"),
+        style: this.chip(s.showUnit === o.v, "var(--c-accent2)"),
         onClick: () => this.set("showUnit", o.v)
       })),
       unitBaseOpts: [1, 10, 100].map(n => ({
         label: String(n),
-        style: this.chip(s.unitBase === n, "#8a5a17"),
+        style: this.chip(s.unitBase === n, "var(--c-accent2)"),
         onClick: () => this.set("unitBase", n)
       })),
       pShomoGridStyle: "flex:1;min-height:0;display:grid;gap:9px;grid-template-columns:repeat(" + SCOL[s.shomoCount] +
@@ -2245,7 +2290,7 @@ class Component extends DCLogic {
       pRecTarget: s.recTarget || "対象となる方を入力してください",
       recCountOpts: [1, 2, 4, 6, 9].map(n => ({
         label: n + "商品",
-        style: this.chip(s.recCount === n, "#b8620f"),
+        style: this.chip(s.recCount === n, "var(--c-accent)"),
         onClick: () => this.set("recCount", n)
       })),
       recRows: recIdx.map(i => Object.assign(this.photoView(i, "cover"), {
@@ -2256,7 +2301,7 @@ class Component extends DCLogic {
         onDelete: () => this.clearItem(i, "recItems", { name: "", note: "" }),
         src: s.photos[i] || "", has: !!s.photos[i], empty: !s.photos[i],
         thumbStyle: "width:100%;height:100%;object-fit:contain;display:block;",
-        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:#f6f2ea;border:2px dashed #cfc5b4;",
+        photoStyle: "width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:10px;overflow:hidden;cursor:pointer;background:var(--c-bg-soft);border:2px dashed var(--c-border-dash);",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i)
       })),
       pRec: recIdx.map(i => Object.assign(this.photoView(i, "cover"), {
@@ -2289,7 +2334,7 @@ class Component extends DCLogic {
       hasSubs: !isTokka && !!(c && c.subs),
       subOpts: (c && c.subs ? c.subs : []).map((x, i) => ({
         label: x.label,
-        style: this.chip(i === s.sub, "#b8620f"),
+        style: this.chip(i === s.sub, "var(--c-accent)"),
         onClick: () => this.applyCat(s.cat, i)
       })),
 
@@ -2371,7 +2416,7 @@ class Component extends DCLogic {
       prodPhotoLabel: isCase ? "商品写真（小さめに入ります）" : "商品写真",
       countOpts: [1, 2, 4, 6, 9].map(n => ({
         label: n + "枚",
-        style: this.chip(s.photoCount === n, "#b8620f"),
+        style: this.chip(s.photoCount === n, "var(--c-accent)"),
         onClick: () => this.set("photoCount", n)
       })),
       slots: slotIdx.map(i => Object.assign(this.photoView(i, s.photoFit, true), {
@@ -2379,7 +2424,7 @@ class Component extends DCLogic {
         src: s.photos[i] || "",
         has: !!s.photos[i],
         empty: !s.photos[i],
-        style: "aspect-ratio:3/4;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed #cfc5b4;",
+        style: "aspect-ratio:3/4;display:grid;place-items:center;border-radius:9px;overflow:hidden;cursor:pointer;background:#fff;border:2px dashed var(--c-border-dash);",
         thumbStyle: "width:100%;height:100%;object-fit:cover;display:block;",
         onPick: e => this.loadImage(e.target.files && e.target.files[0], i),
         onDelete: () => this.clearItem(i, "caseItems", { user: "", change: "" }),
@@ -2394,7 +2439,7 @@ class Component extends DCLogic {
       })),
       photoFitOpts: [{ label: "枠いっぱい（周囲を切り取る）", v: "cover" }, { label: "写真全体を写す", v: "contain" }].map(o => ({
         label: o.label,
-        style: this.chip(s.photoFit === o.v, "#b8620f"),
+        style: this.chip(s.photoFit === o.v, "var(--c-accent)"),
         onClick: () => this.set("photoFit", o.v)
       })),
       pGridStyle: "flex:1;min-height:0;display:grid;gap:8px;grid-template-columns:repeat(" + gc +
@@ -2405,13 +2450,13 @@ class Component extends DCLogic {
       onClearPhotos: () => this.set("photos", []),
       caseOpts: [{ label: "写真ごとに事例を記載する", v: true }, { label: "写真のみ（事例なし）", v: false }].map(o => ({
         label: o.label,
-        style: this.chip(s.showCase === o.v, "#b8620f"),
+        style: this.chip(s.showCase === o.v, "var(--c-accent)"),
         onClick: () => this.set("showCase", o.v)
       })),
       showCase: s.showCase,
       notShowCase: !s.showCase,
       dropStyle: "display:grid;place-items:center;min-height:150px;padding:12px;border-radius:12px;cursor:pointer;background:" +
-        (s.dragging ? "#fdf6ec" : "#faf8f3") + ";border:3px dashed " + (s.dragging ? "#b8620f" : "#cfc5b4") + ";",
+        (s.dragging ? "#fdf6ec" : "var(--c-bg-panel)") + ";border:3px dashed " + (s.dragging ? "var(--c-accent)" : "var(--c-border-dash)") + ";",
       onDragOver: e => { e.preventDefault(); if (!this.state.dragging) this.setState({ dragging: true }); },
       onDragLeave: () => { if (this.state.dragging) this.setState({ dragging: false }); },
       onDrop: e => { this.setState({ dragging: false }); this.dropOnFrame(e, null); },
@@ -2427,13 +2472,25 @@ class Component extends DCLogic {
       fitStyle: "width: 100%; height: 100%; transform-origin: top left; padding: 22px 42px 26px; display: flex; flex-direction: column; gap: 14px;",
       autoPhotoOpts: [{ label: "する", v: true }, { label: "しない", v: false }].map(o => ({
         label: o.label,
-        style: this.miniChip(s.autoPhoto === o.v, "#8a5a17"),
+        style: this.miniChip(s.autoPhoto === o.v, "var(--c-accent2)"),
         onClick: () => this.set("autoPhoto", o.v)
       })),
       previewOpts: [{ label: "標準", v: false }, { label: "大きく", v: true }].map(o => ({
         label: o.label,
-        style: this.miniChip(s.previewBig === o.v, "#b8620f"),
+        style: this.miniChip(s.previewBig === o.v, "var(--c-accent)"),
         onClick: () => this.set("previewBig", o.v)
+      })),
+
+      themeOpts: [
+        { key: "blue", label: "水色" },
+        { key: "brown", label: "茶色（従来）" }
+      ].map(o => ({
+        label: o.label,
+        onClick: () => this.set("theme", o.key),
+        dotStyle: "width:20px;height:20px;border-radius:50%;background:" + THEME_SWATCH[o.key] +
+          ";border:2px solid #fff;box-shadow:0 0 0 " + (s.theme === o.key ? "2px #16140f" : "1px #cfc5b4") + ";cursor:pointer;",
+        labelStyle: "font-size:10.5px;font-weight:" + (s.theme === o.key ? "900" : "500") +
+          ";color:" + (s.theme === o.key ? "#16140f" : "#8a8175") + ";"
       })),
 
       pCatLabel: catLabel,
@@ -2441,7 +2498,7 @@ class Component extends DCLogic {
       badgePlaceholder: badgeAuto + "（自動）。手入力で変更できます",
       badgeText: s.badgeText, onBadgeText: e => this.set("badgeText", e.target.value),
       pKubunLabel: s.badgeText || badgeAuto,
-      pKubunColor: isShomo ? "#8a5a17" : isRecT ? "#b8620f" : isTokka ? "#c0392b" : ki.color,
+      pKubunColor: isShomo ? "var(--c-accent2)" : isRecT ? "var(--c-accent)" : isTokka ? "#c0392b" : ki.color,
       pHeadline: s.headline || "見出しを入力してください",
       pName: isTokka ? "自費ベッドのレンタル" : (s.name || "（商品名を入力してください）"),
       pMakerLine: isTokka
