@@ -11,23 +11,17 @@
 <helmet>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
 <style>
-  /* 配色（既定は水色）。ヘッダー右上のスイッチで <html data-theme="brown"> に切り替えられる。
+  /* 配色（既定は水色）。ヘッダー右上のスイッチで自由な色に変更できる（buildPalette()参照）。
      区分バッジの色（貸与=緑・販売=紫・住宅改修=紺・自費/削除=赤）はここでは変えない。 */
+  /* JS側の buildPalette() が起動後すぐ上書きする（{{ 選んだ色 }} から自動生成）。
+     ここに書いてあるのは、その計算が終わるまでの一瞬に使う既定値（水色）。 */
   :root {
-    --c-accent: #0e78a9; --c-accent-rgb: 14,120,169; --c-accent-hover: #086590; --c-accent-shadow: #07597f;
-    --c-link: #0e6e9b; --c-link-hover: #064e70;
-    --c-accent2: #155d7f; --c-accent2-rgb: 21,93,127; --c-accent2-hover: #114b66; --c-accent3: #0b6995;
-    --c-bg-highlight: #edf8fd; --c-bg-panel: #f3f8fa; --c-bg-soft: #eaf2f6; --c-bg-page: #dee8ed;
-    --c-border-card: #c0d4dd; --c-border-row: #d0e0e7; --c-border-dash: #b4c6cf; --c-border-input: #94a9b3;
-    --c-border-highlight: #a3d1e6; --c-border-notice: #5eb1d8; --c-border-field: #84949c; --c-border-chip: #a0b4bd;
-  }
-  :root[data-theme="brown"] {
-    --c-accent: #b8620f; --c-accent-rgb: 184,98,15; --c-accent-hover: #9c5109; --c-accent-shadow: #8a4708;
-    --c-link: #a8580f; --c-link-hover: #7a3d06;
-    --c-accent2: #8a5a17; --c-accent2-rgb: 138,90,23; --c-accent2-hover: #6f4712; --c-accent3: #a2550c;
-    --c-bg-highlight: #fdf7ed; --c-bg-panel: #faf8f3; --c-bg-soft: #f6f2ea; --c-bg-page: #edeade;
-    --c-border-card: #ddd3c0; --c-border-row: #e7dfd0; --c-border-dash: #cfc5b4; --c-border-input: #b3a894;
-    --c-border-highlight: #e6cda3; --c-border-notice: #d8a45e; --c-border-field: #9c9284; --c-border-chip: #bdb2a0;
+    --c-accent: #1a77a1; --c-accent-rgb: 26,119,161; --c-accent-hover: #145a7a; --c-accent-shadow: #0f435b;
+    --c-link: #1a77a1; --c-link-hover: #145a7a;
+    --c-accent2: #2a7da4; --c-accent2-rgb: 42,125,164; --c-accent2-hover: #21617f; --c-accent3: #1a77a1;
+    --c-bg-highlight: #f6f8f8; --c-bg-panel: #f5f7f7; --c-bg-soft: #f2f4f5; --c-bg-page: #e8edf0;
+    --c-border-card: #d0dce1; --c-border-row: #dae3e7; --c-border-dash: #bfd1d9; --c-border-input: #95b6c6;
+    --c-border-highlight: #c3dae5; --c-border-notice: #72aeca; --c-border-field: #849aa4; --c-border-chip: #a4bfcb;
   }
   body { margin: 0; background: var(--c-bg-page); font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; -webkit-font-smoothing: antialiased; }
   * { box-sizing: border-box; }
@@ -85,6 +79,13 @@
               <span style="{{ th.labelStyle }}">{{ th.label }}</span>
             </button>
           </sc-for>
+          <label title="好きな色を自由に選べます" style="display: grid; gap: 3px; justify-items: center; cursor: pointer;">
+            <input type="color" value="{{ themeColor }}" onChange="{{ onThemeColor }}" style="width: 20px; height: 20px; padding: 0; border: 2px solid #fff; border-radius: 50%; overflow: hidden; cursor: pointer; box-shadow: 0 0 0 1px #cfc5b4;" />
+            <span style="font-size: 10.5px; font-weight: 500; color: #8a8175;">自由に選ぶ</span>
+          </label>
+          <sc-if value="{{ isThemeCustom }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ onThemeReset }}" style="align-self: center; font-size: 10px; font-weight: 700; color: #8a8175; background: none; border: none; text-decoration: underline; cursor: pointer; padding: 0;">既定に戻す</button>
+          </sc-if>
         </div>
         <a href="https://akamar08taiyo-bot.github.io/taiyo-portal/" style="font-size: 12px; color: #8a8175; text-decoration: none;">← 業務アプリポータルへ戻る</a>
       </div>
@@ -1205,8 +1206,109 @@ const SHOMO = [
 
 const cat = id => CATS.filter(c => c.id === id)[0];
 
-// 配色スイッチの見本丸。実際の配色は <style> の :root / :root[data-theme="brown"] のCSS変数。
-const THEME_SWATCH = { blue: "#0e78a9", brown: "#b8620f" };
+/* ---------- 配色（1色選ぶだけで、ボタン・枠線・背景まで自動生成する） ----------
+ * どんな色を選んでも、白背景でちゃんと読める濃さのボタン色になり、
+ * 背景・枠線は薄く彩度を落として「濃い部分」が出ないようにする。 */
+const THEME_DEFAULT = "#0e78a9";
+const THEME_PRESETS = [
+  { key: "blue", label: "水色（既定）", color: THEME_DEFAULT },
+  { key: "brown", label: "茶色", color: "#b8620f" }
+];
+
+function hexToHsl(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.slice(0, 2), 16) / 255, g = parseInt(hex.slice(2, 4), 16) / 255, b = parseInt(hex.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0; const l = (max + min) / 2;
+  const d = max - min;
+  if (d > 0) {
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h /= 6;
+  }
+  return { h, s, l };
+}
+function hslToHex(h, s, l) {
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  let r, g, b;
+  if (s === 0) { r = g = b = l; } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1 / 3);
+  }
+  const toHex = v => Math.round(clampNum(v, 0, 1) * 255).toString(16).padStart(2, "0");
+  return "#" + toHex(r) + toHex(g) + toHex(b);
+}
+function relLuminance(hex) {
+  hex = hex.replace("#", "");
+  const c = [0, 2, 4].map(i => {
+    const v = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrastRatio(hexA, hexB) {
+  const a = relLuminance(hexA), b = relLuminance(hexB);
+  const hi = Math.max(a, b), lo = Math.min(a, b);
+  return (hi + 0.05) / (lo + 0.05);
+}
+function clampNum(v, a, b) { return Math.max(a, Math.min(b, v)); }
+/** 白背景の上で狙った濃さ（コントラスト比）になる明度を、色相・彩度を保ったまま二分探索で決める。
+ *  明るい色ほど白との差が小さくなる＝コントラストが下がる、という単調な関係を利用する。 */
+function pickLightnessForContrast(h, s, targetContrast) {
+  let lo = 0.04, hi = 0.78, mid = 0.4;
+  for (let i = 0; i < 22; i++) {
+    mid = (lo + hi) / 2;
+    const c = contrastRatio(hslToHex(h, s, mid), "#ffffff");
+    if (c > targetContrast) lo = mid; else hi = mid;
+  }
+  return mid;
+}
+/** 選んだ色1つから、ボタン(accent)・補助ボタン(accent2)・背景4段階・枠線6段階を作る。
+ *  彩度は上限・下限でまるめ、背景/枠線は彩度を大きく落として淡くする。 */
+function buildPalette(baseHex) {
+  const base = hexToHsl(baseHex);
+  const h = base.h;
+  const s = clampNum(base.s, 0.35, 0.72);
+  const accentL = pickLightnessForContrast(h, s, 5.0);
+  const accent = hslToHex(h, s, accentL);
+  const accentHover = hslToHex(h, s, clampNum(accentL - 0.09, 0.05, 0.72));
+  const accentShadow = hslToHex(h, s, clampNum(accentL - 0.16, 0.05, 0.72));
+  const s2 = s * 0.82;
+  const accent2L = pickLightnessForContrast(h, s2, 4.6);
+  const accent2 = hslToHex(h, s2, accent2L);
+  const accent2Hover = hslToHex(h, s2, clampNum(accent2L - 0.09, 0.05, 0.72));
+  const bgSat = clampNum(s * 0.28, 0.08, 0.28);
+  const borderSat = clampNum(s * 0.42, 0.12, 0.4);
+  const toRgb = hex => { hex = hex.replace("#", ""); return [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16)).join(","); };
+  return {
+    "--c-accent": accent, "--c-accent-rgb": toRgb(accent),
+    "--c-accent-hover": accentHover, "--c-accent-shadow": accentShadow,
+    "--c-link": accent, "--c-link-hover": accentHover,
+    "--c-accent2": accent2, "--c-accent2-rgb": toRgb(accent2), "--c-accent2-hover": accent2Hover,
+    "--c-accent3": accent,
+    "--c-bg-highlight": hslToHex(h, bgSat * 0.7, 0.97),
+    "--c-bg-panel": hslToHex(h, bgSat * 0.75, 0.965),
+    "--c-bg-soft": hslToHex(h, bgSat * 0.85, 0.955),
+    "--c-bg-page": hslToHex(h, bgSat, 0.925),
+    "--c-border-card": hslToHex(h, borderSat * 0.75, 0.85),
+    "--c-border-row": hslToHex(h, borderSat * 0.7, 0.88),
+    "--c-border-dash": hslToHex(h, borderSat * 0.85, 0.80),
+    "--c-border-input": hslToHex(h, borderSat, 0.68),
+    "--c-border-highlight": hslToHex(h, clampNum(borderSat * 1.3, 0.2, 0.55), 0.83),
+    "--c-border-notice": hslToHex(h, clampNum(borderSat * 1.5, 0.25, 0.6), 0.62),
+    "--c-border-field": hslToHex(h, borderSat * 0.5, 0.58),
+    "--c-border-chip": hslToHex(h, borderSat * 0.9, 0.72)
+  };
+}
 
 const DRAFT_KEY = "taiyo_chirashi_draft_v1";
 
@@ -1229,7 +1331,7 @@ function fixDraft(d) {
   if (!Array.isArray(d.kyufu)) d.kyufu = [];
   if (!Array.isArray(d.photos)) d.photos = [];
   if (["税込", "税抜", "非課税", ""].indexOf(d.taxLabel) < 0) d.taxLabel = "税込";
-  if (["blue", "brown"].indexOf(d.theme) < 0) d.theme = "blue";
+  if (!/^#[0-9a-fA-F]{6}$/.test(d.themeColor || "")) d.themeColor = THEME_DEFAULT;
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
@@ -1270,7 +1372,7 @@ class Component extends DCLogic {
     showUnit: true,
     unitBase: 1,
     taxLabel: "税込",
-    theme: "blue",
+    themeColor: THEME_DEFAULT,
     badgeText: "",
     photoFit: "cover",
     photoFitEach: {},
@@ -1361,11 +1463,12 @@ class Component extends DCLogic {
    *  <style> の :root / :root[data-theme="brown"] のCSS変数が決める。
    *  画面編集中もプレビュー内も印刷も、この1箇所の切り替えで揃って変わる。 */
   applyTheme() {
-    const v = this.state.theme === "brown" ? "brown" : "";
-    if (document.documentElement.getAttribute("data-theme") !== v) {
-      if (v) document.documentElement.setAttribute("data-theme", v);
-      else document.documentElement.removeAttribute("data-theme");
-    }
+    const color = this.state.themeColor || THEME_DEFAULT;
+    if (this._lastThemeColor === color) return;
+    this._lastThemeColor = color;
+    const vars = buildPalette(color);
+    const root = document.documentElement.style;
+    for (const k in vars) root.setProperty(k, vars[k]);
   }
 
   /* ---------- レイアウト調整（描画のたびにDOMを直接調整する） ---------- */
@@ -2481,17 +2584,18 @@ class Component extends DCLogic {
         onClick: () => this.set("previewBig", o.v)
       })),
 
-      themeOpts: [
-        { key: "blue", label: "水色" },
-        { key: "brown", label: "茶色（従来）" }
-      ].map(o => ({
+      themeOpts: THEME_PRESETS.map(o => ({
         label: o.label,
-        onClick: () => this.set("theme", o.key),
-        dotStyle: "width:20px;height:20px;border-radius:50%;background:" + THEME_SWATCH[o.key] +
-          ";border:2px solid #fff;box-shadow:0 0 0 " + (s.theme === o.key ? "2px #16140f" : "1px #cfc5b4") + ";cursor:pointer;",
-        labelStyle: "font-size:10.5px;font-weight:" + (s.theme === o.key ? "900" : "500") +
-          ";color:" + (s.theme === o.key ? "#16140f" : "#8a8175") + ";"
+        onClick: () => this.set("themeColor", o.color),
+        dotStyle: "width:20px;height:20px;border-radius:50%;background:" + o.color +
+          ";border:2px solid #fff;box-shadow:0 0 0 " + (s.themeColor === o.color ? "2px #16140f" : "1px #cfc5b4") + ";cursor:pointer;",
+        labelStyle: "font-size:10.5px;font-weight:" + (s.themeColor === o.color ? "900" : "500") +
+          ";color:" + (s.themeColor === o.color ? "#16140f" : "#8a8175") + ";"
       })),
+      themeColor: s.themeColor,
+      onThemeColor: e => this.set("themeColor", e.target.value),
+      isThemeCustom: THEME_PRESETS.every(o => o.color !== s.themeColor),
+      onThemeReset: () => this.set("themeColor", THEME_DEFAULT),
 
       pCatLabel: catLabel,
       badgeAuto: badgeAuto,
