@@ -106,6 +106,65 @@ export function createDemoEditorState() {
 export function createDemoContext() {
     return { organization: demoOrganization, offices: demoOffices, profiles: demoProfiles, categories: demoCategories };
 }
+const KAO_HAND_HYGIENE_PRODUCTS = [
+    { code: '4901301416810', name: 'ビオレu泡ハンドソープ 業務用 ポンプ', spec: '250mL', packSize: '12個入り', priceYen: 356, type: '泡ハンドソープ' },
+    { code: '4901301416827', name: 'ビオレu泡ハンドソープ 業務用', spec: '1.5L', packSize: '6個入り', priceYen: 1110, type: '泡ハンドソープ' },
+    { code: '4901301433633', name: 'ビオレu泡ハンドソープ 業務用 1.5L 梱販売用', spec: '1.5L', packSize: '6個入り（梱）', priceYen: 7452, type: '泡ハンドソープ' },
+    { code: '4901301416780', name: 'ビオレu泡ハンドソープ 業務用', spec: '4L', packSize: '3個入り', priceYen: 2818, type: '泡ハンドソープ' },
+    { code: '4901301416803', name: 'ビオレu泡ハンドソープ 業務用 4L 梱販売用', spec: '4L', packSize: '3個入り（梱）', priceYen: 9497, type: '泡ハンドソープ' },
+    { code: '4901301459039', name: 'ビオレu泡ハンドソープ 業務用', spec: '10L', packSize: '1個入り', priceYen: 5692, type: '泡ハンドソープ' },
+    { code: '4901301453709', name: 'ビオレu泡ハンドソープ 業務用', spec: '2L', packSize: '6個入り', priceYen: 1626, type: '泡ハンドソープ' },
+    { code: '4901301456069', name: 'ビオレu泡ハンドソープ 業務用 2L 梱販売用', spec: '2L', packSize: '6個入り（梱）', priceYen: 9756, type: '泡ハンドソープ' },
+    { code: '4901301052438', name: 'ハンドスキッシュ アルコール消毒剤', spec: '800mL', packSize: '6個入り', priceYen: 1104, type: 'アルコール消毒液' },
+    { code: '4901301504562', name: 'ハンドスキッシュ アルコール消毒剤', spec: '4.5L', packSize: '3個入り', priceYen: 4797, type: 'アルコール消毒液' },
+    { code: '4901301389138', name: 'ハンドスキッシュEX スプレー', spec: '150mL', packSize: '24個入り', priceYen: 526, type: '除菌スプレー' },
+    { code: '4901301400475', name: 'ハンドスキッシュEX スプレー 150mL 梱販売用', spec: '150mL', packSize: '24個入り（梱）', priceYen: 14198, type: '除菌スプレー' },
+    { code: '4901301395031', name: 'ハンドスキッシュEX デザインボトル', spec: '500mL', packSize: '6個入り', priceYen: 853, type: 'アルコール消毒液' },
+    { code: '4901301507198', name: 'ハンドスキッシュEX 本体 ロングノズル', spec: '800mL', packSize: '6個入り', priceYen: 958, type: 'アルコール消毒液' },
+    { code: '4901301507310', name: 'ハンドスキッシュEX 本体 ショートノズル', spec: '800mL', packSize: '6個入り', priceYen: 958, type: 'アルコール消毒液' },
+    { code: '4901301507204', name: 'ハンドスキッシュEX つけかえ用', spec: '800mL', packSize: '6個入り', priceYen: 807, type: 'アルコール消毒液' }
+];
+function kaoHandHygieneItem(number, product) {
+    return {
+        ...emptyItem(number), title: '', productName: product.name, productCode: product.code, maker: '花王',
+        consumableCategory: '手指衛生・消毒', consumableType: product.type, specification: product.spec, packSize: product.packSize,
+        priceYen: product.priceYen, showPrice: true
+    };
+}
+function kaoHandHygieneEditorState(products) {
+    const state = createDefaultEditorState(4, 'consumables');
+    state.title = '花王 手指衛生用品のご案内';
+    state.subtitle = '業務用ハンドソープ・アルコール消毒剤を、規格・入数・価格と一緒にご案内します。';
+    state.eyebrow = '花王';
+    state.eyebrowNote = '手指衛生・消毒';
+    state.items = products.map((product, index) => kaoHandHygieneItem(index + 1, product));
+    return state;
+}
+function chunk(items, size) {
+    const result = [];
+    for (let i = 0; i < items.length; i += size)
+        result.push(items.slice(i, i + size));
+    return result;
+}
+function createKaoHandHygieneFlyers(now) {
+    const pages = chunk(KAO_HAND_HYGIENE_PRODUCTS, 4);
+    const make = (id, title, pageProducts, minutesAgo) => {
+        const state = kaoHandHygieneEditorState(pageProducts);
+        return {
+            id, organizationId: demoOrganization.id, officeId: 'office-yukuhashi', ownerId: 'user-kubo', assigneeId: 'user-kubo', title,
+            categoryId: 'cat-consumables', shareScope: 'company', orientation: state.orientation, layoutCount: state.layoutCount,
+            designStyle: state.design.style, mainColor: state.design.color, editorState: state, version: 1,
+            createdAt: new Date(now.getTime() - (minutesAgo + 1000) * 60000).toISOString(),
+            updatedAt: new Date(now.getTime() - minutesAgo * 60000).toISOString(), deletedAt: null
+        };
+    };
+    const eight = pages.slice(0, 2);
+    const sixteen = pages;
+    return [
+        ...eight.map((pageProducts, i) => make(`flyer-kao-hand-8-${i + 1}`, `花王 手指衛生 消耗品チラシ（8点セット・${i + 1}/${eight.length}ページ）`, pageProducts, 200 + i)),
+        ...sixteen.map((pageProducts, i) => make(`flyer-kao-hand-16-${i + 1}`, `花王 手指衛生 消耗品チラシ（16点セット・${i + 1}/${sixteen.length}ページ）`, pageProducts, 300 + i))
+    ];
+}
 export function createSeedFlyers() {
     const now = new Date();
     const state = createDemoEditorState();
@@ -121,7 +180,8 @@ export function createSeedFlyers() {
         make('flyer-demo-2', '住宅改修 玄関事例', 'user-doi', 'office-yukuhashi', 'office', 180),
         make('flyer-demo-3', '全社共有 商品チラシ', 'user-admin', 'office-yukuhashi', 'company', 1440),
         make('flyer-demo-private-other', '土居さんの非公開作品', 'user-doi', 'office-yukuhashi', 'private', 60),
-        make('flyer-demo-other-office', '小倉営業所内限定', 'user-kokura', 'office-kokura', 'office', 90)
+        make('flyer-demo-other-office', '小倉営業所内限定', 'user-kokura', 'office-kokura', 'office', 90),
+        ...createKaoHandHygieneFlyers(now)
     ];
 }
 export function createSeedTemplates() {
