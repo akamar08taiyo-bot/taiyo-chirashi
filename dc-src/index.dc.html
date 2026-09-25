@@ -1124,7 +1124,7 @@ const HEADLINES = {
   ],
   new: {
     tool: [
-      "新しく取り扱いを始めた福祉用具のご案内です。",
+      "新商品のご案内です。",
       "この春から新登場した福祉用具をご紹介します。",
       "現場の声から生まれた新商品をご案内します。",
       "使いやすさが進化した新モデルが登場しました。",
@@ -1384,6 +1384,8 @@ function fixDraft(d) {
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
+  // 旧既定の見出し文を保存済みの下書きでも新しい既定文へ置き換える（手入力の文は変更しない）
+  if (d.headline === "新しく取り扱いを始めた福祉用具のご案内です。") d.headline = "新商品のご案内です。";
   return d;
 }
 
