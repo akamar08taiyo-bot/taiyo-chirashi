@@ -913,7 +913,10 @@
             </sc-if>
 
             <sc-if value="{{ notShomo }}" hint-placeholder-val="{{ true }}">
-              <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">{{ footerNote }}</div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; border: 2px solid var(--c-accent); border-radius: 8px; background: var(--c-bg-soft);">
+                <span style="flex: none; padding: 3px 10px; font-size: 13px; font-weight: 900; letter-spacing: .08em; color: #fff; background: var(--c-accent); border-radius: 4px;">デモ機</span>
+                <span style="font-size: 17px; font-weight: 900; line-height: 1.4; color: #16140f;">{{ footerNote }}</span>
+              </div>
             </sc-if>
 
             <div class="flyer-footer" style="margin-top: auto; border-top: 3px solid var(--c-accent); padding-top: 12px; display: grid; gap: 9px;">
@@ -949,7 +952,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000},&quot;footerNote&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;※ 単位数・価格は地域区分および当社設定によります。負担割合はご利用者の負担割合証をご確認ください。デモ機の貸出も承ります。&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;チラシの表示&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000},&quot;footerNote&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;デモ機の貸出も承ります。&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;チラシの表示&quot;}}">
 const OFFICES = [
   { n: "小倉営業所", a: "福岡県北九州市小倉北区重住3丁目11-21", t: "093-952-1616", f: "093-952-1627", j: "4070403227", c: "森口 賢一" },
   { n: "小倉南営業所", a: "福岡県北九州市小倉南区田原新町1丁目3-34", t: "093-474-5670", f: "093-474-5671", j: "4070503471", c: "串山 清彦" },
@@ -2699,7 +2702,7 @@ class Component extends DCLogic {
       pJigyosho: s.jigyosho || "—",
       pMobile: s.mobile || "—",
       isSentaku: !isTokka && !!(c && c.sentaku),
-      footerNote: this.props.footerNote || "※ 単位数・価格は地域区分および当社設定によります。負担割合はご利用者の負担割合証をご確認ください。デモ機の貸出も承ります。",
+      footerNote: this.props.footerNote || "デモ機の貸出も承ります。",
 
       onPrint: () => { this.runLayout(); setTimeout(() => window.print(), 80); }
     };
