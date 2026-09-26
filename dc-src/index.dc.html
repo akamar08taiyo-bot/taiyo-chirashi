@@ -724,13 +724,28 @@
                   <div style="font-size: 14px; font-weight: 900; color: #fff; background: #c0392b; padding: 6px 14px; letter-spacing: 0.1em;">NEW</div>
                 </sc-if>
               </div>
-              <div style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              <sc-if value="{{ hasHeadline }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              </sc-if>
+              <sc-if value="{{ noHeadline }}" hint-placeholder-val="{{ false }}">
+                <div data-print="hide" style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              </sc-if>
             </div>
 
             <sc-if value="{{ showPName }}" hint-placeholder-val="{{ true }}">
               <div style="background: var(--c-bg-highlight); border-left: 8px solid var(--c-accent); padding: 15px 24px; display: grid; gap: 6px;">
-                <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
-                <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                <sc-if value="{{ hasPNameText }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
+                </sc-if>
+                <sc-if value="{{ noPNameText }}" hint-placeholder-val="{{ false }}">
+                  <div data-print="hide" style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
+                </sc-if>
+                <sc-if value="{{ hasMakerLine }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                </sc-if>
+                <sc-if value="{{ noMakerLine }}" hint-placeholder-val="{{ false }}">
+                  <div data-print="hide" style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                </sc-if>
               </div>
             </sc-if>
 
@@ -2683,6 +2698,13 @@ class Component extends DCLogic {
       badgeText: s.badgeText, onBadgeText: e => this.set("badgeText", e.target.value),
       pKubunLabel: s.badgeText || badgeAuto,
       pKubunColor: isShomo ? "var(--c-accent2)" : isRecT ? "var(--c-accent)" : isTokka ? "#c0392b" : ki.color,
+      // 未入力のときの「〜を入力」は画面上の案内。印刷には出さない（hasXxx=false の側は data-print="hide"）
+      hasHeadline: !!s.headline,
+      hasPNameText: isTokka || !!s.name,
+      hasMakerLine: isTokka || !!(s.maker || s.model),
+      noHeadline: !s.headline,
+      noPNameText: !isTokka && !s.name,
+      noMakerLine: !isTokka && !(s.maker || s.model),
       pHeadline: s.headline || "見出しを入力してください",
       pName: isTokka ? "自費ベッドのレンタル" : (s.name || "（商品名を入力してください）"),
       pMakerLine: isTokka
