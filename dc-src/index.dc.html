@@ -725,13 +725,28 @@
                   <div style="font-size: 14px; font-weight: 900; color: #fff; background: #c0392b; padding: 6px 14px; letter-spacing: 0.1em;">NEW</div>
                 </sc-if>
               </div>
-              <div style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              <sc-if value="{{ hasHeadline }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              </sc-if>
+              <sc-if value="{{ noHeadline }}" hint-placeholder-val="{{ false }}">
+                <div data-print="hide" style="font-size: 21px; font-weight: 700; line-height: 1.4; color: #3a352c; text-wrap: pretty;">{{ pHeadline }}</div>
+              </sc-if>
             </div>
 
             <sc-if value="{{ showPName }}" hint-placeholder-val="{{ true }}">
               <div style="background: var(--c-bg-highlight); border-left: 8px solid var(--c-accent); padding: 15px 24px; display: grid; gap: 6px;">
-                <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
-                <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                <sc-if value="{{ hasPNameText }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
+                </sc-if>
+                <sc-if value="{{ noPNameText }}" hint-placeholder-val="{{ false }}">
+                  <div data-print="hide" style="font-size: 36px; font-weight: 900; line-height: 1.18; letter-spacing: 0.01em; text-wrap: pretty;">{{ pName }}</div>
+                </sc-if>
+                <sc-if value="{{ hasMakerLine }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                </sc-if>
+                <sc-if value="{{ noMakerLine }}" hint-placeholder-val="{{ false }}">
+                  <div data-print="hide" style="font-size: 16px; font-weight: 500; color: #453f36;">{{ pMakerLine }}</div>
+                </sc-if>
               </div>
             </sc-if>
 
@@ -914,7 +929,10 @@
             </sc-if>
 
             <sc-if value="{{ notShomo }}" hint-placeholder-val="{{ true }}">
-              <div style="font-size: 12px; line-height: 1.6; color: #7b7365;">{{ footerNote }}</div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; border: 2px solid var(--c-accent); border-radius: 8px; background: var(--c-bg-soft);">
+                <span style="flex: none; padding: 3px 10px; font-size: 13px; font-weight: 900; letter-spacing: .08em; color: #fff; background: var(--c-accent); border-radius: 4px;">デモ機</span>
+                <span style="font-size: 17px; font-weight: 900; line-height: 1.4; color: #16140f;">{{ footerNote }}</span>
+              </div>
             </sc-if>
 
             <div class="flyer-footer" style="margin-top: auto; border-top: 3px solid var(--c-accent); padding-top: 12px; display: grid; gap: 9px;">
@@ -950,7 +968,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000},&quot;footerNote&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;※ 単位数・価格は地域区分および当社設定によります。負担割合はご利用者の負担割合証をご確認ください。デモ機の貸出も承ります。&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;チラシの表示&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000},&quot;footerNote&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;デモ機の貸出も承ります。&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;チラシの表示&quot;}}">
 const OFFICES = [
   { n: "小倉営業所", a: "福岡県北九州市小倉北区重住3丁目11-21", t: "093-952-1616", f: "093-952-1627", j: "4070403227", c: "森口 賢一" },
   { n: "小倉南営業所", a: "福岡県北九州市小倉南区田原新町1丁目3-34", t: "093-474-5670", f: "093-474-5671", j: "4070503471", c: "串山 清彦" },
@@ -1125,7 +1143,7 @@ const HEADLINES = {
   ],
   new: {
     tool: [
-      "新しく取り扱いを始めた福祉用具のご案内です。",
+      "新商品のご案内です。",
       "この春から新登場した福祉用具をご紹介します。",
       "現場の声から生まれた新商品をご案内します。",
       "使いやすさが進化した新モデルが登場しました。",
@@ -1385,6 +1403,8 @@ function fixDraft(d) {
   if ([1, 2, 4, 6, 9].indexOf(d.photoCount) < 0) d.photoCount = 4;
   if ([1, 2, 4, 6, 9].indexOf(d.recCount) < 0) d.recCount = 4;
   if ([1, 2, 3, 4, 6, 9].indexOf(d.shomoCount) < 0) d.shomoCount = 6;
+  // 旧既定の見出し文を保存済みの下書きでも新しい既定文へ置き換える（手入力の文は変更しない）
+  if (d.headline === "新しく取り扱いを始めた福祉用具のご案内です。") d.headline = "新商品のご案内です。";
   return d;
 }
 
@@ -2679,6 +2699,13 @@ class Component extends DCLogic {
       badgeText: s.badgeText, onBadgeText: e => this.set("badgeText", e.target.value),
       pKubunLabel: s.badgeText || badgeAuto,
       pKubunColor: isShomo ? "var(--c-accent2)" : isRecT ? "var(--c-accent)" : isTokka ? "#c0392b" : ki.color,
+      // 未入力のときの「〜を入力」は画面上の案内。印刷には出さない（hasXxx=false の側は data-print="hide"）
+      hasHeadline: !!s.headline,
+      hasPNameText: isTokka || !!s.name,
+      hasMakerLine: isTokka || !!(s.maker || s.model),
+      noHeadline: !s.headline,
+      noPNameText: !isTokka && !s.name,
+      noMakerLine: !isTokka && !(s.maker || s.model),
       pHeadline: s.headline || "見出しを入力してください",
       pName: isTokka ? "自費ベッドのレンタル" : (s.name || "（商品名を入力してください）"),
       pMakerLine: isTokka
@@ -2698,7 +2725,7 @@ class Component extends DCLogic {
       pJigyosho: s.jigyosho || "—",
       pMobile: s.mobile || "—",
       isSentaku: !isTokka && !!(c && c.sentaku),
-      footerNote: this.props.footerNote || "※ 単位数・価格は地域区分および当社設定によります。負担割合はご利用者の負担割合証をご確認ください。デモ機の貸出も承ります。",
+      footerNote: this.props.footerNote || "デモ機の貸出も承ります。",
 
       onPrint: () => { this.runLayout(); setTimeout(() => window.print(), 80); }
     };
